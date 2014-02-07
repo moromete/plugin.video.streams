@@ -5,3 +5,7 @@
 *.jpg -delta
 *.jpeg -delta
 *.gif -delta
+
+/devel export-ignore  
+.gitattributes export-ignore  
+.gitignore export-ignore
