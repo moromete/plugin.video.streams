@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="plugin.video.streams"
+       name="Streams"
+       version="0.1.2"
+       provider-name="Moromete">
+  <requires>
+    <import addon="xbmc.python" version="2.0"/>
+  </requires>
+  <extension point="xbmc.python.pluginsource"
+             defaultresolution="720p"
+             defaultresolutionwide="720p"
+             library="default.py">
+    <provides>video</provides>
+  </extension>
+  <extension point="xbmc.addon.metadata">
+    <summary>
+      Radio/Tv Streams
+      
+      - Watch internet video/audio streams (sopcast, http, rtmp, rtsp, mms ...) based on a remote xml channel list.
+      
+    </summary>
+    <description>
+      Radio/Tv Streams
+      
+      - Watch internet video/audio streams (sopcast, http, rtmp, rtsp, mms ...) based on a remote xml channel list.
+      
+    </description>
+    <platform>all</platform>
+  </extension>
+  <!--
+  <extension point="xbmc.service"
+             library="default.py" start="[startup]">
+  </extension>
+  -->
+  
+  <extension point="xbmc.addon.repository"
+             name="Streams Repository">
+    <info compressed="true">http://streams.magazinmixt.ro/repository/addons.xml</info>
+    <!--<checksum>http://streams.magazinmixt.ro/repository/addons.xml.md5</checksum>-->
+    <datadir zip="true">http://streams.magazinmixt.ro/repository</datadir>
+  </extension>
+</addon>

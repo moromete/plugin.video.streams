@@ -1,0 +1,39 @@
+v 0.1.2 (05.02.2014)
+  1. Fixed default path for channel list to "http://streams.magazinmixt.ro/ro/streams.json"
+  2. If download of schedule fail the script will not crash
+v 0.1.1 (13.01.2014)
+  1. Improved load speed of channel list (moved from xml to json and sqlite)
+  2. Added country filter possibility for channel list
+  2. Added language filter possibility for channel list
+
+v 0.1.0 (31.12.2013)
+  1. added support for running on raspberry pi via quemu
+  2. terminate sp-sc-auth process on player stop was improved
+  3. fixed schedule parsing problem on year change
+
+v 0.0.6 (23.10.2013)
+  1. added 990 cats for movies and tv shows
+
+v 0.0.5 (19.10.2013)
+  1. added filmeonlinenoi.org cat and posibility to access generated url by vk.com
+
+v 0.0.4 (04.09.2013)
+  1. Fixed showing last event when shedule data was epired. Added "Program guide is not available"
+  2. Watching sop process and restarting the player if it dies.
+  3. Added option to load all program guides automaticaly on channel list display.
+
+v 0.0.3 (20.05.2013)
+  1. Refresh schedule on channell list after player is stopped
+  2. Fixed freeze when played stream is offline (non sopcast stream issue).
+  3. Added possibility to hide offline channels from the list
+
+v 0.0.2 (08.05.2013)
+  1. Added possibility to display schedule if available from (port.ro romanian language only)
+  2. Context menu to update Schedule
+  3. Context menu to update channel list
+
+v 0.0.1 (03.05.2013)
+  1. Based on "xsopcast" plugin and "live streams" plugin added the combined posibility to play
+  both sop and direct stream types (http, rtmp, rtsp, mmsh, ...)
+  2. Channels are read from the same remote xml list http://streams.magazinmixt.ro/streams.xml
+  Schedule function were removed and will be added later.

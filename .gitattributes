@@ -1,0 +1,7 @@
+*.xcf -delta
+*.tar.gz -delta
+*.zip -delta
+*.png -delta
+*.jpg -delta
+*.jpeg -delta
+*.gif -delta

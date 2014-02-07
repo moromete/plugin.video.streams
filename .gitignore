@@ -1,0 +1,5 @@
+schedule.sqlite
+channels.sqlite
+streams.json
+*.pyc
+logos

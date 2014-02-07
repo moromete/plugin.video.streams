@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--$Revision: 19319 $-->
+<strings>
+  <!-- strings 30000 thru 30999 reserved for plugins and plugin settings -->
+  <string id="30000">General</string>
+  <string id="30001">Sopcast</string>
+  <string id="30002">Schedule</string>
+  <string id="30003">Channel List</string>
+  <string id="30004">Channel Countries</string>
+  <string id="30005">Channel Language</string>
+  
+  <string id="30010">Enable Add-on Debugging</string>
+  <string id="30011">Wait time before atempting to start the player [ms]</string>
+  <string id="30012">Local port (where others can connect)</string>
+  <string id="30013">Video port</string>
+  <string id="30014">Buffer Size</string>
+  <string id="30015">Disable program guides</string>
+  <string id="30016">Remote channel list URL</string>
+  <string id="30017">Channel list expire [hours] (0 = no update)</string>
+  <string id="30018">Show offline channels</string>
+  <string id="30019">Load program guide when displaying channel list</string>
+  <string id="30020">Sopcast path for ARM system (Raspberry Pi)</string>
+  <string id="30021">unclassified</string>
+  <string id="30022">Show user contributions</string>
+  
+  <string id="30100">AUSTRIA</string>
+  <string id="30101">CZECH REPUBLIC</string>
+  <string id="30102">FRANCE</string>
+  <string id="30103">GERMANY</string>
+  <string id="30104">INDIA</string>
+  <string id="30105">ITALY</string>
+  <string id="30106">MOLDOVA</string>
+  <string id="30107">POLAND</string>
+  <string id="30108">PORTUGAL</string>
+  <string id="30109">ROMANIA</string>
+  <string id="30110">RUSSIAN FEDERATION</string>
+  <string id="30111">SERBIA</string>
+  <string id="30112">SPAIN</string>
+  <string id="30113">TURKEY</string>
+  <string id="30114">SPAIN</string>
+  <string id="30115">UNITED KINGDOM</string>
+  <string id="30116">USA</string>
+  
+  <string id="30201">Czech</string>
+  <string id="30202">French</string>
+  <string id="30203">German</string>
+  <string id="30204">Hindi</string>
+  <string id="30205">Italian</string>
+  <string id="30206">Polish</string>
+  <string id="30207">Portuguese</string>
+  <string id="30208">Romanian</string>
+  <string id="30209">Russian</string>
+  <string id="30210">Serbian</string>
+  <string id="30211">Spanish</string>
+  <string id="30212">Turkish</string>
+  <string id="30213">English</string>
+  
+  <string id="30050">Refresh Schedule</string>
+  <string id="30051">Refresh All Schedules</string>
+  <string id="30052">Refresh Channel List</string>
+  <string id="30053">Downloading Channel list</string>
+  <string id="30054">Channel list</string>
+  <string id="30055">Downloading Channel Logo</string>
+  <string id="30056">Program guide is up to date</string>
+  <string id="30057">Channel is offline</string>
+  <string id="30058">Network is offline</string>
+  <string id="30059">Channel initialization failed</string>
+  <string id="30060">Sream</string>
+  <string id="30061">Downloading Program Guide</string>
+  <string id="30062">Program guide</string>
+  <string id="30063">Offline</string>
+  <string id="30064">Program guide is not available</string>
+  <string id="30065">Get stream URL</string>
+  
+  <string id="30300">Error</string>
+  <string id="30301">Cannot parse channel list !</string>
+ 
+</strings>
