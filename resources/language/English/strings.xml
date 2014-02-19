@@ -74,5 +74,6 @@
   
   <string id="30300">Error</string>
   <string id="30301">Cannot parse channel list !</string>
+  <string id="30302">Please install python module "pytz" or disable program guides from addon settings</string>
  
 </strings>

@@ -9,7 +9,7 @@ try:
   from pytz import timezone
 except ImportError as err:
   addon_log( str(err) )
-  message('Error', str(err)+ "\nPlease install python module pytz!")
+  message(addon.getLocalizedString(30300), str(err) + "\n" + addon.getLocalizedString(30302))
   
 import time
 import sys

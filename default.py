@@ -8,7 +8,11 @@ import time
 from datetime import datetime, timedelta
 
 from glob import addon_log, addon, ADDON_PATH, ADDON_VERSION, Downloader
-from schedule import grab_schedule, load_schedule, load_active_event
+
+DISABLE_SCHEDULE = addon.getSetting('disable_schedule')
+if DISABLE_SCHEDULE != 'true':
+  from schedule import grab_schedule, load_schedule, load_active_event
+  
 from play_vk_com import grab_vk_stream
 from play_fastupload_ro import grab_fu_stream
 
@@ -544,16 +548,20 @@ if(os.uname()[4][:3] == 'arm'):
 ##############
   
 if ARM == False :
-  # get system default env PATH
-  pathdirs = os.environ['PATH'].split(os.pathsep)
-  # looking for (the first match) sp-sc-auth binary in the system default path
-  for dir in pathdirs:
-    if os.path.isdir(dir):
-      if os.path.isfile(os.path.join(dir,SPSC_BINARY)):
-        SPSC = os.path.join(dir,SPSC_BINARY)
-        break
+  SPSC = os.path.join(ADDON_PATH, 'bin/linux_i386/sopcast', SPSC_BINARY)
+
+  ## get system default env PATH
+  #pathdirs = os.environ['PATH'].split(os.pathsep)
+  ## looking for (the first match) sp-sc-auth binary in the system default path
+  #for dir in pathdirs:
+  #  if os.path.isdir(dir):
+  #    if os.path.isfile(os.path.join(dir,SPSC_BINARY)):
+  #      SPSC = os.path.join(dir,SPSC_BINARY)
+  #      break
 elif ARM == True:
   SOPCAST_ARM_PATH =  addon.getSetting('sopcast_arm_path')
+  if(SOPCAST_ARM_PATH == '') :
+    SOPCAST_ARM_PATH == os.path.join(ADDON_PATH, 'bin/arm/sopcast')
   QEMU_SPSC = [os.path.join(SOPCAST_ARM_PATH, QEMU), os.path.join(SOPCAST_ARM_PATH, "lib/ld-linux.so.2"), "--library-path", os.path.join(SOPCAST_ARM_PATH, "lib")]
   SPSC = os.path.join(SOPCAST_ARM_PATH, SPSC_BINARY)
   #/storage/sopcast/qemu-i386 /storage/sopcast/lib/ld-linux.so.2 --library-path /storage/sopcast/lib /storage/sopcast/sp-sc-auth 2>&- $1 $2 $3
@@ -574,7 +582,7 @@ CHANNELS_DB = os.path.join(ADDON_PATH,'channels.sqlite')
 db_connection=sqlite3.connect(CHANNELS_DB)
 db_cursor=db_connection.cursor()
 
-DISABLE_SCHEDULE = addon.getSetting('disable_schedule')
+#DISABLE_SCHEDULE = addon.getSetting('disable_schedule')
 SHOW_OFFLINE_CH = addon.getSetting('show_offline_ch')
 
 NOTIFY_OFFLINE = "true"

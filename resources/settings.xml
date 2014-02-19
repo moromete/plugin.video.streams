@@ -5,7 +5,7 @@
 		<setting id="debug" type="bool" label="30010" default="false"/>
 		<setting id="wait_time" type="number" label="30011" default="3000"/>
 		<setting type="sep" />
-		<setting id="sopcast_arm_path" type="text" label="30020" default="/usr/local/sopcast"/>
+		<setting id="sopcast_arm_path" type="text" label="30020" default=""/>
 		<setting type="sep" />
 	</category>
   <category label="30001">
