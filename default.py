@@ -144,10 +144,12 @@ def parse_ch_data():
     addon_log(data['date'])
     for group in data['groups']:
       addon_log(group['id'] + " " + group['name'])
-      sql = "INSERT INTO categories \
-             VALUES ('%d', '%s')" % \
-             (int(group['id']), str(group['name']))
-      db_cursor.execute(sql)
+      #sql = "INSERT INTO categories \
+      #       VALUES ('%d', '%s')" % \
+      #       (int(group['id']), str(group['name']))
+      db_cursor.execute("INSERT INTO categories \
+                         VALUES (?, ?)",
+                         (group['id'], group['name']))
 
       for channel in group['channels']:
         addon_log(str(channel['id'])+" "+str(channel['name'].decode('utf8').encode('utf8'))+" "+ str(channel['language'])+" "+str(channel['status']))
@@ -174,17 +176,26 @@ def parse_ch_data():
         if 'video_codec' in stream_type:
           video_codec = stream_type['video_codec']
           
-        sql = "INSERT INTO channels \
-               VALUES ('%d', '%d', '%s', '%s', '%s', '%d', \
-                       '%s', '%f2', '%s','%s', \
-                       '%s', '%s', '%s', \
-                       '%d' )" % \
-               ( int(channel['id']), int(group['id']), str(channel['name']), str(channel['country']), str(channel['language']), int(channel['status']), \
-                 str(video_resolution), float(video_aspect), str(audio_codec), str(video_codec), \
-                 str(channel['address']), str(thumbnail), str(channel['protocol']), \
-                 int(schedule_id) )
-        db_cursor.execute(sql)
-
+        #sql = "INSERT INTO channels \
+        #       VALUES ('%d', '%d', '%s', '%s', '%s', '%d', \
+        #               '%s', '%f2', '%s','%s', \
+        #               '%s', '%s', '%s', \
+        #               '%d' )" % \
+        #       ( int(channel['id']), int(group['id']), str(channel['name']), str(channel['country']), str(channel['language']), int(channel['status']), \
+        #         str(video_resolution), float(video_aspect), str(audio_codec), str(video_codec), \
+        #         str(channel['address']), str(thumbnail), str(channel['protocol']), \
+        #         int(schedule_id) )
+        db_cursor.execute( \
+              "INSERT INTO channels \
+               VALUES (?, ?, ?, ?, ?, ?, \
+                       ?, ?, ?, ?, \
+                       ?, ?, ?, \
+                       ? )" ,
+               ( channel['id'], group['id'], channel['name'], channel['country'], channel['language'], channel['status'], \
+                 video_resolution, video_aspect, audio_codec, video_codec, \
+                 channel['address'], thumbnail, channel['protocol'], \
+                 schedule_id) )
+        
     db_connection.commit()
 
 def CAT_LIST(force=False):
@@ -230,16 +241,23 @@ def CAT_LIST(force=False):
 def CHANNEL_LIST(name, cat_id, schedule=False):
   addon_log(name);
   try:
-    sql = "SELECT id, name, country, language, status, \
-           video_resolution, video_aspect, audio_codec, video_codec, \
-           address, thumbnail, protocol, \
-           schedule_id \
-           FROM channels \
-           WHERE id_cat = %d" % \
-           (int(cat_id))
-    db_cursor.execute(sql)
-    rec=db_cursor.fetchall()
+    #sql = "SELECT id, name, country, language, status, \
+    #       video_resolution, video_aspect, audio_codec, video_codec, \
+    #       address, thumbnail, protocol, \
+    #       schedule_id \
+    #       FROM channels \
+    #       WHERE id_cat = %d" % \
+    #       (int(cat_id))
+    db_cursor.execute( 'SELECT id, name, country, language, status, \
+                        video_resolution, video_aspect, audio_codec, video_codec, \
+                        address, thumbnail, protocol, \
+                        schedule_id \
+                        FROM channels \
+                        WHERE id_cat = ?', \
+                        (cat_id,) )
+    rec=db_cursor.fetchall()  
   except Exception as inst:
+    addon_log(inst)
     xbmcgui.Dialog().ok(addon.getLocalizedString(30300), addon.getLocalizedString(30301), str(inst))  #Cannot parse channel list !
     
   if len(rec)>0:

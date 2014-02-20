@@ -156,9 +156,9 @@ def grab_schedule(id_channel_port, name, force=False, update_all=False):
           #addon_log(event_day+" "+event_month+" "+str(event_year)+" "+event_hour+":"+event_minutes + " " + event_title)
           #addon_log(event_time + "  " + str(event_timestamp) + " " + event_title)
                     
-          sql="INSERT INTO `%s` VALUES (%d, '%s')" % \
-               (table_name, event_timestamp, unicode(event_title.replace("'", ""), 'iso-8859-2'))
-          db_cursor.execute(sql)
+          sql="INSERT INTO `%s` VALUES (?, ?)" % \
+               (table_name)
+          st = db_cursor.execute(sql, (event_timestamp, unicode(event_title.replace("'", ""), 'iso-8859-2')))
           #addon_log(sql)
           
           prev_event_hour = event_hour
@@ -173,7 +173,7 @@ def grab_schedule(id_channel_port, name, force=False, update_all=False):
   #xbmc.sleep(random.randint(500, 2000)) #random delay for scraping
   
 def load_schedule(name):
-  #addon_log('load schedule ' + name)
+  addon_log('load schedule ' + name)
   schedule = []
   
   db_connection=sqlite3.connect(SCHEDULE_PATH)
@@ -190,17 +190,20 @@ def load_schedule(name):
     if active_event:
       schedule.append(active_event)
     
-    sql="SELECT event_time, title FROM `%s` WHERE event_time > %d ORDER BY event_time ASC LIMIT 10" % \
-         (table_name, time.mktime(dt_ro.timetuple()))
-    db_cursor.execute(sql)
+    sql="SELECT event_time, title FROM `%s` WHERE event_time > ? ORDER BY event_time ASC LIMIT 10" % \
+         (table_name,)
+    #addon_log(sql)
+    db_cursor.execute(sql, (time.mktime(dt_ro.timetuple()),) )
     rec=db_cursor.fetchall()
-      
+          
     if len(rec)>0:
       for event_time, title in rec:
         event = add_event(event_time, title)
         schedule.append(event)
       
-  except: pass
+  except Exception as inst:
+    addon_log(inst)
+    #pass
   
   if len(schedule)>=2:
     schedule_txt = ' - '.join(schedule)
@@ -223,9 +226,9 @@ def load_active_event(name):
   event = None
   
   try:
-    sql="SELECT event_time, title FROM `%s` WHERE event_time <= %d ORDER BY event_time DESC LIMIT 1" % \
-        (table_name, time.mktime(dt_ro.timetuple()))
-    db_cursor.execute(sql)
+    sql="SELECT event_time, title FROM `%s` WHERE event_time <= ? ORDER BY event_time DESC LIMIT 1" % \
+        (table_name,)
+    db_cursor.execute(sql, ( time.mktime(dt_ro.timetuple()), ) )
     rec=db_cursor.fetchone()
     if rec:
       event = add_event(rec[0], rec[1])
