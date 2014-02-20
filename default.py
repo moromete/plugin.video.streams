@@ -594,6 +594,7 @@ elif ARM == True:
   
   #make executables
   is_exe(os.path.join(SOPCAST_ARM_PATH, QEMU))
+  is_exe(os.path.join(SOPCAST_ARM_PATH, "lib/ld-linux.so.2"))
     
   QEMU_SPSC = [os.path.join(SOPCAST_ARM_PATH, QEMU), os.path.join(SOPCAST_ARM_PATH, "lib/ld-linux.so.2"), "--library-path", os.path.join(SOPCAST_ARM_PATH, "lib")]
   SPSC = os.path.join(SOPCAST_ARM_PATH, SPSC_BINARY)
