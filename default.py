@@ -585,7 +585,7 @@ if ARM == False :
 elif ARM == True:
   SOPCAST_ARM_PATH =  addon.getSetting('sopcast_arm_path')
   if(SOPCAST_ARM_PATH == '') :
-    SOPCAST_ARM_PATH == os.path.join(ADDON_PATH, 'bin/arm/sopcast')
+    SOPCAST_ARM_PATH = os.path.join(ADDON_PATH, 'bin/arm/sopcast')
   
   #make executables
   st = os.stat(os.path.join(SOPCAST_ARM_PATH, QEMU))
