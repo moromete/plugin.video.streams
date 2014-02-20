@@ -150,7 +150,7 @@ def parse_ch_data():
       db_cursor.execute(sql)
 
       for channel in group['channels']:
-        addon_log(str(channel['id'])+" "+str(channel['name'])+" "+ str(channel['language'])+" "+str(channel['status']))
+        addon_log(str(channel['id'])+" "+str(channel['name'].decode('utf8').encode('utf8'))+" "+ str(channel['language'])+" "+str(channel['status']))
                 
         schedule_id = 0
         thumbnail = ""
@@ -271,7 +271,10 @@ def CHANNEL_LIST(name, cat_id, schedule=False):
           logo_name = chan_name.replace(' ', '').lower()
           
           chan_name_formatted ="[B][COLOR blue]"+chan_name+"[/COLOR][/B]"
-          chan_name_formatted += " "+protocol
+          chan_name_formatted += " ("+protocol
+          if(video_codec != ''):
+            chan_name_formatted += " "+video_codec
+          chan_name_formatted += ")"
           if int(chan_status)==1: chan_name_formatted += " [COLOR red]"+addon.getLocalizedString(30063)+"[/COLOR]"  #Offline
           
           thumb_path=""
