@@ -1,5 +1,5 @@
 import xbmc, xbmcgui, xbmcplugin, xbmcaddon
-import sys, os, os.path, subprocess
+import sys, os, os.path, subprocess, stat 
 import urllib, urllib2, socket, re
 import json, sqlite3
 from urlparse import urlparse
@@ -570,7 +570,10 @@ if(os.uname()[4][:3] == 'arm'):
   
 if ARM == False :
   SPSC = os.path.join(ADDON_PATH, 'bin/linux_i386/sopcast', SPSC_BINARY)
-
+  
+  #make executables
+  st = os.stat(SPSC)
+  os.chmod(SPSC, st.st_mode | stat.S_IEXEC)
   ## get system default env PATH
   #pathdirs = os.environ['PATH'].split(os.pathsep)
   ## looking for (the first match) sp-sc-auth binary in the system default path
@@ -583,6 +586,11 @@ elif ARM == True:
   SOPCAST_ARM_PATH =  addon.getSetting('sopcast_arm_path')
   if(SOPCAST_ARM_PATH == '') :
     SOPCAST_ARM_PATH == os.path.join(ADDON_PATH, 'bin/arm/sopcast')
+  
+  #make executables
+  st = os.stat(os.path.join(SOPCAST_ARM_PATH, QEMU))
+  os.chmod(os.path.join(SOPCAST_ARM_PATH, QEMU), st.st_mode | stat.S_IEXEC)
+  
   QEMU_SPSC = [os.path.join(SOPCAST_ARM_PATH, QEMU), os.path.join(SOPCAST_ARM_PATH, "lib/ld-linux.so.2"), "--library-path", os.path.join(SOPCAST_ARM_PATH, "lib")]
   SPSC = os.path.join(SOPCAST_ARM_PATH, SPSC_BINARY)
   #/storage/sopcast/qemu-i386 /storage/sopcast/lib/ld-linux.so.2 --library-path /storage/sopcast/lib /storage/sopcast/sp-sc-auth 2>&- $1 $2 $3
