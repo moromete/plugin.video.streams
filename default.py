@@ -549,6 +549,11 @@ class streamplayer(xbmc.Player):
 #  def onFocus( self, controlId ):
 #	  pass
 
+def is_exe(fpath):
+  if os.path.isfile(fpath):
+    if (os.access(fpath, os.X_OK) != True) :
+      st = os.stat(fpath)
+      os.chmod(fpath, st.st_mode | stat.S_IEXEC)
 
 #######################################################################################################################
 #######################################################################################################################
@@ -572,8 +577,8 @@ if ARM == False :
   SPSC = os.path.join(ADDON_PATH, 'bin/linux_i386/sopcast', SPSC_BINARY)
   
   #make executables
-  st = os.stat(SPSC)
-  os.chmod(SPSC, st.st_mode | stat.S_IEXEC)
+  is_exe(SPSC)
+  
   ## get system default env PATH
   #pathdirs = os.environ['PATH'].split(os.pathsep)
   ## looking for (the first match) sp-sc-auth binary in the system default path
@@ -588,9 +593,8 @@ elif ARM == True:
     SOPCAST_ARM_PATH = os.path.join(ADDON_PATH, 'bin/arm/sopcast')
   
   #make executables
-  st = os.stat(os.path.join(SOPCAST_ARM_PATH, QEMU))
-  os.chmod(os.path.join(SOPCAST_ARM_PATH, QEMU), st.st_mode | stat.S_IEXEC)
-  
+  is_exe(os.path.join(SOPCAST_ARM_PATH, QEMU))
+    
   QEMU_SPSC = [os.path.join(SOPCAST_ARM_PATH, QEMU), os.path.join(SOPCAST_ARM_PATH, "lib/ld-linux.so.2"), "--library-path", os.path.join(SOPCAST_ARM_PATH, "lib")]
   SPSC = os.path.join(SOPCAST_ARM_PATH, SPSC_BINARY)
   #/storage/sopcast/qemu-i386 /storage/sopcast/lib/ld-linux.so.2 --library-path /storage/sopcast/lib /storage/sopcast/sp-sc-auth 2>&- $1 $2 $3
