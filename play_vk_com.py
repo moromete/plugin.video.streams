@@ -12,25 +12,25 @@ def grab_vk_stream(name, url):
   os.remove(temp)
   
   #addon_log(source_txt)
-  match=re.compile('url720=(http:\/\/[\w\W]+?.mp4)&').search(source_txt)
+  match=re.compile('url720=(http:\/\/[\w\W]+.mp4?[\w\W]+)&').search(source_txt)
   if match:
     stream_url = match.group(1)
     addon_log('720 = '+stream_url)  
     return stream_url
   
-  match=re.compile('url480=(http:\/\/[\w\W]+?.mp4)&').search(source_txt)
+  match=re.compile('url480=(http:\/\/[\w\W]+.mp4?[\w\W]+)&').search(source_txt)
   if match:
     stream_url = match.group(1)
     addon_log('480 = '+stream_url)  
     return stream_url
   
-  match=re.compile('url360=(http:\/\/[\w\W]+?.mp4)&').search(source_txt)
+  match=re.compile('url360=(http:\/\/[\w\W]+.mp4?[\w\W]+)&').search(source_txt)
   if match:
     stream_url = match.group(1)
     addon_log('360 = '+stream_url)  
     return stream_url
     
-  match=re.compile('url240=(http:\/\/[\w\W]+?.mp4)&').search(source_txt)
+  match=re.compile('url240=(http:\/\/[\w\W]+.mp4?[\w\W]+)&').search(source_txt)
   if match:
     stream_url = match.group(1)
     addon_log('240 = '+stream_url)  
