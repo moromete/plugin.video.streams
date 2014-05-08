@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.streams"
        name="Streams"
-       version="0.1.5"
+       version="0.1.6"
        provider-name="Moromete">
   <requires>
-    <import addon="xbmc.python" version="2.0"/>
+    <import addon="xbmc.python" version="2.1.0"/>
   </requires>
   <extension point="xbmc.python.pluginsource"
              defaultresolution="720p"
@@ -22,12 +22,6 @@
     </description>
     <platform>all</platform>
   </extension>
-  <!--
-  <extension point="xbmc.service"
-             library="default.py" start="[startup]">
-  </extension>
-  -->
-  
   <extension point="xbmc.addon.repository"
              name="Streams Repository">
     <info compressed="true">http://streams.magazinmixt.ro/repository/addons.xml</info>
