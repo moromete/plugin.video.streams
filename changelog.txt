@@ -1,3 +1,5 @@
+v 0.1.7 (26.08.2014)
+  1. fixed url detecion for fastupload.ro used to play streams from 990.ro
 v 0.1.6 (08.05.2014)
   1. upgraded minimum version of xbmc.python from version="2.0" to version="2.1.0" to make it compatible with xbmc 13.0 Gotham
 v 0.1.5 (22.04.2014)

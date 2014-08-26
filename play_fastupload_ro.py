@@ -14,7 +14,7 @@ def grab_fu_stream(name, url):
   #addon_log(url)
   #addon_log(source_txt)
   
-  match=re.compile('\'file\':\s*\'(http:\/\/[\w\W]+?\.flv)\'').search(source_txt)
+  match=re.compile('\'file\':\s*\'(http:\/\/[\w\W]+?\.\w+)\'').search(source_txt)
   if match:
     stream_url = match.group(1)
     addon_log(stream_url)  
