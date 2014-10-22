@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: XBMC-Addons\n"
 "Report-Msgid-Bugs-To: alanwww1@xbmc.org\n"
-"POT-Creation-Date: 2014-02-19 13:13+0000\n"
+"POT-Creation-Date: 2014-10-22 16:39+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE\n"
@@ -20,7 +20,7 @@ msgid "General"
 msgstr ""
 
 msgctxt "#30001"
-msgid "Sopcast"
+msgid "Engines"
 msgstr ""
 
 msgctxt "#30002"
@@ -90,10 +90,22 @@ msgid "unclassified"
 msgstr ""
 
 msgctxt "#30022"
-msgid "Show user contributions"
+msgid "Sopcast"
 msgstr ""
 
-#empty strings from id 30023 to 30049
+msgctxt "#30023"
+msgid "Acestream"
+msgstr ""
+
+msgctxt "#30024"
+msgid "Engine host"
+msgstr ""
+
+msgctxt "#30025"
+msgid "Engine TCP port"
+msgstr ""
+
+#empty strings from id 30026 to 30049
 
 msgctxt "#30050"
 msgid "Refresh Schedule"

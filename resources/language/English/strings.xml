@@ -3,12 +3,12 @@
 <strings>
   <!-- strings 30000 thru 30999 reserved for plugins and plugin settings -->
   <string id="30000">General</string>
-  <string id="30001">Sopcast</string>
+  <string id="30001">Engines</string>
   <string id="30002">Schedule</string>
   <string id="30003">Channel List</string>
   <string id="30004">Channel Countries</string>
   <string id="30005">Channel Language</string>
-  
+
   <string id="30010">Enable Add-on Debugging</string>
   <string id="30011">Wait time before atempting to start the player [ms]</string>
   <string id="30012">Local port (where others can connect)</string>
@@ -21,8 +21,11 @@
   <string id="30019">Load program guide when displaying channel list</string>
   <string id="30020">Sopcast path for ARM system (Raspberry Pi)</string>
   <string id="30021">unclassified</string>
-  <string id="30022">Show user contributions</string>
-  
+  <string id="30022">Sopcast</string>
+  <string id="30023">Acestream</string>
+  <string id="30024">Engine host</string>
+  <string id="30025">Engine TCP port</string>
+
   <string id="30100">AUSTRIA</string>
   <string id="30101">CZECH REPUBLIC</string>
   <string id="30102">FRANCE</string>
@@ -40,7 +43,7 @@
   <string id="30114">SPAIN</string>
   <string id="30115">UNITED KINGDOM</string>
   <string id="30116">USA</string>
-  
+
   <string id="30201">Czech</string>
   <string id="30202">French</string>
   <string id="30203">German</string>
@@ -54,7 +57,7 @@
   <string id="30211">Spanish</string>
   <string id="30212">Turkish</string>
   <string id="30213">English</string>
-  
+
   <string id="30050">Refresh Schedule</string>
   <string id="30051">Refresh All Schedules</string>
   <string id="30052">Refresh Channel List</string>
@@ -71,9 +74,9 @@
   <string id="30063">Offline</string>
   <string id="30064">Program guide is not available</string>
   <string id="30065">Get stream URL</string>
-  
+
   <string id="30300">Error</string>
   <string id="30301">Cannot parse channel list !</string>
   <string id="30302">Please install python module "pytz" or disable program guides from addon settings</string>
- 
+
 </strings>
