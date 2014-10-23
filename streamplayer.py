@@ -21,8 +21,6 @@ class streamplayer(xbmc.Player):
 
     super(streamplayer, self).play(url, listitem)
 
-    xbmc.executebuiltin( "Dialog.Close(busydialog)" )
-
     self.keep_allive()
 
   def onPlayBackStarted(self):
