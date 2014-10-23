@@ -1,5 +1,5 @@
 import xbmc, xbmcgui, xbmcplugin, xbmcaddon
-import sys, os, os.path, stat
+import sys, os, os.path
 import urllib, urllib2, socket, re
 import json, sqlite3
 

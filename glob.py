@@ -1,6 +1,6 @@
 import xbmc, xbmcgui, xbmcaddon
 import urllib, urllib2
-import os
+import os, stat
 
 addon = xbmcaddon.Addon('plugin.video.streams')
 
