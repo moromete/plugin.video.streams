@@ -5,10 +5,9 @@
        provider-name="Moromete">
   <requires>
     <import addon="xbmc.python" version="2.1.0"/>
+    <import addon="script.module.pytz" />
   </requires>
   <extension point="xbmc.python.pluginsource"
-             defaultresolution="720p"
-             defaultresolutionwide="720p"
              library="default.py">
     <provides>video</provides>
   </extension>
@@ -26,7 +25,7 @@
   <extension point="xbmc.addon.repository"
              name="Streams Repository">
     <info compressed="true">http://streams.magazinmixt.ro/repository/addons.xml</info>
-    <!--<checksum>http://streams.magazinmixt.ro/repository/addons.xml.md5</checksum>-->
+    <checksum>http://streams.magazinmixt.ro/repository/addons.xml.md5</checksum>
     <datadir zip="true">http://streams.magazinmixt.ro/repository</datadir>
   </extension>
 </addon>
