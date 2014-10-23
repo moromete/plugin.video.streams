@@ -3,11 +3,10 @@ import urllib, urllib2
 import os
 
 addon = xbmcaddon.Addon('plugin.video.streams')
-ADDON_VERSION = addon.getAddonInfo('version')
-ADDON_PATH= addon.getAddonInfo('path')
-DEBUG = addon.getSetting('debug')
 
 def addon_log(string):
+  DEBUG = addon.getSetting('debug')
+  ADDON_VERSION = addon.getAddonInfo('version')
   if DEBUG == 'true':
     xbmc.log("[plugin.video.streams-%s]: %s" %(ADDON_VERSION, string))
 

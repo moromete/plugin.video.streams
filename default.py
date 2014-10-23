@@ -1,22 +1,22 @@
 import xbmc, xbmcgui, xbmcplugin, xbmcaddon
-import sys, os, os.path, subprocess, stat
+import sys, os, os.path, stat
 import urllib, urllib2, socket, re
 import json, sqlite3
-from urlparse import urlparse
-from posixpath import basename, dirname
+
 import time
 from datetime import datetime, timedelta
 
-from glob import addon_log, addon, ADDON_PATH, ADDON_VERSION, Downloader
+from settings import SETTINGS
+from glob import addon_log, addon, Downloader
 
-DISABLE_SCHEDULE = addon.getSetting('disable_schedule')
-if DISABLE_SCHEDULE != 'true':
-  from schedule import grab_schedule, load_schedule, load_active_event
+if SETTINGS.DISABLE_SCHEDULE != 'true':
+  from schedule import grab_schedule, load_schedule
 
 from streamplayer import streamplayer
 from play_vk_com import grab_vk_stream
 from play_fastupload_ro import grab_fu_stream
 from play_ace import acestream
+from play_sop import sopcast
 
 try:
   try:
@@ -34,8 +34,6 @@ except:
     dlg.ok('ElementTree missing', 'Please install the elementree addon.',
            'http://tinyurl.com/xmbc-elementtree')
     sys.exit(0)
-
-#from BeautifulSoup import BeautifulStoneSoup, BeautifulSoup, BeautifulSOAP
 
 def get_params():
   param=[]
@@ -79,7 +77,7 @@ def addLink(name_formatted, name, url, protocol, schedule_ch_id, cat_name, cat_i
   ok = True
   contextMenuItems = []
 
-  if DISABLE_SCHEDULE != 'true':
+  if SETTINGS.DISABLE_SCHEDULE != 'true':
     u=sys.argv[0]+"?mode=3&name="+urllib.quote_plus(name.decode('utf8').encode('utf8'))
     if schedule_ch_id != "0":
       u+="&sch_ch_id="+urllib.quote_plus(schedule_ch_id)
@@ -96,18 +94,6 @@ def addLink(name_formatted, name, url, protocol, schedule_ch_id, cat_name, cat_i
 
   liz = xbmcgui.ListItem(name_formatted, iconImage="DefaultVideo.png", thumbnailImage=iconimage)
   liz.setInfo( type="Video", infoLabels={ "Title": name, "Plot": plot} )
-  #if url[0:6]=="sop://":
-    #u=sys.argv[0]+"?sop="+urllib.quote_plus(url)+"&mode=3&name="+urllib.quote_plus(name.decode('utf8').encode('utf8'))+"&iconimage="+urllib.quote_plus(iconimage)
-    #contextMenuItems.append(( 'Refresh', "XBMC.RunPlugin("+u+")", ))
-
-    #if CHAN_LIST == os.path.join(ADDON_PATH,"channel_guide.xml"):
-    #    u=sys.argv[0]+"?sop="+urllib.quote_plus(url)+"&mode=4&name="+urllib.quote_plus(name.decode('utf8').encode('utf8'))+"&iconimage="+urllib.quote_plus(iconimage)
-    #    contextMenuItems.append(( 'Remove channel', "XBMC.RunPlugin("+u+")", ))
-    #channel_guide_xml=ElementTree.parse(os.path.join(ADDON_PATH,"channel_guide.xml"))
-    #channel_guide_data = channel_guide_xml.find("./group/channel/.[@id='"+urlparse(url).path.strip("/")+"']")
-    #if channel_guide_data:
-    #    u=sys.argv[0]+"?sop="+urllib.quote_plus(url)+"&mode=5&name="+urllib.quote_plus(name.decode('utf8').encode('utf8'))+"&iconimage="+urllib.quote_plus(iconimage)
-    #    contextMenuItems.append(( 'Update EPG', "XBMC.RunPlugin("+u+")", ))
 
   u=sys.argv[0]+"?"+"url="+urllib.quote_plus(url)+"&mode="+str(mode)+\
                          "&name="+urllib.quote_plus(name.decode('utf8').encode('utf8'))+\
@@ -115,9 +101,6 @@ def addLink(name_formatted, name, url, protocol, schedule_ch_id, cat_name, cat_i
                          "&cat_id="+cat_id+"&protocol="+protocol
   if schedule_ch_id != "0":
     u+="&sch_ch_id="+urllib.quote_plus(schedule_ch_id)
-  #else:
-    #u=url
-    #liz.setProperty('IsPlayable', 'true')
 
   liz.addContextMenuItems(contextMenuItems)
 
@@ -125,7 +108,7 @@ def addLink(name_formatted, name, url, protocol, schedule_ch_id, cat_name, cat_i
   return ok
 
 def parse_ch_data():
-  with open(CHAN_LIST) as json_file:
+  with open(SETTINGS.CHAN_LIST) as json_file:
     data = json.loads(json_file.read())
     json_file.close()
 
@@ -146,9 +129,6 @@ def parse_ch_data():
     addon_log(data['date'])
     for group in data['groups']:
       addon_log(group['id'] + " " + group['name'])
-      #sql = "INSERT INTO categories \
-      #       VALUES ('%d', '%s')" % \
-      #       (int(group['id']), str(group['name']))
       db_cursor.execute("INSERT INTO categories \
                          VALUES (?, ?)",
                          (group['id'], group['name']))
@@ -178,15 +158,6 @@ def parse_ch_data():
         if 'video_codec' in stream_type:
           video_codec = stream_type['video_codec']
 
-        #sql = "INSERT INTO channels \
-        #       VALUES ('%d', '%d', '%s', '%s', '%s', '%d', \
-        #               '%s', '%f2', '%s','%s', \
-        #               '%s', '%s', '%s', \
-        #               '%d' )" % \
-        #       ( int(channel['id']), int(group['id']), str(channel['name']), str(channel['country']), str(channel['language']), int(channel['status']), \
-        #         str(video_resolution), float(video_aspect), str(audio_codec), str(video_codec), \
-        #         str(channel['address']), str(thumbnail), str(channel['protocol']), \
-        #         int(schedule_id) )
         db_cursor.execute( \
               "INSERT INTO channels \
                VALUES (?, ?, ?, ?, ?, ?, \
@@ -202,26 +173,20 @@ def parse_ch_data():
 
 def CAT_LIST(force=False):
   if force==False:
-    if not os.path.isfile(CHAN_LIST):
+    if not os.path.isfile(SETTINGS.CHAN_LIST):
       addon_log('channels first download')
-      Downloader(CHAN_LIST_URL, CHAN_LIST, addon.getLocalizedString(30053), addon.getLocalizedString(30054))  #Downloading Channel list
+      Downloader(SETTINGS.CHAN_LIST_URL, SETTINGS.CHAN_LIST, addon.getLocalizedString(30053), addon.getLocalizedString(30054))  #Downloading Channel list
       parse_ch_data()
     else:
       now_time = time.mktime(datetime.now().timetuple())
-      time_created = os.stat(CHAN_LIST)[8]  # get local play list modified date
-      if CHAN_LIST_EXPIRE>0 and now_time - time_created > CHAN_LIST_EXPIRE:
+      time_created = os.stat(SETTINGS.CHAN_LIST)[8]  # get local play list modified date
+      if SETTINGS.CHAN_LIST_EXPIRE>0 and now_time - time_created > SETTINGS.CHAN_LIST_EXPIRE:
         addon_log('channels update')
-        Downloader(CHAN_LIST_URL, CHAN_LIST, addon.getLocalizedString(30053), addon.getLocalizedString(30054)) #Downloading Channel list
+        Downloader(SETTINGS.CHAN_LIST_URL, SETTINGS.CHAN_LIST, addon.getLocalizedString(30053), addon.getLocalizedString(30054)) #Downloading Channel list
         parse_ch_data()
   else:
-    Downloader(CHAN_LIST_URL, CHAN_LIST, addon.getLocalizedString(30053), addon.getLocalizedString(30054)) #Downloading Channel list
+    Downloader(SETTINGS.CHAN_LIST_URL, SETTINGS.CHAN_LIST, addon.getLocalizedString(30053), addon.getLocalizedString(30054)) #Downloading Channel list
     parse_ch_data()
-
-  #try:
-  #  parse_ch_data()
-  #except Exception as inst:
-  #  addon_log(inst)
-  #  pass
 
   try:
     sql = "SELECT id, name \
@@ -235,7 +200,7 @@ def CAT_LIST(force=False):
 
   if len(rec)>0:
     for id, name in rec:
-      addDir(name, str(id), CHAN_LIST, 1)
+      addDir(name, str(id), SETTINGS.CHAN_LIST, 1)
 
   #xbmc.executebuiltin("Container.SetViewMode(500)")
   xbmc.executebuiltin("Container.SetViewMode(51)")
@@ -243,13 +208,6 @@ def CAT_LIST(force=False):
 def CHANNEL_LIST(name, cat_id, schedule=False):
   addon_log(name);
   try:
-    #sql = "SELECT id, name, country, language, status, \
-    #       video_resolution, video_aspect, audio_codec, video_codec, \
-    #       address, thumbnail, protocol, \
-    #       schedule_id \
-    #       FROM channels \
-    #       WHERE id_cat = %d" % \
-    #       (int(cat_id))
     db_cursor.execute( 'SELECT id, name, country, language, status, \
                         video_resolution, video_aspect, audio_codec, video_codec, \
                         address, thumbnail, protocol, \
@@ -287,7 +245,7 @@ def CHANNEL_LIST(name, cat_id, schedule=False):
         #addon_log(chan_thumb)
         chan_status = status
 
-        if (((SHOW_OFFLINE_CH=='true') and (int(chan_status)==1)) or (int(chan_status)!=1)): #if we show or not offline channels based on settings
+        if (((SETTINGS.SHOW_OFFLINE_CH=='true') and (int(chan_status)==1)) or (int(chan_status)!=1)): #if we show or not offline channels based on settings
           logo_name = chan_name.replace(' ', '').lower()
 
           chan_name_formatted ="[B][COLOR blue]"+chan_name+"[/COLOR][/B]"
@@ -303,7 +261,7 @@ def CHANNEL_LIST(name, cat_id, schedule=False):
             fileName=fileName.split("/")[-1]
             if fileName != "":
               #thumb_path=os.path.join(ADDON_PATH,"logos",fileName+fileExtension)
-              thumb_path=os.path.join(ADDON_PATH,"logos",logo_name+fileExtension)
+              thumb_path=os.path.join(SETTINGS.ADDON_PATH,"logos",logo_name+fileExtension)
 
             if not os.path.isfile(thumb_path):
               if fileName != "":
@@ -312,14 +270,14 @@ def CHANNEL_LIST(name, cat_id, schedule=False):
           #schedule
           if (schedule_id != 0) and \
              (schedule or (addon.getSetting('schedule_ch_list') == 'true')) \
-             and (DISABLE_SCHEDULE != 'true'):
+             and (SETTINGS.DISABLE_SCHEDULE != 'true'):
             if (schedule): #update all by context menu
               update_all = True
             elif(addon.getSetting('schedule_ch_list') == 'true'): #update all when we display channel list
               update_all = False
             grab_schedule(schedule_id, chan_name, update_all=update_all)
 
-          if (DISABLE_SCHEDULE != 'true') and (int(cat_id) < 200):
+          if (SETTINGS.DISABLE_SCHEDULE != 'true') and (int(cat_id) < 200):
             schedule_txt = load_schedule(chan_name)
             chan_name_formatted += "   " + schedule_txt
 
@@ -334,7 +292,7 @@ def STREAM(name, iconimage, url, protocol, sch_ch_id):
     except: pass
     return False
 
-  if (sch_ch_id != None) and (DISABLE_SCHEDULE != 'true'):
+  if (sch_ch_id != None) and (SETTINGS.DISABLE_SCHEDULE != 'true'):
     grab_schedule(sch_ch_id, name)
 
   #addon_log(name)
@@ -345,178 +303,52 @@ def STREAM(name, iconimage, url, protocol, sch_ch_id):
   listitem.setLabel(name)
   listitem.setInfo('video', {'Title': name})
 
-  #if url[0:6]=="sop://": #play sopcast stream
+  player = streamplayer(xbmc.PLAYER_CORE_AUTO, name=name, protocol=protocol)
+
+  #play sopcast stream
   if protocol == "sop":
-    try:
-      cmd = [SPSC, url, str(LOCAL_PORT), str(VIDEO_PORT), "> /dev/null &"]
-      if(ARM):
-        cmd = QEMU_SPSC + cmd
-      #addon_log(cmd)
-      spsc = subprocess.Popen(cmd, shell=False, bufsize=BUFER_SIZE, stdin=None, stdout=None, stderr=None)
+    sop = sopcast(player=player, url=url, listitem=listitem)
+    sop.start()
 
-      xbmc.sleep(int(addon.getSetting('wait_time')))
-
-      res=False
-      counter=50
-      #while counter > 0 and os.path.exists("/proc/"+str(spsc.pid)):
-      while counter > 0 and sop_pid_exists(spsc.pid):
-        xbmc.executebuiltin( "ActivateWindow(busydialog)" )
-        xbmc.sleep(400)
-        counter -= 1
-        try:
-          addon_log(LOCAL_URL);
-          urllib2.urlopen(LOCAL_URL)
-          counter=0
-          res=sop_sleep(200 , spsc.pid)
-          break
-        except:pass
-
-      addon_log(res)
-
-      if res:
-        player = streamplayer(xbmc.PLAYER_CORE_AUTO , spsc_pid=spsc.pid, name=name)
-        #addon.setSetting('player_status', 'play')
-        #player.callback = stop_spsc
-        #player.callback_args = [spsc_pid]
-        player.play(LOCAL_URL, listitem)
-
-        #keep_allive(player)
-
-        #watching sop process and restarting the player if it dies
-        #watch_sop_thread(spsc.pid, name, listitem)
-
-      #elif not os.path.exists("/proc/"+str(spsc.pid)):
-      elif not sop_pid_exists(spsc.pid):
-        try: xbmc.executebuiltin("Dialog.Close(all,true)")
-        except: pass
-        try:
-          urllib2.urlopen("http://www.google.com")
-          if NOTIFY_OFFLINE == "true": xbmc.executebuiltin("Notification(%s,%s,%i)" % (addon.getLocalizedString(30057), "",1))  #Channel is offline
-        except:
-          if NOTIFY_OFFLINE == "true": xbmc.executebuiltin("Notification(%s,%s,%i)" % (addon.getLocalizedString(30058), "",1)) #Network is offline
-      elif NOTIFY_OFFLINE == "true":
-        try: xbmc.executebuiltin("Dialog.Close(all,true)")
-        except: pass
-        xbmc.executebuiltin("Notification(%s,%s,%i)" % (addon.getLocalizedString(30059), "", 1)) #Channel initialization failed
-        try: stop_spsc(spsc.pid)
-        except: pass
-
-    except Exception as inst:
-      xbmcgui.Dialog().ok(addon.getLocalizedString(30060), str(type(inst)),str(inst),"")
-      addon_log(str(inst))
-      try:
-        stop_spsc()
-      except: pass
-      try: xbmc.executebuiltin("Dialog.Close(all,true)")
-      except: pass
-
+  #play acestream
   elif protocol=='acestream':
-    try: xbmc.executebuiltin("Dialog.Close(all,true)")
-    except: pass
-
-    player = streamplayer(xbmc.PLAYER_CORE_AUTO, name=name, protocol=protocol)
     ace = acestream(player=player, url=url, listitem=listitem)
     ace.engine_connect()
 
-  else: #play direct stream
+  #play direct stream
+  else:
     try:
-      player = streamplayer(xbmc.PLAYER_CORE_AUTO, name=name)
-      #addon.setSetting('player_status', 'play')
       player.play(url, listitem)
-      #keep_allive(player)
-
     except Exception as inst:
       xbmcgui.Dialog().ok(addon.getLocalizedString(30060), str(type(inst)),str(inst),"")
       try: xbmc.executebuiltin("Dialog.Close(all,true)")
       except: pass
 
-# this function will sleep only if the sop is running
-def sop_pid_exists(pid):
-  try:
-    os.kill(pid, 0)
-  except OSError:
-    return False
-  else:
-    return True
-
-def sop_sleep(time , spsc_pid):
-  counter=0
-  increment=200
-  #path="/proc/%s" % str(spsc_pid)
-
-  #addon_log('proc exists')
-  #addon_log(os.path.exists(path))
-  try:
-    #while counter < time and spsc_pid>0 and not xbmc.abortRequested and os.path.exists(path):
-    while counter < time and spsc_pid>0 and not xbmc.abortRequested and sop_pid_exists(spsc_pid):
-      counter += increment
-      xbmc.sleep(increment)
-  except Exception as inst:
-    addon_log(inst)
-    if DEBUG == 'true': xbmc.executebuiltin("Notification(%s,%s,%i)" % (str(type(inst)), str(inst), 5))
-    return True
-  if counter < time: return False
-  else: return True
 
 #watching sop process and restarting the player if it dies
-def watch_sop_thread(spsc_pid, name, listitem):
-  xbmc.sleep(100)
-  sop_sleep(4000 , spsc_pid)
-
-  #addon_log(spsc_pid)
-  #addon_log(name)
-  #addon_log(listitem)
-
-  #while os.path.exists("/proc/"+str(spsc_pid)) and not xbmc.abortRequested:
-  while sop_pid_exists(spsc_pid) and not xbmc.abortRequested:
-    addon_log("CHECK ONLINE")
-    addon_log(SPSC_STOPED)
-
-    # check if player stoped and restart it
-    if not xbmc.Player(xbmc.PLAYER_CORE_AUTO).isPlaying():
-      if not sop_sleep(1000 , spsc_pid): break
-      if not xbmc.Player(xbmc.PLAYER_CORE_AUTO).isPlaying():
-        player = streamplayer(xbmc.PLAYER_CORE_AUTO , spsc_pid=spsc_pid, name=name)
-        player.play(LOCAL_URL, listitem)
-        addon_log("RESTART PLAYER")
-
-      sop_sleep(2000 , spsc_pid)
-    sop_sleep(300 , spsc_pid)
-
-def stop_spsc(pid=None):
-  if(pid != None) :
-    addon_log('KILL PID = '+str(pid))
-    os.kill(pid, 9)
-  else :
-    addon_log('KILL ALL SOPCAST')
-    if(ARM) :
-      os.system("killall -9 "+QEMU)
-    else :
-      os.system("killall -9 "+SPSC_BINARY)
-
-#class EPG(xbmcgui.WindowXMLDialog):
-#  def __init__( self , *args, **kwargs):
-#    xbmcgui.WindowXMLDialog.__init__( self , *args, **kwargs)
-    #self.spsc_pid=kwargs.get('spsc_pid')
-
+#def watch_sop_thread(spsc_pid, name, listitem):
+#  xbmc.sleep(100)
+#  sop_sleep(4000 , spsc_pid)
 #
-#  def onInit(self):
-#    pass
+#  #addon_log(spsc_pid)
+#  #addon_log(name)
+#  #addon_log(listitem)
 #
-#  def onControl(self,control):
-#    pass
+#  #while os.path.exists("/proc/"+str(spsc_pid)) and not xbmc.abortRequested:
+#  while sop_pid_exists(spsc_pid) and not xbmc.abortRequested:
+#    addon_log("CHECK ONLINE")
+#    addon_log(SPSC_STOPED)
 #
-#  def onClick(self,controlId):
-#	  pass
+#    # check if player stoped and restart it
+#    if not xbmc.Player(xbmc.PLAYER_CORE_AUTO).isPlaying():
+#      if not sop_sleep(1000 , spsc_pid): break
+#      if not xbmc.Player(xbmc.PLAYER_CORE_AUTO).isPlaying():
+#        player = streamplayer(xbmc.PLAYER_CORE_AUTO , spsc_pid=spsc_pid, name=name)
+#        player.play(LOCAL_URL, listitem)
+#        addon_log("RESTART PLAYER")
 #
-#  def onFocus( self, controlId ):
-#	  pass
-
-def is_exe(fpath):
-  if os.path.isfile(fpath):
-    if (os.access(fpath, os.X_OK) != True) :
-      st = os.stat(fpath)
-      os.chmod(fpath, st.st_mode | stat.S_IEXEC)
+#      sop_sleep(2000 , spsc_pid)
+#    sop_sleep(300 , spsc_pid)
 
 #######################################################################################################################
 #######################################################################################################################
@@ -524,57 +356,38 @@ def is_exe(fpath):
 
 addon_log('------------- START -------------')
 
-LANGUAGE = 'en'
-CHAN_LIST_URL = addon.getSetting('chan_list_url')
-parse_object = urlparse(CHAN_LIST_URL)
-f_name = basename(parse_object[2]); #file name of the channel list
-CHAN_LIST = os.path.join(ADDON_PATH, f_name) #full path of the channel list
-CHAN_LIST_EXPIRE =  int(addon.getSetting('chan_list_expire'))*60*60
-CHANNELS_DB = os.path.join(ADDON_PATH,'channels.sqlite')
-db_connection=sqlite3.connect(CHANNELS_DB)
+db_connection=sqlite3.connect(SETTINGS.CHANNELS_DB)
 db_cursor=db_connection.cursor()
 
-#DISABLE_SCHEDULE = addon.getSetting('disable_schedule')
-SHOW_OFFLINE_CH = addon.getSetting('show_offline_ch')
+addon_log(SETTINGS.CHAN_LIST_URL)
+addon_log(SETTINGS.CHAN_LIST)
 
-NOTIFY_OFFLINE = "true"
-
-addon_log(CHAN_LIST_URL)
-addon_log(CHAN_LIST)
-
+#read params
 params=get_params()
-mode=None
-
 try:
   mode=int(params["mode"])
 except:
-  pass
-
+  mode=None
 try:
   name=urllib.unquote_plus(params["name"].decode('utf8').encode('utf8'))
 except:
   name=None
-
 try:
   cat_id=urllib.unquote_plus(params["cat_id"].decode('utf8').encode('utf8'))
 except:
   cat_id=None
-
 try:
   iconimage=urllib.unquote_plus(params["iconimage"])
 except:
   iconimage=None
-
 try:
   url=urllib.unquote_plus(params["url"])
 except:
   url=None
-
 try:
   sch_ch_id=urllib.unquote_plus(params["sch_ch_id"])
 except:
   sch_ch_id=None
-
 try:
   protocol=urllib.unquote_plus(params["protocol"])
 except:
@@ -587,7 +400,7 @@ elif mode==1:  #list channels
   CHANNEL_LIST(name, cat_id)
 elif mode==2:  #play stream
   if xbmc.Player(xbmc.PLAYER_CORE_AUTO).isPlaying():
-    stop_spsc()
+    #stop_spsc()
 
     xbmc.Player(xbmc.PLAYER_CORE_AUTO).stop()
     try: xbmc.executebuiltin("Dialog.Close(all,true)")
@@ -601,7 +414,7 @@ elif mode==2:  #play stream
       url = grab_fu_stream(name, url)
     STREAM(name, iconimage, url, protocol, sch_ch_id)
   else:
-    stop_spsc()
+    #stop_spsc()
     xbmc.executebuiltin( "ActivateWindow(busydialog)" )
     if cat_id == "200" :
       url = grab_vk_stream(name, url)
@@ -625,5 +438,7 @@ elif mode==5:  #refresh all schedules
 #  del mydisplay
 
 db_connection.close()
+
+addon_log('------------- END -------------')
 
 xbmcplugin.endOfDirectory(int(sys.argv[1]))

@@ -6,15 +6,16 @@ import hashlib
 import random
 import json
 import urllib2
+import time
 
 import glob
-from glob import addon_log, ADDON_PATH, addon
+from glob import addon_log, addon
+from settings import SETTINGS
 
 class acestream():
   buffer_size = 1024
-
-  #PRODUCT_KEY='kjYX790gTytRaXV04IvC-xZH3A18sj5b1Tf3I-J5XVS1xsj-j0797KwxxLpBl26HPvWMm' #free
-  PRODUCT_KEY='n51LvQoTlJzNGaFxseRK-uvnvX-sD4Vm5Axwmc4UcoD-jruxmKsuJaH0eVgE' #aceproxy
+  start_time = None
+  timeout = 30
 
   def __init__( self , *args, **kwargs):
     self.player=kwargs.get('player')
@@ -23,9 +24,6 @@ class acestream():
 
     self.pid = url.replace('acestream://', '')
 
-    self.ace_host = addon.getSetting('ace_host')
-    self.ace_port = int(addon.getSetting('ace_port'))
-
     addon_log('INIT ACESTREAM')
 
   def read_lines(self, sock, recv_buffer=4096, delim='\n'):
@@ -33,6 +31,7 @@ class acestream():
     data = True
     while data:
       data = sock.recv(recv_buffer)
+
       buffer += data
 
       while buffer.find(delim) != -1:
@@ -41,11 +40,18 @@ class acestream():
     return
 
   def engine_connect(self):
-    self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    addon_log(self.ace_host)
-    addon_log(self.ace_port)
-    self.sock.connect((self.ace_host, self.ace_port))
-    self.sock.send("HELLOBG version=3"+"\r\n")
+    try:
+      self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+      self.sock.connect((SETTINGS.ACE_HOST, SETTINGS.ACE_PORT))
+    except Exception as inst:
+      addon_log(inst)
+      try: xbmc.executebuiltin("Dialog.Close(all,true)")
+      except: pass
+      DEBUG = addon.getSetting('debug')
+      if DEBUG == 'true': xbmc.executebuiltin("Notification(%s,%s,%i)" % (str(type(inst)), str(inst), 5))
+      return False
+
+    self.send("HELLOBG version=3")
     self.ace_read()
 
   def auth(self, data):
@@ -53,24 +59,39 @@ class acestream():
     m = p.search(data)
     REQUEST_KEY=m.group(1)
 
-    signature = hashlib.sha1(REQUEST_KEY + self.PRODUCT_KEY).hexdigest()
-    response_key = self.PRODUCT_KEY.split ("-") [0] + "-" + signature
+    signature = hashlib.sha1(REQUEST_KEY + SETTINGS.PRODUCT_KEY).hexdigest()
+    response_key = SETTINGS.PRODUCT_KEY.split ("-") [0] + "-" + signature
 
-    self.sock.send("READY key="+response_key+"\r\n")
+    self.send("READY key="+response_key)
 
   def ch_open(self):
     request_id = random.randint(1, 100)
-    self.sock.send('LOADASYNC ' + str(request_id) + ' PID ' + self.pid + "\r\n")
+    self.send('LOADASYNC ' + str(request_id) + ' PID ' + self.pid)
     return request_id
 
   def ch_start(self):
-    self.sock.send('START PID ' + self.pid + " 0" + "\r\n")
+    self.send('START PID ' + self.pid + " 0")
+    self.start_time = time.time()
 
   def shutdown(self):
-    self.sock.send("SHUTDOWN"+"\r\n")
+    #addon_log("SHUTDOWN")
+    self.send("SHUTDOWN")
+    try: xbmc.executebuiltin("Dialog.Close(all,true)")
+    except: pass
+
+  def send(self, cmd):
+    try:
+      self.sock.send(cmd + "\r\n")
+    except Exception as inst:
+      addon_log(inst)
 
   def ace_read(self):
     for line in self.read_lines(self.sock):
+
+      if ((self.start_time!=None) and ((time.time() - self.start_time) > self.timeout)):
+        self.shutdown()
+        xbmc.executebuiltin("Notification(%s,%s,%i)" % (addon.getLocalizedString(30057), "", 10000))
+
       addon_log(line)
       if line.startswith("HELLOTS"):
         self.auth(line)
@@ -93,6 +114,8 @@ class acestream():
           self.ch_start()
 
       elif line.startswith("START"):
+        self.start_time = None
+
         try:
           player_url = line.split()[1]
           addon_log (player_url)
@@ -112,9 +135,18 @@ class acestream():
         #self.sock.send("STOP"+"\r\n")
         #self.sock.send("SHUTDOWN"+"\r\n")
 
-      #elif line.startswith("SHUTDOWN"):
-      #  self.sock.close()
-      #  break
+      elif line.startswith("SHUTDOWN"):
+        self.sock.close()
+        break
+
+      #INFO 1;Cannot find active peers
+      elif line.startswith("INFO"):
+        tmp = line.split(';')
+        info_status = tmp[0].split()[1]
+        if(info_status == '1'): #INFO 1;Cannot find active peers
+          info_msg = tmp[1]
+          self.shutdown()
+          xbmc.executebuiltin("Notification(%s,%s,%i)" % (info_msg, "", 10000))
 
       elif line.startswith("EVENT"):
         #print line

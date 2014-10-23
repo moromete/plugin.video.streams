@@ -1,17 +1,25 @@
+v 0.2.0 (xx.10.2014)
+  1. Added interface to acestream engine. Engine must be started before on the host defined in Engine settings section
+
 v 0.1.7 (26.08.2014)
-  1. fixed url detecion for fastupload.ro used to play streams from 990.ro
+  1. fixed url detection for fastupload.ro used to play streams from 990.ro
+
 v 0.1.6 (08.05.2014)
   1. upgraded minimum version of xbmc.python from version="2.0" to version="2.1.0" to make it compatible with xbmc 13.0 Gotham
+
 v 0.1.5 (22.04.2014)
   1. fixed play from filmeonline.org (vk.com)
+
 v 0.1.3 (20.02.2014)
   1. Treat pytz error if that module is not available.
      Do not load "pytz" module if schedule function is disabled ("Disable program guide" = Checked)
   2. added binaries for sopcast in plugin files so it does not depend if is installed on host system or not
   3. add video codec info to channel list
+
 v 0.1.2 (05.02.2014)
   1. Fixed default path for channel list to "http://streams.magazinmixt.ro/ro/streams.json"
   2. If download of schedule fail the script will not crash
+
 v 0.1.1 (13.01.2014)
   1. Improved load speed of channel list (moved from xml to json and sqlite)
   2. Added country filter possibility for channel list
