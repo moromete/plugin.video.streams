@@ -16,7 +16,7 @@ class sopcast():
     url=kwargs.get('url')
     self.cmd = [SETTINGS.SPSC, url, str(SETTINGS.LOCAL_PORT), str(SETTINGS.VIDEO_PORT), "> /dev/null &"]
     if(SETTINGS.ARM):
-      self.cmd = SETTINGS.QEMU_SPSC + cmd
+      self.cmd = SETTINGS.QEMU_SPSC + self.cmd
 
   def start( self ):
     try:
