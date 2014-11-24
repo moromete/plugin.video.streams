@@ -6,6 +6,7 @@ import hashlib
 import random
 import json
 import urllib2
+import urllib
 import time
 
 import glob
@@ -109,17 +110,22 @@ class acestream():
         if response.get('status') == 100:
           addon_log("LOADASYNC returned error with message: %s" % response.get('message'))
         else:
-          filename = urllib2.unquote(response.get('files')[0][0])
-          addon_log(filename)
+          #self.filename = urllib2.unquote(response.get('files')[0][0])
+          self.filename = urllib.unquote(response.get('files')[0][0].encode('ascii')).decode('utf-8')
+          addon_log(self.filename)
           self.ch_start()
 
       elif line.startswith("START"):
         self.start_time = None
 
+        try: xbmc.executebuiltin("Dialog.Close(all,true)")
+        except: pass
+
         try:
           player_url = line.split()[1]
           addon_log (player_url)
           self.player.callback = self.shutdown
+          self.listitem.setInfo('video', {'Title': self.filename})
           self.player.play(player_url, self.listitem)
         except IndexError as e:
           player_url = None

@@ -96,8 +96,8 @@ def addLink(name_formatted, name, url, protocol, schedule_ch_id, cat_name, cat_i
   liz.setInfo( type="Video", infoLabels={ "Title": name, "Plot": plot} )
 
   u=sys.argv[0]+"?"+"url="+urllib.quote_plus(url)+"&mode="+str(mode)+\
-                         "&name="+urllib.quote_plus(name.decode('utf8').encode('utf8'))+\
-                         "&iconimage="+urllib.quote_plus(iconimage.decode('utf8').encode('utf8'))+\
+                         "&name="+urllib.quote_plus(name.encode('utf8'))+\
+                         "&iconimage="+urllib.quote_plus(iconimage.encode('utf8'))+\
                          "&cat_id="+cat_id+"&protocol="+protocol
   if schedule_ch_id != "0":
     u+="&sch_ch_id="+urllib.quote_plus(schedule_ch_id)
@@ -134,7 +134,8 @@ def parse_ch_data():
                          (group['id'], group['name']))
 
       for channel in group['channels']:
-        addon_log(str(channel['id'])+" "+str(channel['name'].decode('utf8').encode('utf8'))+" "+ str(channel['language'])+" "+str(channel['status']))
+        #addon_log(str(channel['id'])+" "+unicode(channel['name'])+" "+ str(channel['language'])+" "+str(channel['status']))
+        addon_log(channel['name'].encode('utf8'))
 
         schedule_id = 0
         thumbnail = ""
@@ -300,7 +301,7 @@ def STREAM(name, iconimage, url, protocol, sch_ch_id):
 
   if not iconimage or iconimage == "": iconimage="DefaultVideo.png"
   listitem = xbmcgui.ListItem(name, iconImage="DefaultVideo.png", thumbnailImage=iconimage)
-  listitem.setLabel(name)
+  #listitem.setLabel(name)
   listitem.setInfo('video', {'Title': name})
 
   player = streamplayer(xbmc.PLAYER_CORE_AUTO, name=name, protocol=protocol)
