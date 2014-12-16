@@ -1,5 +1,6 @@
-v 0.2.2 (16.12.2014)
+v 0.2.3 (16.12.2014)
   1. fix some utf8 encoding problems
+  2. fix vk play for filmeonlinenoi
 
 v 0.2.0 (xx.10.2014)
   1. Added interface to acestream engine. Engine must be started before on the host defined in Engine settings section
