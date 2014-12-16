@@ -128,7 +128,7 @@ def parse_ch_data():
 
     addon_log(data['date'])
     for group in data['groups']:
-      addon_log(group['id'] + " " + group['name'])
+      addon_log(str(group['id']) + " " + group['name'])
       db_cursor.execute("INSERT INTO categories \
                          VALUES (?, ?)",
                          (group['id'], group['name']))
