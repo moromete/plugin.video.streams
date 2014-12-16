@@ -17,9 +17,10 @@ def Downloader(url,dest,description,heading):
   dp = xbmcgui.DialogProgress()
   dp.create(heading,description,url)
   dp.update(0)
+
   urllib.urlretrieve(url,dest,lambda nb, bs, fs, url=url: _pbhook(nb,bs,fs,dp))
 
-def _pbhook(numblocks, blocksize, filesize,dp=None):
+def _pbhook(numblocks, blocksize, filesize, dp=None):
   try:
     percent = int((int(numblocks)*int(blocksize)*100)/int(filesize))
     dp.update(percent)
