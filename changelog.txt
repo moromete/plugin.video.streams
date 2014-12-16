@@ -1,3 +1,6 @@
+v 0.2.1 (16.12.2014)
+  1. fix some utf8 encoding problems
+
 v 0.2.0 (xx.10.2014)
   1. Added interface to acestream engine. Engine must be started before on the host defined in Engine settings section
 
