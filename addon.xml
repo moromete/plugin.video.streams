@@ -21,10 +21,4 @@
     </description>
     <platform>all</platform>
   </extension>
-  <extension point="xbmc.addon.repository"
-             name="Streams Repository">
-    <info compressed="true">http://streams.magazinmixt.ro/repository/addons.xml</info>
-    <checksum>http://streams.magazinmixt.ro/repository/addons.xml.md5</checksum>
-    <datadir zip="true">http://streams.magazinmixt.ro/repository</datadir>
-  </extension>
 </addon>
