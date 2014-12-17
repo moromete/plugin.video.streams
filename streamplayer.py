@@ -1,4 +1,6 @@
 import xbmc, xbmcgui
+import urllib2
+import json
 
 #import glob
 from glob import addon_log, addon
@@ -13,6 +15,7 @@ class streamplayer(xbmc.Player):
   def __init__( self , *args, **kwargs):
     self.name=kwargs.get('name')
     self.protocol=kwargs.get('protocol')
+    self.ch_id=kwargs.get('ch_id')
     self.callback = None
     addon_log('INIT PLAYER')
 
@@ -33,6 +36,9 @@ class streamplayer(xbmc.Player):
     #  try: stop_spsc(self.spsc_pid)
     #  except: pass
     xbmc.executebuiltin( "Dialog.Close(busydialog)" )
+
+    #online notif
+    self.markOnline()
 
     if SETTINGS.DISABLE_SCHEDULE!='true':
       #display schedule active event
@@ -70,4 +76,23 @@ class streamplayer(xbmc.Player):
       xbmc.sleep(500)
 
     try: xbmc.executebuiltin("Dialog.Close(all,true)")
+    except: pass
+
+  def markOnline(self):
+    try:
+      url = "http://streams/channelstatus"
+      channelData = { "idChannel": self.ch_id,
+                      "status":    1,
+                      "res":       xbmc.getInfoLabel('VideoPlayer.VideoResolution'),
+                      "aspect":    xbmc.getInfoLabel('VideoPlayer.VideoAspect'),
+                      "vCodec":    xbmc.getInfoLabel('VideoPlayer.VideoCodec'),
+                      "aCodec":    xbmc.getInfoLabel('VideoPlayer.AudioCodec')
+                    }
+      addon_log(json.dumps(channelData))
+      opener = urllib2.build_opener(urllib2.HTTPHandler)
+      request = urllib2.Request(url, data=json.dumps(channelData))
+      request.add_header('Content-Type', 'application/json')
+      request.get_method = lambda: 'PUT'
+      response = opener.open(request)
+      addon_log(response.read())
     except: pass

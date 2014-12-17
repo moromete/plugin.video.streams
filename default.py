@@ -73,7 +73,7 @@ def addDir(name, cat_id, url, mode):
   ok = xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=u,listitem=liz,isFolder=True)
   return ok
 
-def addLink(name_formatted, name, url, protocol, schedule_ch_id, cat_name, cat_id, mode, iconimage, plot, totalitems):
+def addLink(ch_id, name_formatted, name, url, protocol, schedule_ch_id, cat_name, cat_id, mode, iconimage, plot, totalitems):
   ok = True
   contextMenuItems = []
 
@@ -98,7 +98,8 @@ def addLink(name_formatted, name, url, protocol, schedule_ch_id, cat_name, cat_i
   u=sys.argv[0]+"?"+"url="+urllib.quote_plus(url)+"&mode="+str(mode)+\
                          "&name="+urllib.quote_plus(name.encode('utf8'))+\
                          "&iconimage="+urllib.quote_plus(iconimage.encode('utf8'))+\
-                         "&cat_id="+cat_id+"&protocol="+protocol
+                         "&cat_id="+cat_id+"&protocol="+protocol+\
+                         "&ch_id="+str(ch_id)
   if schedule_ch_id != "0":
     u+="&sch_ch_id="+urllib.quote_plus(schedule_ch_id)
 
@@ -282,12 +283,12 @@ def CHANNEL_LIST(name, cat_id, schedule=False):
             schedule_txt = load_schedule(chan_name)
             chan_name_formatted += "   " + schedule_txt
 
-          addLink(chan_name_formatted, chan_name, chan_url, protocol, str(schedule_id),
+          addLink(id, chan_name_formatted, chan_name, chan_url, protocol, str(schedule_id),
                   name, cat_id, 2, thumb_path, "", len(rec))
 
   xbmc.executebuiltin("Container.SetViewMode(51)")
 
-def STREAM(name, iconimage, url, protocol, sch_ch_id):
+def STREAM(name, iconimage, url, protocol, sch_ch_id, ch_id):
   if(url == None):
     try: xbmc.executebuiltin("Dialog.Close(all,true)")
     except: pass
@@ -304,7 +305,7 @@ def STREAM(name, iconimage, url, protocol, sch_ch_id):
   #listitem.setLabel(name)
   listitem.setInfo('video', {'Title': name})
 
-  player = streamplayer(xbmc.PLAYER_CORE_AUTO, name=name, protocol=protocol)
+  player = streamplayer(xbmc.PLAYER_CORE_AUTO, name=name, protocol=protocol, ch_id=ch_id)
 
   #play sopcast stream
   if protocol == "sop":
@@ -393,6 +394,10 @@ try:
   protocol=urllib.unquote_plus(params["protocol"])
 except:
   protocol=None
+try:
+  ch_id=urllib.unquote_plus(params["ch_id"])
+except:
+  ch_id=None
 
 addon_log(mode)
 if mode==None: #list categories
@@ -413,7 +418,7 @@ elif mode==2:  #play stream
       url = grab_vk_stream(name, url)
     if cat_id == "201" or cat_id == "202" :
       url = grab_fu_stream(name, url)
-    STREAM(name, iconimage, url, protocol, sch_ch_id)
+    STREAM(name, iconimage, url, protocol, sch_ch_id, ch_id)
   else:
     #stop_spsc()
     xbmc.executebuiltin( "ActivateWindow(busydialog)" )
@@ -421,7 +426,7 @@ elif mode==2:  #play stream
       url = grab_vk_stream(name, url)
     if cat_id == "201" or cat_id == "202" :
       url = grab_fu_stream(name, url)
-    STREAM(name, iconimage, url, protocol, sch_ch_id)
+    STREAM(name, iconimage, url, protocol, sch_ch_id, ch_id)
 elif mode==3:  #refresh schedule
   if sch_ch_id != None:
     grab_schedule(sch_ch_id, name, force=True)
