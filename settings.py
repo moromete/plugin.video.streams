@@ -34,7 +34,8 @@ class SETTINGS(object):
     ARM = True
 
   if ARM == False :
-    SPSC = os.path.join(ADDON_PATH, 'bin/linux_i386/sopcast', SPSC_BINARY)
+    SPSC = os.path.join(ADDON_PATH, 'bin/linux_x86/sopcast', SPSC_BINARY)
+    SPSC_LIB = os.path.join(ADDON_PATH, 'bin/linux_x86/sopcast')
 
     #make executables
     is_exe(SPSC)
@@ -67,4 +68,3 @@ class SETTINGS(object):
   ACE_HOST = addon.getSetting('ace_host')
   ACE_PORT = int(addon.getSetting('ace_port'))
   ##########################################################
-

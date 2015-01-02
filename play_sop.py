@@ -20,7 +20,13 @@ class sopcast():
 
   def start( self ):
     try:
-      spsc = subprocess.Popen(self.cmd, shell=False, bufsize=SETTINGS.BUFER_SIZE, stdin=None, stdout=None, stderr=None)
+      if(SETTINGS.ARM):
+        spsc = subprocess.Popen(self.cmd, shell=False, bufsize=SETTINGS.BUFER_SIZE, stdin=None, stdout=None, stderr=None)
+      else:
+        env = os.environ
+        env['LD_LIBRARY_PATH'] = SETTINGS.SPSC_LIB
+        spsc = subprocess.Popen(self.cmd, shell=False, bufsize=SETTINGS.BUFER_SIZE, stdin=None, stdout=None, stderr=None, env=env)
+
       self.spsc_pid = spsc.pid
 
       xbmc.sleep(int(addon.getSetting('wait_time')))
