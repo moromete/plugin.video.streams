@@ -1,5 +1,6 @@
-v 0.2.4 (02.01.2015)
+v 0.2.4 (04.01.2015)
   1. call sopcast binary from plugin for linux x86
+  2. change pytz dependecy from python module to "script.module.pytz" addon
 
 v 0.2.3 (16.12.2014)
   1. fix some utf8 encoding problems
