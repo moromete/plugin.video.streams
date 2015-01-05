@@ -1,3 +1,6 @@
+v 0.2.5 (05.01.2015)
+  1. fix play from fastupload (990.ro)
+
 v 0.2.4 (04.01.2015)
   1. call sopcast binary from plugin for linux x86
   2. change pytz dependecy from python module to "script.module.pytz" addon
