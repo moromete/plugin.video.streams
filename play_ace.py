@@ -12,6 +12,7 @@ import time
 import glob
 from glob import addon_log, addon
 from settings import SETTINGS
+from mark_stream import mark_stream
 
 class acestream():
   buffer_size = 1024
@@ -22,6 +23,8 @@ class acestream():
     self.player=kwargs.get('player')
     url=kwargs.get('url')
     self.listitem=kwargs.get('listitem')
+
+    self.player_started = None
 
     self.pid = url.replace('acestream://', '')
 
@@ -127,6 +130,7 @@ class acestream():
           self.player.callback = self.shutdown
           self.listitem.setInfo('video', {'Title': self.filename})
           self.player.play(player_url, self.listitem)
+          self.player_started = True
         except IndexError as e:
           player_url = None
 
@@ -143,6 +147,13 @@ class acestream():
 
       elif line.startswith("SHUTDOWN"):
         self.sock.close()
+
+        #offline notif
+        #if player was not started 
+        if(self.player_started != True):
+          mark = mark_stream(ch_id=self.player.ch_id)
+          mark.mark_offline()
+
         break
 
       #INFO 1;Cannot find active peers
