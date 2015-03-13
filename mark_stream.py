@@ -10,8 +10,10 @@ class mark_stream():
     self.ch_id=kwargs.get('ch_id')
     #self.url = "http://streams/channelstatus"
     #self.url = "http://streams.magazinmixt.ro/channelstatus"
-    o = urlparse(SETTINGS.CHAN_LIST)
+    #addon_log(SETTINGS.CHAN_LIST_URL)
+    o = urlparse(SETTINGS.CHAN_LIST_URL)
     self.url = o.scheme+'://'+o.netloc+"/channelstatus"
+    #addon_log(self.url)
 
   def mark_online(self):
     channelData = { "idChannel": self.ch_id,
