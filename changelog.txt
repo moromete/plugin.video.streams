@@ -1,3 +1,7 @@
+v 0.3.0 (13.03.2015)
+  1. new online/offline detection system
+  2. fix some utf8 encoding problems (logo name)
+
 v 0.2.5 (05.01.2015)
   1. fix play from fastupload (990.ro)
 

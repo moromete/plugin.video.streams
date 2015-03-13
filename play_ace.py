@@ -149,7 +149,9 @@ class acestream():
         self.sock.close()
 
         #offline notif
-        #if player was not started 
+        #if player was not started
+        #addon_log('player_started=');
+        #addon_log(self.player_started);
         if(self.player_started != True):
           mark = mark_stream(ch_id=self.player.ch_id)
           mark.mark_offline()

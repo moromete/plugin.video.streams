@@ -249,6 +249,7 @@ def CHANNEL_LIST(name, cat_id, schedule=False):
 
         if (((SETTINGS.SHOW_OFFLINE_CH=='true') and (int(chan_status)==1)) or (int(chan_status)!=1)): #if we show or not offline channels based on settings
           logo_name = chan_name.replace(' ', '').lower()
+          logo_name = logo_name.encode('utf8')
 
           chan_name_formatted ="[B][COLOR blue]"+chan_name+"[/COLOR][/B]"
           chan_name_formatted += " ("+protocol_color

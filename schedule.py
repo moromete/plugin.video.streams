@@ -18,8 +18,8 @@ import sys
 import sqlite3
 #import random
 
-reload(sys)
-sys.setdefaultencoding('utf-8')
+#reload(sys)
+#sys.setdefaultencoding('utf-8')
 
 def grab_schedule(id_channel_port, name, force=False, update_all=False):
   addon_log('grab schedule')

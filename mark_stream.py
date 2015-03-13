@@ -6,7 +6,8 @@ from glob import addon_log
 class mark_stream():
   def __init__( self , *args, **kwargs):
     self.ch_id=kwargs.get('ch_id')
-    self.url = "http://streams/channelstatus"
+    #self.url = "http://streams/channelstatus"
+    self.url = "http://streams.magazinmixt.ro/channelstatus"
 
   def mark_online(self):
     channelData = { "idChannel": self.ch_id,
