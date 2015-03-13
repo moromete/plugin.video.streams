@@ -2,12 +2,16 @@ import xbmc, xbmcgui
 import urllib2
 import json
 from glob import addon_log
+from settings import SETTINGS
+from urlparse import urlparse
 
 class mark_stream():
   def __init__( self , *args, **kwargs):
     self.ch_id=kwargs.get('ch_id')
     #self.url = "http://streams/channelstatus"
-    self.url = "http://streams.magazinmixt.ro/channelstatus"
+    #self.url = "http://streams.magazinmixt.ro/channelstatus"
+    o = urlparse(SETTINGS.CHAN_LIST)
+    self.url = o.scheme+'://'+o.netloc+"/channelstatus"
 
   def mark_online(self):
     channelData = { "idChannel": self.ch_id,

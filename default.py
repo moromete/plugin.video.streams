@@ -55,6 +55,7 @@ def get_params():
   return param
 
 def addDir(name, cat_id, url, mode):
+  name = name.encode('utf8')
   contextMenuItems = []
 
   plugin=sys.argv[0]
@@ -63,7 +64,7 @@ def addDir(name, cat_id, url, mode):
   contextMenuItems.append(( 'Refresh Channel List', "XBMC.RunPlugin("+u+")", ))
 
   u = plugin+"?"+"mode="+str(mode) + \
-      "&name="+urllib.quote_plus(name.decode('utf8').encode('utf8')) + \
+      "&name="+urllib.quote_plus(name) + \
       "&cat_id="+cat_id + "&url="+urllib.quote_plus(url)
   ok = True
 
@@ -74,16 +75,18 @@ def addDir(name, cat_id, url, mode):
   return ok
 
 def addLink(ch_id, name_formatted, name, url, protocol, schedule_ch_id, cat_name, cat_id, mode, iconimage, plot, totalitems):
+  name = name.encode('utf8')
+  cat_name = cat_name.encode('utf8')
   ok = True
   contextMenuItems = []
 
   if SETTINGS.DISABLE_SCHEDULE != 'true':
-    u=sys.argv[0]+"?mode=3&name="+urllib.quote_plus(name.decode('utf8').encode('utf8'))
+    u=sys.argv[0]+"?mode=3&name="+urllib.quote_plus(name)
     if schedule_ch_id != "0":
       u+="&sch_ch_id="+urllib.quote_plus(schedule_ch_id)
     contextMenuItems.append(( addon.getLocalizedString(30050), "XBMC.RunPlugin("+u+")", )) #Refresh Schedule
 
-    u=sys.argv[0]+"?mode=5&name="+urllib.quote_plus(cat_name.decode('utf8').encode('utf8'))+"&cat_id="+cat_id
+    u=sys.argv[0]+"?mode=5&name="+urllib.quote_plus(cat_name)+"&cat_id="+cat_id
     contextMenuItems.append(( addon.getLocalizedString(30051), "XBMC.RunPlugin("+u+")", )) #Refresh All Schedules
 
     #u=sys.argv[0]+"?mode=6"
@@ -96,8 +99,8 @@ def addLink(ch_id, name_formatted, name, url, protocol, schedule_ch_id, cat_name
   liz.setInfo( type="Video", infoLabels={ "Title": name, "Plot": plot} )
 
   u=sys.argv[0]+"?"+"url="+urllib.quote_plus(url)+"&mode="+str(mode)+\
-                         "&name="+urllib.quote_plus(name.encode('utf8'))+\
-                         "&iconimage="+urllib.quote_plus(iconimage.encode('utf8'))+\
+                         "&name="+urllib.quote_plus(name)+\
+                         "&iconimage="+urllib.quote_plus(iconimage)+\
                          "&cat_id="+cat_id+"&protocol="+protocol+\
                          "&ch_id="+str(ch_id)
   if schedule_ch_id != "0":
@@ -264,6 +267,7 @@ def CHANNEL_LIST(name, cat_id, schedule=False):
             fileName=fileName.split("/")[-1]
             if fileName != "":
               #thumb_path=os.path.join(ADDON_PATH,"logos",fileName+fileExtension)
+              fileExtension = fileExtension.encode('utf8')
               thumb_path=os.path.join(SETTINGS.ADDON_PATH,"logos",logo_name+fileExtension)
 
             if not os.path.isfile(thumb_path):
