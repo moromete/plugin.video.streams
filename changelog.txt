@@ -1,3 +1,6 @@
+v 0.3.2 
+  1. improve detection if sopcast process is running and close zombie processes
+
 v 0.3.1 (16.03.2015)
   1. fix the marking offline of a sopcast channel
   
