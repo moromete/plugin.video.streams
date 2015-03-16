@@ -7,6 +7,7 @@ import subprocess
 import glob
 from glob import addon_log, addon, is_exe
 from settings import SETTINGS
+from mark_stream import mark_stream
 
 class sopcast():
   def __init__( self , *args, **kwargs):
@@ -48,6 +49,7 @@ class sopcast():
           addon_log(inst)
 
       addon_log(res)
+      offline = None
       if res:
 
         #START PLAY
@@ -60,14 +62,20 @@ class sopcast():
         try:
           urllib2.urlopen(SETTINGS.TEST_URL)
           if SETTINGS.NOTIFY_OFFLINE == "true": xbmc.executebuiltin("Notification(%s,%s,%i)" % (addon.getLocalizedString(30057), "",1))  #Channel is offline
+          offline = True
         except:
           if SETTINGS.NOTIFY_OFFLINE == "true": xbmc.executebuiltin("Notification(%s,%s,%i)" % (addon.getLocalizedString(30058), "",1)) #Network is offline
       elif SETTINGS.NOTIFY_OFFLINE == "true":
         try: xbmc.executebuiltin("Dialog.Close(all,true)")
         except: pass
         xbmc.executebuiltin("Notification(%s,%s,%i)" % (addon.getLocalizedString(30059), "", 1)) #Channel initialization failed
+        offline = True
         try: self.stop_spsc()
         except: pass
+      
+      if offline:
+        mark = mark_stream(ch_id=self.player.ch_id)
+        mark.mark_offline()
 
     except Exception as inst:
       xbmcgui.Dialog().ok(addon.getLocalizedString(30060), str(type(inst)),str(inst),"")
