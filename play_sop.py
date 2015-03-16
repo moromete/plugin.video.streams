@@ -22,13 +22,13 @@ class sopcast():
   def start( self ):
     try:
       if(SETTINGS.ARM):
-        spsc = subprocess.Popen(self.cmd, shell=False, bufsize=SETTINGS.BUFER_SIZE, stdin=None, stdout=None, stderr=None)
+        self.spsc = subprocess.Popen(self.cmd, shell=False, bufsize=SETTINGS.BUFER_SIZE, stdin=None, stdout=None, stderr=None)
       else:
         env = os.environ
         env['LD_LIBRARY_PATH'] = SETTINGS.SPSC_LIB
-        spsc = subprocess.Popen(self.cmd, shell=False, bufsize=SETTINGS.BUFER_SIZE, stdin=None, stdout=None, stderr=None, env=env)
+        self.spsc = subprocess.Popen(self.cmd, shell=False, bufsize=SETTINGS.BUFER_SIZE, stdin=None, stdout=None, stderr=None, env=env)
 
-      self.spsc_pid = spsc.pid
+      self.spsc_pid = self.spsc.pid
 
       xbmc.sleep(int(addon.getSetting('wait_time')))
 
@@ -87,12 +87,17 @@ class sopcast():
       except: pass
 
   def sop_pid_exists(self):
-    try:
-      os.kill(self.spsc_pid, 0)
-    except OSError:
-      return False
-    else:
+    if(self.spsc.poll() == None): #A None value indicates that the process hasn't terminated yet
       return True
+    else:
+      return False
+    #try:
+    #  self.spsc.poll() #avoid zombie process (A None value indicates that the process hasn't terminated yet)
+    #  os.kill(self.spsc_pid, 0)
+    #except OSError:
+    #  return False
+    #else:
+    #  return True
 
   # this function will sleep only if the sop is running
   def sop_sleep(self, time):
