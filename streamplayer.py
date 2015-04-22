@@ -26,7 +26,7 @@ class streamplayer(xbmc.Player):
     self.player_status = 'play';
 
     super(streamplayer, self).play(url, listitem)
-    
+
     self.keep_allive()
 
   def onPlayBackStarted(self):
@@ -48,6 +48,7 @@ class streamplayer(xbmc.Player):
     if SETTINGS.DISABLE_SCHEDULE!='true':
       #display schedule active event
       active_event = load_active_event(self.name)
+      active_event = active_event.encode('utf8')
       if active_event:
         xbmc.executebuiltin("Notification(%s,%s,%i)" % (active_event, "", 10000))
 
