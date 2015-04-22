@@ -25,11 +25,8 @@ class streamplayer(xbmc.Player):
     #addon.setSetting('player_status', 'play')
     self.player_status = 'play';
 
-    try:
-      super(streamplayer, self).play(url, listitem)
-    except Exception as inst:
-      addon_log('PLAY FAILED')
-
+    super(streamplayer, self).play(url, listitem)
+    
     self.keep_allive()
 
   def onPlayBackStarted(self):
