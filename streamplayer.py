@@ -25,7 +25,10 @@ class streamplayer(xbmc.Player):
     #addon.setSetting('player_status', 'play')
     self.player_status = 'play';
 
-    super(streamplayer, self).play(url, listitem)
+    try:
+      super(streamplayer, self).play(url, listitem)
+    except Exception as inst:
+      addon_log('PLAY FAILED')
 
     self.keep_allive()
 
@@ -86,6 +89,8 @@ class streamplayer(xbmc.Player):
       mark = mark_stream(ch_id=self.ch_id)
       mark.mark_offline()
       self.stream_online = False
+      xbmc.executebuiltin( "Dialog.Close(busydialog)" )
+      if SETTINGS.NOTIFY_OFFLINE == "true": xbmc.executebuiltin("Notification(%s,%s,%i)" % (addon.getLocalizedString(30057), "",1))  #Channel is offline
 
     #addon.setSetting('player_status', 'stop')
     self.player_status = 'stop';

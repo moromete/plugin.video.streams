@@ -1,9 +1,10 @@
-v 0.3.2 
+v 0.3.2
   1. improve detection if sopcast process is running and close zombie processes
+  2. fix continous "working" message for http offline streams
 
 v 0.3.1 (16.03.2015)
   1. fix the marking offline of a sopcast channel
-  
+
 v 0.3.0 (13.03.2015)
   1. new online/offline detection system
   2. fix some utf8 encoding problems (logo name)
