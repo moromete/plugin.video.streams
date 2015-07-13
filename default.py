@@ -272,7 +272,10 @@ def CHANNEL_LIST(name, cat_id, schedule=False):
 
             if not os.path.isfile(thumb_path):
               if fileName != "":
-                Downloader(chan_thumb, thumb_path, fileName+fileExtension, addon.getLocalizedString(30055)) #Downloading Channel Logo
+                try:
+                  Downloader(chan_thumb, thumb_path, fileName+fileExtension, addon.getLocalizedString(30055)) #Downloading Channel Logo
+                except Exception as inst:
+                  pass;
 
           #schedule
           if (schedule_id != 0) and \

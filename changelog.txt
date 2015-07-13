@@ -1,3 +1,6 @@
+v 0.3.3
+  1. fixed crashing when channel logo link is not available
+
 v 0.3.2
   1. improve detection if sopcast process is running and close zombie processes
   2. fix continous "working" message for http offline streams
