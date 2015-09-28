@@ -232,67 +232,67 @@ def CHANNEL_LIST(name, cat_id, schedule=False):
         schedule_id in rec:
 
       #filter by country and language
-      if( (((country != '') and (addon.getSetting('country_'+country) == 'true')) or
-           ((country == '') and (addon.getSetting('country_none') == 'true')) ) and
-           (((language != '') and (addon.getSetting('lang_'+language) == 'true')) or
-           ((language == '') and (addon.getSetting('lang_none') == 'true')) )
-        ):
+      #if( (((country != '') and (addon.getSetting('country_'+country) == 'true')) or
+           #((country == '') and (addon.getSetting('country_none') == 'true')) ) and
+           #(((language != '') and (addon.getSetting('lang_'+language) == 'true')) or
+           #((language == '') and (addon.getSetting('lang_none') == 'true')) )
+        #):
 
-        chan_name = name
-        chan_url = address.strip()
+      chan_name = name
+      chan_url = address.strip()
 
-        protocol = protocol.strip()
-        if protocol=='sop':
-          protocol_color = '[COLOR lightgreen]'+protocol+'[/COLOR]'
-        else:
-          protocol_color = '[COLOR yellow]'+protocol+'[/COLOR]'
-        chan_thumb = thumbnail.strip()
-        #addon_log(chan_thumb)
-        chan_status = status
+      protocol = protocol.strip()
+      if protocol=='sop':
+	protocol_color = '[COLOR lightgreen]'+protocol+'[/COLOR]'
+      else:
+	protocol_color = '[COLOR yellow]'+protocol+'[/COLOR]'
+      chan_thumb = thumbnail.strip()
+      #addon_log(chan_thumb)
+      chan_status = status
 
-        if (((SETTINGS.SHOW_OFFLINE_CH=='true') and (int(chan_status)==1)) or (int(chan_status)!=1)): #if we show or not offline channels based on settings
-          logo_name = chan_name.replace(' ', '').lower()
-          logo_name = logo_name.encode('utf8')
+      if (((SETTINGS.SHOW_OFFLINE_CH=='true') and (int(chan_status)==1)) or (int(chan_status)!=1)): #if we show or not offline channels based on settings
+	logo_name = chan_name.replace(' ', '').lower()
+	logo_name = logo_name.encode('utf8')
 
-          chan_name_formatted ="[B][COLOR blue]"+chan_name+"[/COLOR][/B]"
-          chan_name_formatted += " ("+protocol_color
-          if(video_codec != ''):
-            chan_name_formatted += " "+video_codec
-          chan_name_formatted += ")"
-          if int(chan_status)==1: chan_name_formatted += " [COLOR red]"+addon.getLocalizedString(30063)+"[/COLOR]"  #Offline
+	chan_name_formatted ="[B][COLOR blue]"+chan_name+"[/COLOR][/B]"
+	chan_name_formatted += " ("+protocol_color
+	if(video_codec != ''):
+	  chan_name_formatted += " "+video_codec
+	chan_name_formatted += ")"
+	if int(chan_status)==1: chan_name_formatted += " [COLOR red]"+addon.getLocalizedString(30063)+"[/COLOR]"  #Offline
 
-          thumb_path=""
-          if chan_thumb and chan_thumb != "":
-            fileName, fileExtension = os.path.splitext(chan_thumb)
-            fileName=fileName.split("/")[-1]
-            if fileName != "":
-              #thumb_path=os.path.join(ADDON_PATH,"logos",fileName+fileExtension)
-              fileExtension = fileExtension.encode('utf8')
-              thumb_path=os.path.join(SETTINGS.ADDON_PATH,"logos",logo_name+fileExtension)
+	thumb_path=""
+	if chan_thumb and chan_thumb != "":
+	  fileName, fileExtension = os.path.splitext(chan_thumb)
+	  fileName=fileName.split("/")[-1]
+	  if fileName != "":
+	    #thumb_path=os.path.join(ADDON_PATH,"logos",fileName+fileExtension)
+	    fileExtension = fileExtension.encode('utf8')
+	    thumb_path=os.path.join(SETTINGS.ADDON_PATH,"logos",logo_name+fileExtension)
 
-            if not os.path.isfile(thumb_path):
-              if fileName != "":
-                try:
-                  Downloader(chan_thumb, thumb_path, fileName+fileExtension, addon.getLocalizedString(30055)) #Downloading Channel Logo
-                except Exception as inst:
-                  pass;
+	  if not os.path.isfile(thumb_path):
+	    if fileName != "":
+	      try:
+		Downloader(chan_thumb, thumb_path, fileName+fileExtension, addon.getLocalizedString(30055)) #Downloading Channel Logo
+	      except Exception as inst:
+		pass;
 
-          #schedule
-          if (schedule_id != 0) and \
-             (schedule or (addon.getSetting('schedule_ch_list') == 'true')) \
-             and (SETTINGS.DISABLE_SCHEDULE != 'true'):
-            if (schedule): #update all by context menu
-              update_all = True
-            elif(addon.getSetting('schedule_ch_list') == 'true'): #update all when we display channel list
-              update_all = False
-            grab_schedule(schedule_id, chan_name, update_all=update_all)
+	#schedule
+	if (schedule_id != 0) and \
+	    (schedule or (addon.getSetting('schedule_ch_list') == 'true')) \
+	    and (SETTINGS.DISABLE_SCHEDULE != 'true'):
+	  if (schedule): #update all by context menu
+	    update_all = True
+	  elif(addon.getSetting('schedule_ch_list') == 'true'): #update all when we display channel list
+	    update_all = False
+	  grab_schedule(schedule_id, chan_name, update_all=update_all)
 
-          if (SETTINGS.DISABLE_SCHEDULE != 'true') and (int(cat_id) < 200):
-            schedule_txt = load_schedule(chan_name)
-            chan_name_formatted += "   " + schedule_txt
+	if (SETTINGS.DISABLE_SCHEDULE != 'true') and (int(cat_id) < 200):
+	  schedule_txt = load_schedule(chan_name)
+	  chan_name_formatted += "   " + schedule_txt
 
-          addLink(id, chan_name_formatted, chan_name, chan_url, protocol, str(schedule_id),
-                  name, cat_id, 2, thumb_path, "", len(rec))
+	addLink(id, chan_name_formatted, chan_name, chan_url, protocol, str(schedule_id),
+		name, cat_id, 2, thumb_path, "", len(rec))
 
   xbmc.executebuiltin("Container.SetViewMode(51)")
 

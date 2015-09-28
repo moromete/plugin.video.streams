@@ -32,6 +32,7 @@
     <!--<setting id="language" type="labelenum" label="30018" values="One|Two|Three|Four"/>-->
 		<!--<setting id="language1" type="select" label="30018" mask="/" source="/resources/country" />-->
 	</category>
+  <!--	
   <category label="30004">
     <setting id="country_at" type="bool" label="30100" default="true"/>
     <setting id="country_cz" type="bool" label="30101" default="true"/>
@@ -67,4 +68,5 @@
     <setting id="lang_uk" type="bool" label="30213" default="true"/>
     <setting id="lang_none" type="bool" label="30021" default="true"/>
   </category>
+  -->
 </settings>
