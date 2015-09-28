@@ -1,3 +1,6 @@
+v 0.3.4
+  1. fixed missing channels from list with countries or languages not in addon settings
+  
 v 0.3.3
   1. fixed crashing when channel logo link is not available
 
