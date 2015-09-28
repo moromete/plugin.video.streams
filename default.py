@@ -18,22 +18,22 @@ from play_fastupload_ro import grab_fu_stream
 from play_ace import acestream
 from play_sop import sopcast
 
-try:
-  try:
-    raise
-    import xml.etree.cElementTree as ElementTree
-  except:
-    from xml.etree import ElementTree
-except:
-  try:
-    from xml.etree.ElementTree import Element
-    from xml.etree.ElementTree import SubElement
-    from elementtree import ElementTree
-  except:
-    dlg = xbmcgui.Dialog()
-    dlg.ok('ElementTree missing', 'Please install the elementree addon.',
-           'http://tinyurl.com/xmbc-elementtree')
-    sys.exit(0)
+# try:
+#   try:
+#     raise
+#     import xml.etree.cElementTree as ElementTree
+#   except:
+#     from xml.etree import ElementTree
+# except:
+#   try:
+#     from xml.etree.ElementTree import Element
+#     from xml.etree.ElementTree import SubElement
+#     from elementtree import ElementTree
+#   except:
+#     dlg = xbmcgui.Dialog()
+#     dlg.ok('ElementTree missing', 'Please install the elementree addon.',
+#            'http://tinyurl.com/xmbc-elementtree')
+#     sys.exit(0)
 
 def get_params():
   param=[]
