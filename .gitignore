@@ -2,6 +2,7 @@ schedule.sqlite
 channels.sqlite
 streams.json
 *.pyc
+*.pyo
 logos/*.gif
 logos/*.png
 logos/*.jpg
