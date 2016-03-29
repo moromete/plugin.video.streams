@@ -453,6 +453,10 @@ elif mode==5:  #refresh all schedules
 
 db_connection.close()
 
+try:
+  xbmc.executebuiltin( "Dialog.Close(busydialog)" )
+except: pass
+
 addon_log('------------- END -------------')
 
 xbmcplugin.endOfDirectory(int(sys.argv[1]))

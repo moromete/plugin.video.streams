@@ -105,18 +105,19 @@ class acestream():
         response = line.split()[2:]
         response = ' '.join(response)
         response = json.loads(response)
-
+        
+        if response.get('status') == 100:
+          addon_log("LOADASYNC returned error with message: %s" % response.get('message'))
+          xbmc.executebuiltin("Notification(%s,%s,%i)" % (response.get('message'), "", 10000))
+          return False
+        
         infohash = response.get('infohash')
         #self.sock.send('GETADURL width = 1328 height = 474 infohash = ' + infohash + ' action = load'+"\r\n")
         #self.sock.send('GETADURL width = 1328 height = 474 infohash = ' + infohash + ' action = pause'+"\r\n")
 
-        if response.get('status') == 100:
-          addon_log("LOADASYNC returned error with message: %s" % response.get('message'))
-        else:
-          #self.filename = urllib2.unquote(response.get('files')[0][0])
-          self.filename = urllib.unquote(response.get('files')[0][0].encode('ascii')).decode('utf-8')
-          addon_log(self.filename)
-          self.ch_start()
+        self.filename = urllib.unquote(response.get('files')[0][0].encode('ascii')).decode('utf-8')
+        addon_log(self.filename)
+        self.ch_start()
 
       elif line.startswith("START"):
         self.start_time = None
