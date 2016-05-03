@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: XBMC-Addons\n"
 "Report-Msgid-Bugs-To: alanwww1@xbmc.org\n"
-"POT-Creation-Date: 2014-10-22 16:39+0000\n"
+"POT-Creation-Date: 2016-05-03 09:59+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE\n"
@@ -105,7 +105,11 @@ msgctxt "#30025"
 msgid "Engine TCP port"
 msgstr ""
 
-#empty strings from id 30026 to 30049
+msgctxt "#30026"
+msgid "Show unverified"
+msgstr ""
+
+#empty strings from id 30027 to 30049
 
 msgctxt "#30050"
 msgid "Refresh Schedule"
@@ -171,7 +175,11 @@ msgctxt "#30065"
 msgid "Get stream URL"
 msgstr ""
 
-#empty strings from id 30066 to 30099
+msgctxt "#30066"
+msgid "unverified"
+msgstr ""
+
+#empty strings from id 30067 to 30099
 
 msgctxt "#30100"
 msgid "AUSTRIA"

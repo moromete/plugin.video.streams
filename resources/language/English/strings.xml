@@ -25,6 +25,7 @@
   <string id="30023">Acestream</string>
   <string id="30024">Engine host</string>
   <string id="30025">Engine TCP port</string>
+  <string id="30026">Show unverified</string>
 
   <string id="30100">AUSTRIA</string>
   <string id="30101">CZECH REPUBLIC</string>
@@ -74,6 +75,7 @@
   <string id="30063">Offline</string>
   <string id="30064">Program guide is not available</string>
   <string id="30065">Get stream URL</string>
+  <string id="30066">unverified</string>
 
   <string id="30300">Error</string>
   <string id="30301">Cannot parse channel list !</string>

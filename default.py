@@ -122,15 +122,16 @@ def parse_ch_data():
     db_cursor.execute(sql)
 
     sql = "CREATE TABLE IF NOT EXISTS channels \
-          (id INTEGER, id_cat INTEGER, name TEXT, country TEXT, language TEXT, status INTEGER, \
+          (id INTEGER, id_cat INTEGER, name TEXT, language TEXT, status INTEGER, \
            video_resolution TEXT, video_aspect REAL, audio_codec TEXT, video_codec TEXT, \
            address TEXT, thumbnail TEXT, protocol TEXT, \
-           schedule_id INTEGER)"
+           schedule_id INTEGER, unverified INTEGER)"
     db_cursor.execute(sql)
     sql="DELETE FROM channels"
     db_cursor.execute(sql)
 
     addon_log(data['date'])
+    
     for group in data['groups']:
       addon_log(str(group['id']) + " " + group['name'])
       db_cursor.execute("INSERT INTO categories \
@@ -139,40 +140,42 @@ def parse_ch_data():
 
       for channel in group['channels']:
         #addon_log(str(channel['id'])+" "+unicode(channel['name'])+" "+ str(channel['language'])+" "+str(channel['status']))
-        addon_log(channel['name'].encode('utf8'))
-
-        schedule_id = 0
-        thumbnail = ""
-        video_resolution = ""
-        video_aspect = 0
-        audio_codec = ""
-        video_codec = ""
-
-        stream_type = channel['stream_type']
-        if 'schedule' in channel:
-          schedule = channel['schedule']
-          schedule_id = schedule['ch_id']
-        if 'thumbnail' in channel:
-          thumbnail = channel['thumbnail']
-        if 'video_resolution' in stream_type:
-          video_resolution = stream_type['video_resolution']
-        if 'video_aspect' in stream_type:
-          video_aspect = stream_type['video_aspect']
-        if 'audio_codec' in stream_type:
-          audio_codec = stream_type['audio_codec']
-        if 'video_codec' in stream_type:
-          video_codec = stream_type['video_codec']
-
-        db_cursor.execute( \
-              "INSERT INTO channels \
-               VALUES (?, ?, ?, ?, ?, ?, \
-                       ?, ?, ?, ?, \
-                       ?, ?, ?, \
-                       ? )" ,
-               ( channel['id'], group['id'], channel['name'], channel['country'], channel['language'], channel['status'], \
-                 video_resolution, video_aspect, audio_codec, video_codec, \
-                 channel['address'], thumbnail, channel['protocol'], \
-                 schedule_id) )
+        if ((not channel['unverified']) or (SETTINGS.SHOW_UNVERIFIED=='true')):
+        
+          addon_log(channel['name'].encode('utf8'))
+    
+          schedule_id = 0
+          thumbnail = ""
+          video_resolution = ""
+          video_aspect = 0
+          audio_codec = ""
+          video_codec = ""
+    
+          stream_type = channel['stream_type']
+          if 'schedule' in channel:
+            schedule = channel['schedule']
+            schedule_id = schedule['ch_id']
+          if 'thumbnail' in channel:
+            thumbnail = channel['thumbnail']
+          if 'video_resolution' in stream_type:
+            video_resolution = stream_type['video_resolution']
+          if 'video_aspect' in stream_type:
+            video_aspect = stream_type['video_aspect']
+          if 'audio_codec' in stream_type:
+            audio_codec = stream_type['audio_codec']
+          if 'video_codec' in stream_type:
+            video_codec = stream_type['video_codec']
+    
+          db_cursor.execute( \
+                "INSERT INTO channels \
+                 VALUES (?, ?, ?, ?, ?, \
+                         ?, ?, ?, ?, \
+                         ?, ?, ?, \
+                         ?, ?)" ,
+                 ( channel['id'], group['id'], channel['name'], channel['language'], channel['status'], \
+                   video_resolution, video_aspect, audio_codec, video_codec, \
+                   channel['address'], thumbnail, channel['protocol'], \
+                   schedule_id, channel['unverified']) )
 
     db_connection.commit()
 
@@ -206,6 +209,10 @@ def CAT_LIST(force=False):
   if len(rec)>0:
     for id, name in rec:
       addDir(name, str(id), SETTINGS.CHAN_LIST, 1)
+      
+  #unverified category
+  if SETTINGS.SHOW_UNVERIFIED == 'true':
+    addDir(addon.getLocalizedString(30066), str(-1), SETTINGS.CHAN_LIST, 1)
 
   #xbmc.executebuiltin("Container.SetViewMode(500)")
   xbmc.executebuiltin("Container.SetViewMode(51)")
@@ -213,23 +220,31 @@ def CAT_LIST(force=False):
 def CHANNEL_LIST(name, cat_id, schedule=False):
   addon_log(name);
   try:
-    db_cursor.execute( 'SELECT id, name, country, language, status, \
-                        video_resolution, video_aspect, audio_codec, video_codec, \
-                        address, thumbnail, protocol, \
-                        schedule_id \
-                        FROM channels \
-                        WHERE id_cat = ?', \
-                        (cat_id,) )
+    if(int(cat_id) != -1):
+      db_cursor.execute( 'SELECT id, name, language, status, \
+                          video_resolution, video_aspect, audio_codec, video_codec, \
+                          address, thumbnail, protocol, \
+                          schedule_id, unverified \
+                          FROM channels \
+                          WHERE id_cat = ? and unverified IS NULL', \
+                          (cat_id,) )
+    else:
+      db_cursor.execute( 'SELECT id, name, language, status, \
+                          video_resolution, video_aspect, audio_codec, video_codec, \
+                          address, thumbnail, protocol, \
+                          schedule_id, unverified \
+                          FROM channels \
+                          WHERE unverified = 1')
     rec=db_cursor.fetchall()
   except Exception as inst:
     addon_log(inst)
     xbmcgui.Dialog().ok(addon.getLocalizedString(30300), addon.getLocalizedString(30301), str(inst))  #Cannot parse channel list !
 
   if len(rec)>0:
-    for id, name, country, language, status, \
+    for id, name, language, status, \
         video_resolution, video_aspect, audio_codec, video_codec, \
         address, thumbnail, protocol, \
-        schedule_id in rec:
+        schedule_id, unverified in rec:
 
       #filter by country and language
       #if( (((country != '') and (addon.getSetting('country_'+country) == 'true')) or
@@ -241,11 +256,14 @@ def CHANNEL_LIST(name, cat_id, schedule=False):
       chan_name = name
       chan_url = address.strip()
 
+      if(protocol == None):
+        protocol = 'http';
       protocol = protocol.strip()
       if protocol=='sop':
         protocol_color = '[COLOR lightgreen]'+protocol+'[/COLOR]'
       else:
         protocol_color = '[COLOR yellow]'+protocol+'[/COLOR]'
+          
       chan_thumb = thumbnail.strip()
       #addon_log(chan_thumb)
       chan_status = status
@@ -276,7 +294,7 @@ def CHANNEL_LIST(name, cat_id, schedule=False):
                 Downloader(chan_thumb, thumb_path, fileName+fileExtension, addon.getLocalizedString(30055)) #Downloading Channel Logo
               except Exception as inst:
                 pass;
-
+        
         #schedule
         if (schedule_id != 0) and \
             (schedule or (addon.getSetting('schedule_ch_list') == 'true')) \

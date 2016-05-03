@@ -18,6 +18,7 @@ class SETTINGS(object):
 
   #DISABLE_SCHEDULE = addon.getSetting('disable_schedule')
   SHOW_OFFLINE_CH = addon.getSetting('show_offline_ch')
+  SHOW_UNVERIFIED = addon.getSetting('show_unverified')
 
   NOTIFY_OFFLINE = "true"
 
