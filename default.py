@@ -212,7 +212,7 @@ def CAT_LIST(force=False):
       
   #unverified category
   if SETTINGS.SHOW_UNVERIFIED == 'true':
-    addDir(addon.getLocalizedString(30066), str(-1), SETTINGS.CHAN_LIST, 1)
+    addDir("[COLOR red]"+addon.getLocalizedString(30066)+"[/COLOR]", str(-1), SETTINGS.CHAN_LIST, 1)
 
   #xbmc.executebuiltin("Container.SetViewMode(500)")
   xbmc.executebuiltin("Container.SetViewMode(51)")
@@ -287,7 +287,7 @@ def CHANNEL_LIST(name, cat_id, schedule=False):
             #thumb_path=os.path.join(ADDON_PATH,"logos",fileName+fileExtension)
             fileExtension = fileExtension.encode('utf8')
             thumb_path=os.path.join(SETTINGS.ADDON_PATH,"logos",logo_name+fileExtension)
-
+          
           if not os.path.isfile(thumb_path):
             if fileName != "":
               try:
@@ -303,6 +303,7 @@ def CHANNEL_LIST(name, cat_id, schedule=False):
             update_all = True
           elif(addon.getSetting('schedule_ch_list') == 'true'): #update all when we display channel list
             update_all = False
+          #addon_log('grab_schedule')
           grab_schedule(schedule_id, chan_name, update_all=update_all)
 
         if (SETTINGS.DISABLE_SCHEDULE != 'true') and (int(cat_id) < 200):
