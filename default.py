@@ -283,10 +283,16 @@ def CHANNEL_LIST(name, cat_id, schedule=False):
         if chan_thumb and chan_thumb != "":
           fileName, fileExtension = os.path.splitext(chan_thumb)
           fileName=fileName.split("/")[-1]
+          
+          logoDir = os.path.join(SETTINGS.ADDON_PATH,"logos");
+          #create logos directory if does not exists
+          if(not os.path.isdir(logoDir)):
+            os.makedirs(logoDir)
+            
           if fileName != "":
             #thumb_path=os.path.join(ADDON_PATH,"logos",fileName+fileExtension)
             fileExtension = fileExtension.encode('utf8')
-            thumb_path=os.path.join(SETTINGS.ADDON_PATH,"logos",logo_name+fileExtension)
+            thumb_path=os.path.join(logoDir,logo_name+fileExtension)
           
           if not os.path.isfile(thumb_path):
             if fileName != "":
