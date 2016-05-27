@@ -27,6 +27,7 @@ class acestream():
     self.player_started = None
 
     self.pid = url.replace('acestream://', '')
+    self.pid = self.pid.replace('/', '')
 
     addon_log('INIT ACESTREAM')
 
@@ -70,7 +71,9 @@ class acestream():
 
   def ch_open(self):
     request_id = random.randint(1, 100)
-    self.send('LOADASYNC ' + str(request_id) + ' PID ' + self.pid)
+    cmd = 'LOADASYNC ' + str(request_id) + ' PID ' + self.pid
+    self.send(cmd)
+    addon_log(cmd)
     return request_id
 
   def ch_start(self):
