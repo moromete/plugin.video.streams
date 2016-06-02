@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: XBMC-Addons\n"
 "Report-Msgid-Bugs-To: alanwww1@xbmc.org\n"
-"POT-Creation-Date: 2016-05-03 09:59+0000\n"
+"POT-Creation-Date: 2016-06-02 11:19+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE\n"
@@ -109,7 +109,11 @@ msgctxt "#30026"
 msgid "Show unverified"
 msgstr ""
 
-#empty strings from id 30027 to 30049
+msgctxt "#30027"
+msgid "Use Plexus"
+msgstr ""
+
+#empty strings from id 30028 to 30049
 
 msgctxt "#30050"
 msgid "Refresh Schedule"
@@ -179,131 +183,7 @@ msgctxt "#30066"
 msgid "unverified"
 msgstr ""
 
-#empty strings from id 30067 to 30099
-
-msgctxt "#30100"
-msgid "AUSTRIA"
-msgstr ""
-
-msgctxt "#30101"
-msgid "CZECH REPUBLIC"
-msgstr ""
-
-msgctxt "#30102"
-msgid "FRANCE"
-msgstr ""
-
-msgctxt "#30103"
-msgid "GERMANY"
-msgstr ""
-
-msgctxt "#30104"
-msgid "INDIA"
-msgstr ""
-
-msgctxt "#30105"
-msgid "ITALY"
-msgstr ""
-
-msgctxt "#30106"
-msgid "MOLDOVA"
-msgstr ""
-
-msgctxt "#30107"
-msgid "POLAND"
-msgstr ""
-
-msgctxt "#30108"
-msgid "PORTUGAL"
-msgstr ""
-
-msgctxt "#30109"
-msgid "ROMANIA"
-msgstr ""
-
-msgctxt "#30110"
-msgid "RUSSIAN FEDERATION"
-msgstr ""
-
-msgctxt "#30111"
-msgid "SERBIA"
-msgstr ""
-
-msgctxt "#30112"
-msgid "SPAIN"
-msgstr ""
-
-msgctxt "#30113"
-msgid "TURKEY"
-msgstr ""
-
-msgctxt "#30114"
-msgid "SPAIN"
-msgstr ""
-
-msgctxt "#30115"
-msgid "UNITED KINGDOM"
-msgstr ""
-
-msgctxt "#30116"
-msgid "USA"
-msgstr ""
-
-#empty strings from id 30117 to 30200
-
-msgctxt "#30201"
-msgid "Czech"
-msgstr ""
-
-msgctxt "#30202"
-msgid "French"
-msgstr ""
-
-msgctxt "#30203"
-msgid "German"
-msgstr ""
-
-msgctxt "#30204"
-msgid "Hindi"
-msgstr ""
-
-msgctxt "#30205"
-msgid "Italian"
-msgstr ""
-
-msgctxt "#30206"
-msgid "Polish"
-msgstr ""
-
-msgctxt "#30207"
-msgid "Portuguese"
-msgstr ""
-
-msgctxt "#30208"
-msgid "Romanian"
-msgstr ""
-
-msgctxt "#30209"
-msgid "Russian"
-msgstr ""
-
-msgctxt "#30210"
-msgid "Serbian"
-msgstr ""
-
-msgctxt "#30211"
-msgid "Spanish"
-msgstr ""
-
-msgctxt "#30212"
-msgid "Turkish"
-msgstr ""
-
-msgctxt "#30213"
-msgid "English"
-msgstr ""
-
-#empty strings from id 30214 to 30299
+#empty strings from id 30067 to 30299
 
 msgctxt "#30300"
 msgid "Error"
@@ -315,4 +195,8 @@ msgstr ""
 
 msgctxt "#30302"
 msgid "Please install python module \"pytz\" or disable program guides from addon settings"
+msgstr ""
+
+msgctxt "#30303"
+msgid "Plexus addon not installed!"
 msgstr ""

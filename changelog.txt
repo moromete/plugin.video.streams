@@ -1,5 +1,7 @@
 v 0.3.6
   1. fix loading acestream url with trailling '/'
+  2. added suport for playing acestream and sopcast channels by "Plexus" addon
+     "https://www.tvaddons.ag/kodi-addons/show/program.plexus/"
 
 v 0.3.5
   1. fix program guide information

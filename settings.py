@@ -57,6 +57,7 @@ class SETTINGS(object):
   LOCAL_PORT =  addon.getSetting('local_port')
   VIDEO_PORT =  addon.getSetting('video_port')
   BUFER_SIZE = int(addon.getSetting('buffer_size'))
+  USE_PLEXUS_SOP = addon.getSetting('use_plexus_sop')
 
   LOCAL_URL = "http://localhost:"+str(VIDEO_PORT)+"/?"
 
@@ -68,4 +69,5 @@ class SETTINGS(object):
   PRODUCT_KEY='n51LvQoTlJzNGaFxseRK-uvnvX-sD4Vm5Axwmc4UcoD-jruxmKsuJaH0eVgE' #aceproxy
   ACE_HOST = addon.getSetting('ace_host')
   ACE_PORT = int(addon.getSetting('ace_port'))
+  USE_PLEXUS_ACE = addon.getSetting('use_plexus_ace')
   ##########################################################

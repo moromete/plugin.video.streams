@@ -342,14 +342,30 @@ def STREAM(name, iconimage, url, protocol, sch_ch_id, ch_id):
 
   #play sopcast stream
   if protocol == "sop":
-    sop = sopcast(player=player, url=url, listitem=listitem)
-    sop.start()
+    if(SETTINGS.USE_PLEXUS_SOP == 'true'):
+      try:
+        addon_log('plexus')
+        xbmc.executebuiltin('XBMC.RunPlugin(plugin://program.plexus/?mode=2&url='+url+'&name='+name+'&iconimage='+iconimage+')')
+      except Exception as inst:
+        addon_log(inst)
+        xbmc.executebuiltin("Notification(%s,%s,%i)" % (addon.getLocalizedString(30303), "", 10000))
+    else:
+      sop = sopcast(player=player, url=url, listitem=listitem)
+      sop.start()
 
   #play acestream
   elif protocol=='acestream':
-    ace = acestream(player=player, url=url, listitem=listitem)
-    ace.engine_connect()
-
+    if(SETTINGS.USE_PLEXUS_ACE == 'true'):
+      try:
+        addon_log('plexus')
+        xbmc.executebuiltin('XBMC.RunPlugin(plugin://program.plexus/?mode=1&url='+url+'&name='+name+'&iconimage='+iconimage+')')
+      except Exception as inst:
+        addon_log(inst)
+        xbmc.executebuiltin("Notification(%s,%s,%i)" % (addon.getLocalizedString(30303), "", 10000))
+    else:
+      ace = acestream(player=player, url=url, listitem=listitem)
+      ace.engine_connect()
+  
   #play direct stream
   else:
     try:
