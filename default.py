@@ -338,7 +338,7 @@ def STREAM(name, iconimage, url, protocol, sch_ch_id, ch_id):
   #listitem.setLabel(name)
   listitem.setInfo('video', {'Title': name})
 
-  player = streamplayer(xbmc.PLAYER_CORE_AUTO, name=name, protocol=protocol, ch_id=ch_id)
+  player = streamplayer(name=name, protocol=protocol, ch_id=ch_id)
 
   #play sopcast stream
   if protocol == "sop":
@@ -454,10 +454,10 @@ if mode==None: #list categories
 elif mode==1:  #list channels
   CHANNEL_LIST(name, cat_id)
 elif mode==2:  #play stream
-  if xbmc.Player(xbmc.PLAYER_CORE_AUTO).isPlaying():
+  if xbmc.Player().isPlaying():
     #stop_spsc()
 
-    xbmc.Player(xbmc.PLAYER_CORE_AUTO).stop()
+    xbmc.Player().stop()
     try: xbmc.executebuiltin("Dialog.Close(all,true)")
     except: pass
 
