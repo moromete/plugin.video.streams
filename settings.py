@@ -1,4 +1,4 @@
-import os
+import os, sys
 from urlparse import urlparse
 from posixpath import basename, dirname
 from glob import addon, is_exe
@@ -31,7 +31,7 @@ class SETTINGS(object):
   #raspberry pi
   QEMU = "qemu-i386"  #for raspberry pi to issue kill command
   ARM = False
-  if(os.uname()[4][:3] == 'arm'):
+  if sys.platform.startswith('arm'):
     ARM = True
 
   if ARM == False :
