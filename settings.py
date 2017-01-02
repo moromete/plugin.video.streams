@@ -1,7 +1,7 @@
 import os, sys
 from urlparse import urlparse
 from posixpath import basename, dirname
-from glob import addon, is_exe
+from glob import addon, addon_log, is_exe
 
 class SETTINGS(object):
 
@@ -31,8 +31,10 @@ class SETTINGS(object):
   #raspberry pi
   QEMU = "qemu-i386"  #for raspberry pi to issue kill command
   ARM = False
-  if sys.platform.startswith('arm'):
-    ARM = True
+  
+  if sys.platform.startswith('linux'):
+    if(os.uname()[4][:3] == 'arm'): #not supported by windows
+      ARM = True
 
   if ARM == False :
     SPSC = os.path.join(ADDON_PATH, 'bin/linux_x86/sopcast', SPSC_BINARY)

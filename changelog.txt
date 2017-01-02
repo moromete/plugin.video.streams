@@ -1,3 +1,6 @@
+v 0.3.8
+  1. change arm linux detection
+
 v 0.3.7
   1. fix program guide response if is not a valid json
 
