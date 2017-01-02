@@ -55,10 +55,6 @@ def grab_schedule(id_channel_port, name, force=False, update_all=False):
 
   addon_log('update schedule')
 
-  sql="DELETE FROM `%s`" % \
-       (table_name)
-  db_cursor.execute(sql)
-
   month_name_to_no={"Ianuarie" : "01",
                     "Februarie" : "02",
                     "Martie" : "03",
@@ -94,7 +90,16 @@ def grab_schedule(id_channel_port, name, force=False, update_all=False):
     schedule_txt = ""
 
   #addon_log(schedule_txt)
-  schedule_json = json.loads(schedule_txt, encoding='iso-8859-2')
+  try:
+    schedule_json = json.loads(schedule_txt, encoding='iso-8859-2')
+  except JSONDecodeError:
+    db_connection.commit()
+    db_connection.close()
+    return False
+  
+  sql="DELETE FROM `%s`" % \
+       (table_name)
+  db_cursor.execute(sql)
     
   for k in schedule_json: #for every day
     for program in schedule_json[k]['channels'][0]["programs"]: #every program in a day

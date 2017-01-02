@@ -196,6 +196,7 @@ def CAT_LIST(force=False):
     Downloader(SETTINGS.CHAN_LIST_URL, SETTINGS.CHAN_LIST, addon.getLocalizedString(30053), addon.getLocalizedString(30054)) #Downloading Channel list
     parse_ch_data()
 
+  rec = []
   try:
     sql = "SELECT id, name \
            FROM categories"
@@ -219,6 +220,7 @@ def CAT_LIST(force=False):
 
 def CHANNEL_LIST(name, cat_id, schedule=False):
   addon_log(name);
+  rec = []
   try:
     if(int(cat_id) != -1):
       db_cursor.execute( 'SELECT id, name, language, status, \
