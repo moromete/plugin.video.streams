@@ -1,3 +1,6 @@
+v 0.3.7
+  1. fix program guide response if is not a valid json
+
 v 0.3.6
   1. fix loading acestream url with trailling '/'
   2. added suport for playing acestream and sopcast channels by "Plexus" addon
