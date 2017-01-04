@@ -92,7 +92,7 @@ def grab_schedule(id_channel_port, name, force=False, update_all=False):
   #addon_log(schedule_txt)
   try:
     schedule_json = json.loads(schedule_txt, encoding='iso-8859-2')
-  except JSONDecodeError:
+  except Exception as inst:
     db_connection.commit()
     db_connection.close()
     return False
