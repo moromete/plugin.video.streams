@@ -102,14 +102,15 @@ def grab_schedule(id_channel_port, name, force=False, update_all=False):
   db_cursor.execute(sql)
     
   for k in schedule_json: #for every day
-    for program in schedule_json[k]['channels'][0]["programs"]: #every program in a day
-      event_title = program['title']
-      start_datetime = re.sub('[\+-]+\d+:\d+$', '', program['start_datetime'])
-      event_timestamp = time.mktime(time.strptime(start_datetime, "%Y-%m-%dT%H:%M:%S"))
-      sql="INSERT INTO `%s` VALUES (?, ?)" % \
-           (table_name)
-      #st = db_cursor.execute(sql, (event_timestamp, unicode(event_title.replace("'", ""), 'iso-8859-2')))
-      st = db_cursor.execute(sql, (event_timestamp, event_title))
+    if(len(schedule_json[k]['channels'])>0):
+      for program in schedule_json[k]['channels'][0]["programs"]: #every program in a day
+        event_title = program['title']
+        start_datetime = re.sub('[\+-]+\d+:\d+$', '', program['start_datetime'])
+        event_timestamp = time.mktime(time.strptime(start_datetime, "%Y-%m-%dT%H:%M:%S"))
+        sql="INSERT INTO `%s` VALUES (?, ?)" % \
+             (table_name)
+        #st = db_cursor.execute(sql, (event_timestamp, unicode(event_title.replace("'", ""), 'iso-8859-2')))
+        st = db_cursor.execute(sql, (event_timestamp, event_title))
 
   # match=re.compile(r'class="begin_time">(?P<time>.*?)</p>').search(schedule_txt)
   # if match:
