@@ -47,7 +47,7 @@ def grab_schedule(id_channel_port, name, force=False, update_all=False):
     if rec:
       #addon_log(rec[0]);
       #addon_log(time.mktime(dt_ro.timetuple()));
-      if ((time.mktime(dt_ro.timetuple()) - rec[0]) < (60*60*24*2)): #update only if schedule is older than 2 days
+      if ((time.mktime(now_utc.timetuple()) - rec[0]) < (60*60*24*2)): #update only if schedule is older than 2 days
         addon_log('schedule is up to date')
         if update_all:
           xbmc.executebuiltin("Notification(%s,%s,%i)" % (name, addon.getLocalizedString(30056), 1000))  #Schedule is up to date
@@ -74,9 +74,12 @@ def grab_schedule(id_channel_port, name, force=False, update_all=False):
   #end_date = start_date
   #url="http://port.ro/pls/w/tv.channel?i_xday="+str(nr_days)+"&i_date=%i-%02i-%02i&i_ch=%s" % (start_date.year , start_date.month , start_date.day , id_channel_port)
   
-  i_datetime_from = start_date.strftime('%Y-%m-%d')
-  i_datetime_to = end_date.strftime('%Y-%m-%d')
-  url="http://port.ro/pls/w/tv_api.event_list?i_channel_id=%s&i_datetime_from=%s&i_datetime_to=%s" % (id_channel_port, i_datetime_from, i_datetime_to)
+  #i_datetime_from = start_date.strftime('%Y-%m-%d')
+  #i_datetime_to = end_date.strftime('%Y-%m-%d')
+  #url="http://port.ro/pls/w/tv_api.event_list?i_channel_id=%s&i_datetime_from=%s&i_datetime_to=%s" % (id_channel_port, i_datetime_from, i_datetime_to)
+  
+  url="https://web-api-pepper.horizon.tv/oesp/v2/RO/ron/web/programschedules/"
+  url+=dt_ro.strftime('%Y%m%d')+'/1'
   #addon_log(url)
 
   temp = os.path.join(SETTINGS.ADDON_PATH,"temp.htm")
@@ -88,10 +91,10 @@ def grab_schedule(id_channel_port, name, force=False, update_all=False):
     os.remove(temp)
   except Exception as inst:
     schedule_txt = ""
-
   #addon_log(schedule_txt)
+  
   try:
-    schedule_json = json.loads(schedule_txt, encoding='iso-8859-2')
+    schedule_json = json.loads(schedule_txt, encoding='utf-8')
   except Exception as inst:
     db_connection.commit()
     db_connection.close()
@@ -100,17 +103,50 @@ def grab_schedule(id_channel_port, name, force=False, update_all=False):
   sql="DELETE FROM `%s`" % \
        (table_name)
   db_cursor.execute(sql)
-    
-  for k in schedule_json: #for every day
-    if(len(schedule_json[k]['channels'])>0):
-      for program in schedule_json[k]['channels'][0]["programs"]: #every program in a day
-        event_title = program['title']
-        start_datetime = re.sub('[\+-]+\d+:\d+$', '', program['start_datetime'])
-        event_timestamp = time.mktime(time.strptime(start_datetime, "%Y-%m-%dT%H:%M:%S"))
+  
+  #addon_log(schedule_json['entries'])
+  #addon_log(id_channel_port)
+  for entry in schedule_json['entries']:
+    if(str(entry['o']) == str(id_channel_port)):
+      for l in entry['l']:
+        event_timestamp=l['s']/1000
+        event_title = l['t']
+        
         sql="INSERT INTO `%s` VALUES (?, ?)" % \
              (table_name)
-        #st = db_cursor.execute(sql, (event_timestamp, unicode(event_title.replace("'", ""), 'iso-8859-2')))
         st = db_cursor.execute(sql, (event_timestamp, event_title))
+
+        
+        
+        startTime=datetime.fromtimestamp(event_timestamp)
+        startTime=timezone('UTC').localize(startTime)
+        startTime=startTime.astimezone(tz_ro)
+        
+        
+        endTime=l['e']/1000
+        endTime=datetime.fromtimestamp(endTime)
+        endTime=timezone('UTC').localize(endTime)
+        endTime=endTime.astimezone(tz_ro)
+        
+        addon_log('start = '+startTime.strftime('%Y-%m-%d %H:%M:%S'))
+        addon_log('end = '+endTime.strftime('%Y-%m-%d %H:%M:%S'))
+        addon_log(l['t'])
+        
+    
+  
+  # for k in schedule_json: #for every day
+  #   if(len(schedule_json[k]['channels'])>0):
+  #     for program in schedule_json[k]['channels'][0]["programs"]: #every program in a day
+  #       event_title = program['title']
+  #       start_datetime = re.sub('[\+-]+\d+:\d+$', '', program['start_datetime'])
+  #       event_timestamp = time.mktime(time.strptime(start_datetime, "%Y-%m-%dT%H:%M:%S"))
+  #       sql="INSERT INTO `%s` VALUES (?, ?)" % \
+  #            (table_name)
+  #       #st = db_cursor.execute(sql, (event_timestamp, unicode(event_title.replace("'", ""), 'iso-8859-2')))
+  #       st = db_cursor.execute(sql, (event_timestamp, event_title))
+
+
+
 
   # match=re.compile(r'class="begin_time">(?P<time>.*?)</p>').search(schedule_txt)
   # if match:
@@ -203,7 +239,7 @@ def load_schedule(name):
   db_cursor=db_connection.cursor()
 
   table_name = name.replace(' ', '_').lower()
-
+  
   now_utc = datetime.now(timezone('UTC'))
   tz_ro = timezone('Europe/Bucharest')
   dt_ro = tz_ro.normalize(now_utc.astimezone(tz_ro))
@@ -216,7 +252,8 @@ def load_schedule(name):
     sql="SELECT event_time, title FROM `%s` WHERE event_time > ? ORDER BY event_time ASC LIMIT 10" % \
          (table_name,)
     #addon_log(sql)
-    db_cursor.execute(sql, (time.mktime(dt_ro.timetuple()),) )
+    #db_cursor.execute(sql, (time.mktime(dt_ro.timetuple()),) )
+    db_cursor.execute(sql, (time.mktime(now_utc.timetuple()),) )
     rec=db_cursor.fetchall()
 
     if len(rec)>0:
@@ -251,7 +288,8 @@ def load_active_event(name):
   try:
     sql="SELECT event_time, title FROM `%s` WHERE event_time <= ? ORDER BY event_time DESC LIMIT 1" % \
         (table_name,)
-    db_cursor.execute(sql, ( time.mktime(dt_ro.timetuple()), ) )
+    #db_cursor.execute(sql, ( time.mktime(dt_ro.timetuple()), ) )
+    db_cursor.execute(sql, ( time.mktime(dt_utc.timetuple()), ) )
     rec=db_cursor.fetchone()
     if rec:
       event = add_event(rec[0], rec[1])
@@ -266,12 +304,15 @@ def add_event(event_time, title):
   tz_offset = float(time.strftime('%z'))/100  #xbmc offset
   #addon_log(tz_offset)
 
-  tz_ro = timezone('Europe/Bucharest')
-  now_ro = datetime.now(tz_ro)
-  tz_ro_offset = float(now_ro.strftime('%z'))/100  #port.ro offset
+  # tz_ro = timezone('Europe/Bucharest')
+  # now_ro = datetime.now(tz_ro)
+  # tz_ro_offset = float(now_ro.strftime('%z'))/100  #port.ro offset
+  # 
+  # dt_ro = datetime.fromtimestamp(event_time)
+  # dt_display = dt_ro - timedelta(hours = tz_ro_offset) + timedelta(hours = tz_offset)
 
-  dt_ro = datetime.fromtimestamp(event_time)
-  dt_display = dt_ro - timedelta(hours = tz_ro_offset) + timedelta(hours = tz_offset)
+  dt_utc = datetime.fromtimestamp(event_time)
+  dt_display = dt_utc + timedelta(hours = tz_offset)
 
   #addon_log(dt_display.strftime('%H:%M') + " " + title)
   #addon_log(dt_display)
