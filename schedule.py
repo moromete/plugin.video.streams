@@ -90,62 +90,65 @@ class epg():
     self.downloadEPG()
     
     lastEventTimestamp = None
-    for section in range(1,5): #every day EPG is splitted in 3
-      epgFile = os.path.join(SETTINGS.ADDON_PATH,"epg_" + dt_ro.strftime('%Y%m%d') + "_" + str(section)+".json")
-      try:
-        f = open(epgFile)
-        schedule_txt = f.read()
-        f.close()
-        #os.remove(temp)
-      except Exception as inst:
-        addon_log("error opening epg file")
-        addon_log(inst)
-        schedule_txt = ""
-      #addon_log(schedule_txt)
-      
-      try:
-        schedule_json = json.loads(schedule_txt, encoding='utf-8')
-      except Exception as inst:
-        db_connection.commit()
-        db_connection.close()
-        addon_log("error parsing json file")
-        return False
+    for day in range(0,2):
+      dt_ro = dt_ro + timedelta(days=day)
           
-      #addon_log(schedule_json['entries'])
-      #addon_log(id_channel_port)
-      for entry in schedule_json['entries']:
-        if(str(entry['o']) == str(id_channel_port)):
-          for l in entry['l']:
-            event_timestamp=l['s']/1000
-            event_title = l['t']
+      for section in range(1,5): #every day EPG is splitted in 3
+        epgFile = os.path.join(SETTINGS.ADDON_PATH,"epg_" + dt_ro.strftime('%Y%m%d') + "_" + str(section)+".json")
+        try:
+          f = open(epgFile)
+          schedule_txt = f.read()
+          f.close()
+          #os.remove(temp)
+        except Exception as inst:
+          addon_log("error opening epg file")
+          addon_log(inst)
+          schedule_txt = ""
+        #addon_log(schedule_txt)
+        
+        try:
+          schedule_json = json.loads(schedule_txt, encoding='utf-8')
+        except Exception as inst:
+          db_connection.commit()
+          db_connection.close()
+          addon_log("error parsing json file")
+          return False
             
-            #convert from timezone ro to timezone utc
-            startTime=datetime.fromtimestamp(event_timestamp)
-            startTime=timezone('Europe/Bucharest').localize(startTime)
-            startTime=startTime.astimezone(timezone('UTC'))
-            event_timestamp = time.mktime(startTime.timetuple())
-            
-            if(lastEventTimestamp<event_timestamp):
-              sql="INSERT INTO `%s` VALUES (?, ?)" % \
-                   (table_name)
-              st = db_cursor.execute(sql, (event_timestamp, event_title))
-              lastEventTimestamp = event_timestamp
+        #addon_log(schedule_json['entries'])
+        #addon_log(id_channel_port)
+        for entry in schedule_json['entries']:
+          if(str(entry['o']) == str(id_channel_port)):
+            for l in entry['l']:
+              event_timestamp=l['s']/1000
+              event_title = l['t']
               
+              #convert from timezone ro to timezone utc
               startTime=datetime.fromtimestamp(event_timestamp)
-              startTime=timezone('UTC').localize(startTime)
-              startTime=startTime.astimezone(timezone('Europe/Bucharest'))
+              startTime=timezone('Europe/Bucharest').localize(startTime)
+              startTime=startTime.astimezone(timezone('UTC'))
+              event_timestamp = time.mktime(startTime.timetuple())
               
-              #endTime=l['e']/1000
-              #endTime=datetime.fromtimestamp(endTime)
-              #endTime=timezone('UTC').localize(endTime)
-              #endTime=endTime.astimezone(tz_ro)
-              
-              addon_log('starttt = '+str(event_timestamp))
-              addon_log('start = '+startTime.strftime('%Y-%m-%d %H:%M:%S'))
-              #addon_log('end = '+endTime.strftime('%Y-%m-%d %H:%M:%S'))
-              addon_log(l['t'])
-              
-  
+              if(lastEventTimestamp<event_timestamp):
+                sql="INSERT INTO `%s` VALUES (?, ?)" % \
+                     (table_name)
+                st = db_cursor.execute(sql, (event_timestamp, event_title))
+                lastEventTimestamp = event_timestamp
+                
+                startTime=datetime.fromtimestamp(event_timestamp)
+                startTime=timezone('UTC').localize(startTime)
+                startTime=startTime.astimezone(timezone('Europe/Bucharest'))
+                
+                #endTime=l['e']/1000
+                #endTime=datetime.fromtimestamp(endTime)
+                #endTime=timezone('UTC').localize(endTime)
+                #endTime=endTime.astimezone(tz_ro)
+                
+                addon_log('starttt = '+str(event_timestamp))
+                addon_log('start = '+startTime.strftime('%Y-%m-%d %H:%M:%S'))
+                #addon_log('end = '+endTime.strftime('%Y-%m-%d %H:%M:%S'))
+                addon_log(l['t'])
+                
+    
     # for k in schedule_json: #for every day
     #   if(len(schedule_json[k]['channels'])>0):
     #     for program in schedule_json[k]['channels'][0]["programs"]: #every program in a day
@@ -258,22 +261,25 @@ class epg():
     
     #https://web-api-salt.horizon.tv/oesp/v2/RO/ron/web/channels
     urlBase="https://web-api-salt.horizon.tv/oesp/v2/RO/ron/web/programschedules/"
-    urlBase+=dt_ro.strftime('%Y%m%d')+'/'
-    #addon_log(url)
     
-    for section in range(1,5): #every day EPG is splitted in 3
-      url=urlBase+str(section)
-      epgFile = os.path.join(SETTINGS.ADDON_PATH,"epg_" + dt_ro.strftime('%Y%m%d') + "_" + str(section)+".json")
-      if(not os.path.isfile(epgFile)):
-        try:
-          Downloader(url, epgFile, addon.getLocalizedString(30061), addon.getLocalizedString(30062))  #Downloading Schedule
-          f = open(epgFile)
-          f.close()
-        except Exception as inst:
-          addon_log("error downloading epg file")
-          addon_log(inst)
-    
-    self.loaded = True
+    for day in range(0,2):
+      dt_ro = dt_ro + timedelta(days=day)
+      urlDate = urlBase + dt_ro.strftime('%Y%m%d')+'/'
+      
+      for section in range(1,5): #every day EPG is splitted in 3
+        url=urlDate+str(section)
+        #addon_log(url)
+        epgFile = os.path.join(SETTINGS.ADDON_PATH,"epg_" + dt_ro.strftime('%Y%m%d') + "_" + str(section)+".json")
+        if(not os.path.isfile(epgFile)):
+          try:
+            Downloader(url, epgFile, addon.getLocalizedString(30061), addon.getLocalizedString(30062))  #Downloading Schedule
+            f = open(epgFile)
+            f.close()
+          except Exception as inst:
+            addon_log("error downloading epg file")
+            addon_log(inst)
+      
+      self.loaded = True
   
   def load_schedule(self, name):
     addon_log('load schedule ' + name)
