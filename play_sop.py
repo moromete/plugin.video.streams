@@ -15,11 +15,29 @@ class sopcast():
     self.listitem=kwargs.get('listitem')
 
     url=kwargs.get('url')
+    self.sopurl = url
     self.cmd = [SETTINGS.SPSC, url, str(SETTINGS.LOCAL_PORT), str(SETTINGS.VIDEO_PORT), "> /dev/null &"]
     if(SETTINGS.ARM):
       self.cmd = SETTINGS.QEMU_SPSC + self.cmd
 
   def start( self ):
+   if xbmc.getCondVisibility('System.Platform.Android'):
+       xbmc.executebuiltin('XBMC.StartAndroidActivity("com.devaward.soptohttp","android.intent.action.VIEW","",'+self.sopurl+')')
+       #try:
+       #    InstalledAPK = subprocess.Popen(['exec ''/system/bin/pm list packages -3'''], executable='/system/bin/sh', shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT).communicate()[0].rstrip('\n').splitlines()
+       #except:
+       #    InstalledAPK = []
+
+       #for i in range(len(InstalledAPK)):
+       #    InstalledAPK[i] = InstalledAPK[i].partition(':')[2]
+       #if "com.devaward.soptohttp" in InstalledAPK:
+       #    xbmc.executebuiltin('XBMC.StartAndroidActivity("com.devaward.soptohttp","android.intent.action.VIEW","",'+self.sopurl+')')
+       #elif "org.sopcast.android" in InstalledAPK:
+       #    xbmc.executebuiltin('XBMC.StartAndroidActivity("org.sopcast.android","android.intent.action.VIEW","",'+self.sopurl+')')
+       #else:
+       #   xbmcgui.Dialog().ok("Missing Sop to Http", "Please install:", "1.Sop to Http from Google Play Store (recommended) or:", "2.Sopcast for android")
+       #    xbmc.executebuiltin("Dialog.Close(all,true)")
+   else:
     try:
       if(SETTINGS.ARM):
         self.spsc = subprocess.Popen(self.cmd, shell=False, bufsize=SETTINGS.BUFER_SIZE, stdin=None, stdout=None, stderr=None)

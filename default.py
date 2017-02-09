@@ -2,6 +2,7 @@ import xbmc, xbmcgui, xbmcplugin, xbmcaddon
 import sys, os, os.path
 import urllib, urllib2, socket, re
 import json, sqlite3
+import tarfile
 
 import time
 from datetime import datetime, timedelta
@@ -18,6 +19,58 @@ from play_vk_com import grab_vk_stream
 from play_fastupload_ro import grab_fu_stream
 from play_ace import acestream
 from play_sop import sopcast
+
+addon_id = 'plugin.video.streams'
+settings = xbmcaddon.Addon(id=addon_id)
+addonpath = settings.getAddonInfo('path').decode('utf-8')
+pastaperfil = xbmc.translatePath(settings.getAddonInfo('profile')).decode('utf-8')
+
+class download_tools():
+	def Downloader(self,url,dest,description,heading):
+		dp = xbmcgui.DialogProgress()
+		dp.create(heading,description,'')
+		dp.update(0)
+		urllib.urlretrieve(url,dest,lambda nb, bs, fs, url=url: self._pbhook(nb,bs,fs,dp))
+		
+	def _pbhook(self,numblocks, blocksize, filesize,dp=None):
+		try:
+			percent = int((int(numblocks)*int(blocksize)*100)/int(filesize))
+			dp.update(percent)
+		except:
+			percent = 100
+			dp.update(percent)
+		if dp.iscanceled(): 
+			dp.close()
+	
+	def extract(self,file_tar,destination):
+		dp = xbmcgui.DialogProgress()
+		dp.create("Streams","Extracting module contents. Please wait.")
+		tar = tarfile.open(file_tar)
+		tar.extractall(destination)
+		dp.update(100)
+		tar.close()
+		dp.close()
+		
+	def remove(self,file_):
+		dp = xbmcgui.DialogProgress()
+		dp.create("Streams","Removing files.")
+		os.remove(file_)
+		dp.update(100)
+		dp.close()
+		
+        def acekit(self,acestream_pack):
+                ACE_KIT = os.path.join(addonpath,acestream_pack.split("/")[-1])
+                download_tools().Downloader(acestream_pack,ACE_KIT,"Downloading AceStream modules.","Streams")
+                if tarfile.is_tarfile(ACE_KIT):
+                    path_libraries = os.path.join(pastaperfil)
+		    download_tools().extract(ACE_KIT,path_libraries)
+		    xbmc.sleep(500)
+		    download_tools().remove(ACE_KIT)
+                binary_path = os.path.join(pastaperfil,"acestream","chroot")
+                st = os.stat(binary_path)
+                import stat
+                os.chmod(binary_path, st.st_mode | stat.S_IEXEC)
+
 
 # try:
 #   try:
@@ -267,7 +320,7 @@ def CHANNEL_LIST(name, cat_id, mode=None, schedule=False):
         protocol = 'http';
       protocol = protocol.strip()
       if protocol=='sop':
-        protocol_color = '[COLOR lightgreen]'+protocol+'[/COLOR]'
+        protocol_color = '[COLOR yellow]'+protocol+'[/COLOR]'
       else:
         protocol_color = '[COLOR yellow]'+protocol+'[/COLOR]'
           
@@ -279,7 +332,7 @@ def CHANNEL_LIST(name, cat_id, mode=None, schedule=False):
         logo_name = chan_name.replace(' ', '').lower()
         logo_name = logo_name.encode('utf8')
 
-        chan_name_formatted ="[B][COLOR blue]"+chan_name+"[/COLOR][/B]"
+        chan_name_formatted ="[B][COLOR yellow]"+chan_name+"[/COLOR][/B]"
         chan_name_formatted += " ("+protocol_color
         if(video_codec != ''):
           chan_name_formatted += " "+video_codec
@@ -371,8 +424,26 @@ def STREAM(name, iconimage, url, protocol, sch_ch_id, ch_id):
         addon_log(inst)
         xbmc.executebuiltin("Notification(%s,%s,%i)" % (addon.getLocalizedString(30303), "", 10000))
     else:
-      ace = acestream(player=player, url=url, listitem=listitem)
-      ace.engine_connect()
+      if xbmc.getCondVisibility('System.Platform.Android'):
+          #xbmc.executebuiltin("Notification(%s,%s,%i)" % ("android", "", 3000))
+          ace = acestream(player=player, url=url, listitem=listitem)
+          ace.engine_connect()
+      elif xbmc.getCondVisibility('system.platform.linux'):
+          #xbmc.executebuiltin("Notification(%s,%s,%i)" % ("linux", "", 3000))
+          if "aarch" in os.uname()[4]:
+              #xbmc.executebuiltin("Notification(%s,%s,%i)" % ("aarch", "", 3000))
+              if not os.path.isfile(os.path.join(pastaperfil,"acestream","chroot")):
+                  arch = '64' if sys.maxsize > 2**32 else '32'
+                  acestream_pack = "https://raw.githubusercontent.com/viorel-m/kingul-repo/master/acestream/acestream_arm%s.tar.gz" % arch 
+                  download_tools().acekit(acestream_pack)
+              import acestream as ace
+              ace.acestreams_builtin(name,iconimage,url)
+          elif "arm" in os.uname()[4]:
+              if not os.path.isfile(os.path.join(pastaperfil,"acestream","chroot")):
+                  acestream_pack = "https://raw.githubusercontent.com/viorel-m/kingul-repo/master/acestream/acestream_arm32.tar.gz"
+                  download_tools().acekit(acestream_pack)
+              import acestream as ace
+              ace.acestreams_builtin(name,iconimage,url)
   
   #play direct stream
   else:
