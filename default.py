@@ -235,7 +235,7 @@ def CHANNEL_LIST(name, cat_id, mode=None, schedule=False):
            schedule_id, unverified \
            FROM channels \
            WHERE id_cat = ?'
-    if(int(mode)==101):
+    if((mode!=None) and (int(mode)==101)):
       sql += ' and unverified = 1'
     else:
       sql += ' and unverified IS NULL'

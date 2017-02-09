@@ -98,6 +98,7 @@ class epg():
         f.close()
         #os.remove(temp)
       except Exception as inst:
+        addon_log("error opening epg file")
         addon_log(inst)
         schedule_txt = ""
       #addon_log(schedule_txt)
@@ -107,6 +108,7 @@ class epg():
       except Exception as inst:
         db_connection.commit()
         db_connection.close()
+        addon_log("error parsing json file")
         return False
           
       #addon_log(schedule_json['entries'])
@@ -255,6 +257,7 @@ class epg():
         f = open(epgFile)
         f.close()
       except Exception as inst:
+        addon_log("error downloading epg file")
         addon_log(inst)
     
     self.loaded = True
