@@ -49,7 +49,9 @@ class streamplayer(xbmc.Player):
       #display schedule active event
       epgObj = epg()
       active_event = epgObj.load_active_event(self.name)
-      active_event = active_event.encode('utf8')
+      #active_event = active_event.encode('utf8')
+      addon_log("active_event=")
+      addon_log(active_event)
       if active_event:
         xbmc.executebuiltin("Notification(%s,%s,%i)" % (active_event, "", 10000))
 

@@ -224,8 +224,9 @@ def CAT_LIST(force=False, mode=None):
   xbmc.executebuiltin("Container.SetViewMode(51)")
 
 def CHANNEL_LIST(name, cat_id, mode=None, schedule=False):
-  epgObj = epg()
-  
+  if (SETTINGS.DISABLE_SCHEDULE != 'true'):
+    epgObj = epg()
+    
   addon_log(name);
   rec = []
   try:

@@ -119,6 +119,12 @@ class epg():
             event_timestamp=l['s']/1000
             event_title = l['t']
             
+            #convert from timezone ro to timezone utc
+            startTime=datetime.fromtimestamp(event_timestamp)
+            startTime=timezone('Europe/Bucharest').localize(startTime)
+            startTime=startTime.astimezone(timezone('UTC'))
+            event_timestamp = time.mktime(startTime.timetuple())
+            
             if(lastEventTimestamp<event_timestamp):
               sql="INSERT INTO `%s` VALUES (?, ?)" % \
                    (table_name)
@@ -127,15 +133,16 @@ class epg():
               
               startTime=datetime.fromtimestamp(event_timestamp)
               startTime=timezone('UTC').localize(startTime)
-              startTime=startTime.astimezone(tz_ro)
+              startTime=startTime.astimezone(timezone('Europe/Bucharest'))
               
-              endTime=l['e']/1000
-              endTime=datetime.fromtimestamp(endTime)
-              endTime=timezone('UTC').localize(endTime)
-              endTime=endTime.astimezone(tz_ro)
+              #endTime=l['e']/1000
+              #endTime=datetime.fromtimestamp(endTime)
+              #endTime=timezone('UTC').localize(endTime)
+              #endTime=endTime.astimezone(tz_ro)
               
+              addon_log('starttt = '+str(event_timestamp))
               addon_log('start = '+startTime.strftime('%Y-%m-%d %H:%M:%S'))
-              addon_log('end = '+endTime.strftime('%Y-%m-%d %H:%M:%S'))
+              #addon_log('end = '+endTime.strftime('%Y-%m-%d %H:%M:%S'))
               addon_log(l['t'])
               
   
@@ -320,12 +327,13 @@ class epg():
       sql="SELECT event_time, title FROM `%s` WHERE event_time <= ? ORDER BY event_time DESC LIMIT 1" % \
           (table_name,)
       #db_cursor.execute(sql, ( time.mktime(dt_ro.timetuple()), ) )
-      db_cursor.execute(sql, ( time.mktime(dt_utc.timetuple()), ) )
+      db_cursor.execute(sql, ( time.mktime(now_utc.timetuple()), ) )
       rec=db_cursor.fetchone()
       if rec:
         event = self.add_event(rec[0], rec[1])
         schedule.append(event)
-    except: pass
+    except Exception as inst:
+      addon_log(inst)
   
     #addon_log(event)
   
