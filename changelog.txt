@@ -2,10 +2,31 @@ v 0.5.1
   1. improve epg download to use cache if multiple requests are done in the same day
   
 v 0.5.0
-  1. fixed player for kodi 17
-  2. add new EPG provider
-  3. classify unverified channels
-  4. skip version 4 because of conflicts with other repository ("kingul's repository")
+  1. epg tests
+
+v 0.4.9
+  1. improved detection for aarch64
+
+v 0.4.8
+  1. small fix
+
+v 0.4.7
+  1. added arm32 acestream support (like rpi)
+
+v 0.4.6
+  1. changed arch detection
+
+v 0.4.5
+  1. added acestream support for linux arm64 (like s905) (tested on Dotsmart DSPure)
+
+v 0.4.4
+  1. added Sop to Http support for android devices (tested on Dotsmart DSBlack)
+
+v 0.4.3
+  1. changed channel names to yellow
+
+v 0.4.2
+  1. added support for sopcast in aarch64 linux systems
 
 v 0.3.8
   1. change arm linux detection
