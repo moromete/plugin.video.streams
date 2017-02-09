@@ -90,7 +90,7 @@ class epg():
     self.downloadEPG()
     
     lastEventTimestamp = None
-    for section in range(1,4): #every day EPG is splitted in 3
+    for section in range(1,5): #every day EPG is splitted in 3
       epgFile = os.path.join(SETTINGS.ADDON_PATH,"epg"+str(section)+".htm")
       try:
         f = open(epgFile)
@@ -249,7 +249,7 @@ class epg():
     urlBase+=dt_ro.strftime('%Y%m%d')+'/'
     #addon_log(url)
     
-    for section in range(1,4): #every day EPG is splitted in 3
+    for section in range(1,5): #every day EPG is splitted in 3
       url=urlBase+str(section)
       epgFile = os.path.join(SETTINGS.ADDON_PATH,"epg"+str(section)+".htm")
       try:
