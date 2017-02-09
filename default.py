@@ -7,7 +7,7 @@ import time
 from datetime import datetime, timedelta
 
 from settings import SETTINGS
-from glob import addon_log, addon, Downloader
+from common import addon_log, addon, Downloader
 
 if SETTINGS.DISABLE_SCHEDULE != 'true':
   #from schedule import grab_schedule, load_schedule

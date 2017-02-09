@@ -1,7 +1,7 @@
 import os, sys
 from urlparse import urlparse
 from posixpath import basename, dirname
-from glob import addon, addon_log, is_exe
+from common import addon, addon_log, is_exe
 
 class SETTINGS(object):
 

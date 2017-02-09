@@ -5,7 +5,7 @@ import urllib2
 import subprocess
 
 import glob
-from glob import addon_log, addon, is_exe
+from common import addon_log, addon, is_exe
 from settings import SETTINGS
 from mark_stream import mark_stream
 

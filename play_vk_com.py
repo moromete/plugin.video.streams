@@ -2,7 +2,7 @@ import xbmc, xbmcgui
 import os, os.path, re
 import glob
 import urllib2
-from glob import addon_log, Downloader, message, addon
+from common import addon_log, Downloader, message, addon
 
 from settings import SETTINGS
 

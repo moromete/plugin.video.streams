@@ -2,7 +2,7 @@ import xbmc, xbmcgui
 import os, os.path, re
 import urllib2
 import glob
-from glob import addon_log, Downloader, message, addon
+from common import addon_log, Downloader, message, addon
 from settings import SETTINGS
 
 def grab_fu_stream(name, url):

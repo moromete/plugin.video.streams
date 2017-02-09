@@ -10,7 +10,7 @@ import urllib
 import time
 
 import glob
-from glob import addon_log, addon
+from common import addon_log, addon
 from settings import SETTINGS
 from mark_stream import mark_stream
 

@@ -2,7 +2,7 @@ import xbmc, xbmcgui
 from mark_stream import mark_stream
 
 #import glob
-from glob import addon_log, addon
+from common import addon_log, addon
 #from default import DISABLE_SCHEDULE, load_active_event
 
 from settings import SETTINGS

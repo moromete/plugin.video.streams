@@ -1,7 +1,7 @@
 import xbmc, xbmcgui
 import os, os.path, re
 import glob
-from glob import addon_log, Downloader, message, addon
+from common import addon_log, Downloader, message, addon
 from datetime import datetime, timedelta
 import json
 
@@ -40,7 +40,7 @@ class epg():
   
     now_utc = datetime.now(timezone('UTC'))
     tz_ro = timezone('Europe/Bucharest')
-    # dt_ro = tz_ro.normalize(now_utc.astimezone(tz_ro))
+    dt_ro = tz_ro.normalize(now_utc.astimezone(tz_ro))
   
     if force == False:
       #sql="SELECT event_time FROM `%s` ORDER BY event_time ASC LIMIT 1" % \
@@ -91,7 +91,7 @@ class epg():
     
     lastEventTimestamp = None
     for section in range(1,5): #every day EPG is splitted in 3
-      epgFile = os.path.join(SETTINGS.ADDON_PATH,"epg"+str(section)+".htm")
+      epgFile = os.path.join(SETTINGS.ADDON_PATH,"epg_" + dt_ro.strftime('%Y%m%d') + "_" + str(section)+".json")
       try:
         f = open(epgFile)
         schedule_txt = f.read()
@@ -247,6 +247,13 @@ class epg():
     if(self.loaded):
       return
     
+    now = time.time()
+    for filename in glob.glob(os.path.join(SETTINGS.ADDON_PATH,"epg*")):
+      if(os.stat(filename).st_mtime < now - 86400): #remove files older than 1 day
+        addon_log(os.stat(filename).st_mtime)
+        addon_log(str(now - 86400))
+        os.remove(filename)
+  
     now_utc = datetime.now(timezone('UTC'))
     tz_ro = timezone('Europe/Bucharest')
     dt_ro = tz_ro.normalize(now_utc.astimezone(tz_ro))
@@ -258,14 +265,15 @@ class epg():
     
     for section in range(1,5): #every day EPG is splitted in 3
       url=urlBase+str(section)
-      epgFile = os.path.join(SETTINGS.ADDON_PATH,"epg"+str(section)+".htm")
-      try:
-        Downloader(url, epgFile, addon.getLocalizedString(30061), addon.getLocalizedString(30062))  #Downloading Schedule
-        f = open(epgFile)
-        f.close()
-      except Exception as inst:
-        addon_log("error downloading epg file")
-        addon_log(inst)
+      epgFile = os.path.join(SETTINGS.ADDON_PATH,"epg_" + dt_ro.strftime('%Y%m%d') + "_" + str(section)+".json")
+      if(not os.path.isfile(epgFile)):
+        try:
+          Downloader(url, epgFile, addon.getLocalizedString(30061), addon.getLocalizedString(30062))  #Downloading Schedule
+          f = open(epgFile)
+          f.close()
+        except Exception as inst:
+          addon_log("error downloading epg file")
+          addon_log(inst)
     
     self.loaded = True
   

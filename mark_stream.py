@@ -1,7 +1,7 @@
 import xbmc, xbmcgui
 import urllib2
 import json
-from glob import addon_log
+from common import addon_log
 from settings import SETTINGS
 from urlparse import urlparse
 
