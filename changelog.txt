@@ -1,3 +1,9 @@
+v 0.5.0
+  1. fixed player for kodi 17
+  2. add new EPG provider
+  3. classify unverified channels
+  4. skip version 4 because of conflicts with other repository ("kingul's repository")
+
 v 0.3.8
   1. change arm linux detection
 

@@ -10,7 +10,8 @@ from settings import SETTINGS
 from glob import addon_log, addon, Downloader
 
 if SETTINGS.DISABLE_SCHEDULE != 'true':
-  from schedule import grab_schedule, load_schedule
+  #from schedule import grab_schedule, load_schedule
+  from schedule import epg
 
 from streamplayer import streamplayer
 from play_vk_com import grab_vk_stream
@@ -179,7 +180,7 @@ def parse_ch_data():
 
     db_connection.commit()
 
-def CAT_LIST(force=False):
+def CAT_LIST(force=False, mode=None):
   if force==False:
     if not os.path.isfile(SETTINGS.CHAN_LIST):
       addon_log('channels first download')
@@ -209,34 +210,37 @@ def CAT_LIST(force=False):
 
   if len(rec)>0:
     for id, name in rec:
-      addDir(name, str(id), SETTINGS.CHAN_LIST, 1)
+      channelsListMode=1
+      if(mode!=None):
+        name="[COLOR red]"+name+"[/COLOR]"
+        channelsListMode=101
+      addDir(name, str(id), SETTINGS.CHAN_LIST, channelsListMode)
       
   #unverified category
-  if SETTINGS.SHOW_UNVERIFIED == 'true':
-    addDir("[COLOR red]"+addon.getLocalizedString(30066)+"[/COLOR]", str(-1), SETTINGS.CHAN_LIST, 1)
+  if ((SETTINGS.SHOW_UNVERIFIED == 'true') and (mode==None)):
+    addDir("[COLOR red]"+addon.getLocalizedString(30066)+"[/COLOR]", str(-1), SETTINGS.CHAN_LIST, 100)
 
   #xbmc.executebuiltin("Container.SetViewMode(500)")
   xbmc.executebuiltin("Container.SetViewMode(51)")
 
-def CHANNEL_LIST(name, cat_id, schedule=False):
+def CHANNEL_LIST(name, cat_id, mode, schedule=False):
+  epgObj = epg()
+  
   addon_log(name);
   rec = []
   try:
-    if(int(cat_id) != -1):
-      db_cursor.execute( 'SELECT id, name, language, status, \
-                          video_resolution, video_aspect, audio_codec, video_codec, \
-                          address, thumbnail, protocol, \
-                          schedule_id, unverified \
-                          FROM channels \
-                          WHERE id_cat = ? and unverified IS NULL', \
-                          (cat_id,) )
+    sql = 'SELECT id, name, language, status, \
+           video_resolution, video_aspect, audio_codec, video_codec, \
+           address, thumbnail, protocol, \
+           schedule_id, unverified \
+           FROM channels \
+           WHERE id_cat = ?'
+    if(int(mode)==101):
+      sql += ' and unverified = 1'
     else:
-      db_cursor.execute( 'SELECT id, name, language, status, \
-                          video_resolution, video_aspect, audio_codec, video_codec, \
-                          address, thumbnail, protocol, \
-                          schedule_id, unverified \
-                          FROM channels \
-                          WHERE unverified = 1')
+      sql += ' and unverified IS NULL'
+    sql += ' ORDER BY name'
+    db_cursor.execute( sql, (cat_id,) )
     rec=db_cursor.fetchall()
   except Exception as inst:
     addon_log(inst)
@@ -312,10 +316,10 @@ def CHANNEL_LIST(name, cat_id, schedule=False):
           elif(addon.getSetting('schedule_ch_list') == 'true'): #update all when we display channel list
             update_all = False
           #addon_log('grab_schedule')
-          grab_schedule(schedule_id, chan_name, update_all=update_all)
+          epgObj.grab_schedule(schedule_id, chan_name, update_all=update_all)
 
         if (SETTINGS.DISABLE_SCHEDULE != 'true') and (int(cat_id) < 200):
-          schedule_txt = load_schedule(chan_name)
+          schedule_txt = epgObj.load_schedule(chan_name)
           chan_name_formatted += "   " + schedule_txt
 
         addLink(id, chan_name_formatted, chan_name, chan_url, protocol, str(schedule_id),
@@ -330,7 +334,8 @@ def STREAM(name, iconimage, url, protocol, sch_ch_id, ch_id):
     return False
 
   if (sch_ch_id != None) and (SETTINGS.DISABLE_SCHEDULE != 'true'):
-    grab_schedule(sch_ch_id, name)
+    epgObj = epg()
+    epgObj.grab_schedule(sch_ch_id, name)
 
   #addon_log(name)
   #addon_log(iconimage)
@@ -451,10 +456,10 @@ except:
   ch_id=None
 
 addon_log(mode)
-if mode==None: #list categories
-  CAT_LIST()
-elif mode==1:  #list channels
-  CHANNEL_LIST(name, cat_id)
+if ((mode==None) or (mode==100)): #list categories
+  CAT_LIST(mode=mode)
+elif ((mode==1) or (mode==101)):  #list channels
+  CHANNEL_LIST(name=name, cat_id=cat_id, mode=mode)
 elif mode==2:  #play stream
   if xbmc.Player().isPlaying():
     #stop_spsc()
@@ -480,7 +485,8 @@ elif mode==2:  #play stream
     STREAM(name, iconimage, url, protocol, sch_ch_id, ch_id)
 elif mode==3:  #refresh schedule
   if sch_ch_id != None:
-    grab_schedule(sch_ch_id, name, force=True)
+    epgObj = epg()
+    epgObj.grab_schedule(sch_ch_id, name, force=True)
     xbmc.executebuiltin('Container.Refresh()')
 elif mode==4:  #refresh channel list
   CAT_LIST(force=True)
