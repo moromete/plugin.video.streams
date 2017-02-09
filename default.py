@@ -223,7 +223,7 @@ def CAT_LIST(force=False, mode=None):
   #xbmc.executebuiltin("Container.SetViewMode(500)")
   xbmc.executebuiltin("Container.SetViewMode(51)")
 
-def CHANNEL_LIST(name, cat_id, mode, schedule=False):
+def CHANNEL_LIST(name, cat_id, mode=None, schedule=False):
   epgObj = epg()
   
   addon_log(name);
@@ -492,7 +492,7 @@ elif mode==4:  #refresh channel list
   CAT_LIST(force=True)
   xbmc.executebuiltin('Container.Refresh()')
 elif mode==5:  #refresh all schedules
-  CHANNEL_LIST(name, cat_id, schedule=True)
+  CHANNEL_LIST(name=name, cat_id=cat_id, schedule=True)
   xbmc.executebuiltin('Container.Refresh()')
 #elif mode==6:  #EPG
 #  addon_log('epg');
