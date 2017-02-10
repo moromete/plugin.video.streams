@@ -231,7 +231,6 @@ def CHANNEL_LIST(name, cat_id, mode=None, schedule=False):
   rec = []
   try:
     sql = 'SELECT id, name, language, status, \
-           video_resolution, video_aspect, audio_codec, video_codec, \
            address, thumbnail, protocol, \
            schedule_id, unverified \
            FROM channels \
@@ -249,7 +248,6 @@ def CHANNEL_LIST(name, cat_id, mode=None, schedule=False):
 
   if len(rec)>0:
     for id, name, language, status, \
-        video_resolution, video_aspect, audio_codec, video_codec, \
         address, thumbnail, protocol, \
         schedule_id, unverified in rec:
 
@@ -262,15 +260,13 @@ def CHANNEL_LIST(name, cat_id, mode=None, schedule=False):
 
       chan_name = name
       chan_url = address.strip()
-
-      if(protocol == None):
-        protocol = 'http';
+      
       protocol = protocol.strip()
-      if protocol=='sop':
-        protocol_color = '[COLOR lightgreen]'+protocol+'[/COLOR]'
-      else:
-        protocol_color = '[COLOR yellow]'+protocol+'[/COLOR]'
-          
+      #if protocol=='sop':
+      #  protocol_color = '[COLOR lightgreen]'+protocol+'[/COLOR]'
+      #else:
+      #  protocol_color = '[COLOR yellow]'+protocol+'[/COLOR]'
+                
       chan_thumb = thumbnail.strip()
       #addon_log(chan_thumb)
       chan_status = status
@@ -279,11 +275,9 @@ def CHANNEL_LIST(name, cat_id, mode=None, schedule=False):
         logo_name = chan_name.replace(' ', '').lower()
         logo_name = logo_name.encode('utf8')
 
-        chan_name_formatted ="[B][COLOR blue]"+chan_name+"[/COLOR][/B]"
-        chan_name_formatted += " ("+protocol_color
-        if(video_codec != ''):
-          chan_name_formatted += " "+video_codec
-        chan_name_formatted += ")"
+        chan_name_formatted ="[B]"+chan_name+"[/B]"
+        chan_name_formatted += " [[COLOR yellow]"+protocol+"[/COLOR]]"
+        
         if int(chan_status)==1: chan_name_formatted += " [COLOR red]"+addon.getLocalizedString(30063)+"[/COLOR]"  #Offline
 
         thumb_path=""

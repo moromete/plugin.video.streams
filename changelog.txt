@@ -1,3 +1,7 @@
+v 0.5.2
+  1. Channels names leave color unchanged (made by skin default to avoid conflicts with skin color)
+  2. remove video codec from channel name
+
 v 0.5.1
   1. improve epg download to use cache if multiple requests are done in the same day
   
