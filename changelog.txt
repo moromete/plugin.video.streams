@@ -1,3 +1,11 @@
+v 0.5.3
+  1. Merge changes from kingul's repo:
+    a. added support for sopcast in aarch64 linux systems
+    b. added Sop to Http support for android devices (tested on Dotsmart DSBlack)
+    c. added acestream support for linux arm64 (like s905) (tested on Dotsmart DSPure)
+    d. added arm32 acestream support (tested on raspberry pi2 and pi3)
+    e. improved detection for aarch64
+
 v 0.5.2
   1. Channels names leave color unchanged (made by skin default to avoid conflicts with skin color)
   2. remove video codec from channel name

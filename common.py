@@ -1,8 +1,11 @@
 import xbmc, xbmcgui, xbmcaddon
 import urllib, urllib2
 import os, stat
+import tarfile
 
 addon = xbmcaddon.Addon('plugin.video.streams')
+addonpath = addon.getAddonInfo('path')
+filespath = xbmc.translatePath(addon.getAddonInfo('profile'))
 
 def addon_log(string):
   DEBUG = addon.getSetting('debug')
@@ -30,6 +33,35 @@ def _pbhook(numblocks, blocksize, filesize, dp=None):
   if dp.iscanceled():
     #raise KeyboardInterrupt
     dp.close()
+
+def extract(file_tar,destination):
+    dp = xbmcgui.DialogProgress()
+    dp.create("Streams","Extracting module contents. Please wait.")
+    tar = tarfile.open(file_tar)
+    tar.extractall(destination)
+    dp.update(100)
+    tar.close()
+    dp.close()
+		
+def remove(file_):
+    dp = xbmcgui.DialogProgress()
+    dp.create("Streams","Removing files.")
+    os.remove(file_)
+    dp.update(100)
+    dp.close()
+		
+def acekit(acestream_pack):
+    ACE_KIT = os.path.join(addonpath,acestream_pack.split("/")[-1])
+    Downloader(acestream_pack,ACE_KIT,"Downloading AceStream modules.","Streams")
+    if tarfile.is_tarfile(ACE_KIT):
+        path_libraries = os.path.join(filespath)
+        extract(ACE_KIT,path_libraries)
+        xbmc.sleep(500)
+        remove(ACE_KIT)
+    binary_path = os.path.join(filespath,"acestream","chroot")
+    st = os.stat(binary_path)
+    import stat
+    os.chmod(binary_path, st.st_mode | stat.S_IEXEC)
 
 def message(title, message):
   dialog = xbmcgui.Dialog()

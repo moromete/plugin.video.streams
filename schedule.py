@@ -251,10 +251,12 @@ class epg():
       return
     
     now = time.time()
-    for filename in glob.glob(os.path.join(SETTINGS.ADDON_PATH,"epg*")):
+    try:
+     for filename in glob.glob(os.path.join(SETTINGS.ADDON_PATH,"epg*")):
       if(os.stat(filename).st_mtime < now - 86400): #remove files older than 1 day
         os.remove(filename)
-  
+    except:
+     pass
     now_utc = datetime.now(timezone('UTC'))
     tz_ro = timezone('Europe/Bucharest')
     dt_ro = tz_ro.normalize(now_utc.astimezone(tz_ro))

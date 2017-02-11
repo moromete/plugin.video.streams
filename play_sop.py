@@ -15,11 +15,15 @@ class sopcast():
     self.listitem=kwargs.get('listitem')
 
     url=kwargs.get('url')
+    self.sopurl = url
     self.cmd = [SETTINGS.SPSC, url, str(SETTINGS.LOCAL_PORT), str(SETTINGS.VIDEO_PORT), "> /dev/null &"]
     if(SETTINGS.ARM):
       self.cmd = SETTINGS.QEMU_SPSC + self.cmd
 
   def start( self ):
+   if xbmc.getCondVisibility('System.Platform.Android'):
+       xbmc.executebuiltin('XBMC.StartAndroidActivity("com.devaward.soptohttp","android.intent.action.VIEW","",'+self.sopurl+')')
+   else:
     try:
       if(SETTINGS.ARM):
         self.spsc = subprocess.Popen(self.cmd, shell=False, bufsize=SETTINGS.BUFER_SIZE, stdin=None, stdout=None, stderr=None)

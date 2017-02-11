@@ -2,12 +2,13 @@ import xbmc, xbmcgui, xbmcplugin, xbmcaddon
 import sys, os, os.path
 import urllib, urllib2, socket, re
 import json, sqlite3
+import tarfile
 
 import time
 from datetime import datetime, timedelta
 
 from settings import SETTINGS
-from common import addon_log, addon, Downloader
+from common import addon_log, addon, Downloader, acekit
 
 if SETTINGS.DISABLE_SCHEDULE != 'true':
   #from schedule import grab_schedule, load_schedule
@@ -18,6 +19,11 @@ from play_vk_com import grab_vk_stream
 from play_fastupload_ro import grab_fu_stream
 from play_ace import acestream
 from play_sop import sopcast
+
+addon_id = 'plugin.video.streams'
+settings = xbmcaddon.Addon(id=addon_id)
+fileslist = xbmc.translatePath(settings.getAddonInfo('profile')).decode('utf-8')
+
 
 # try:
 #   try:
@@ -365,8 +371,26 @@ def STREAM(name, iconimage, url, protocol, sch_ch_id, ch_id):
         addon_log(inst)
         xbmc.executebuiltin("Notification(%s,%s,%i)" % (addon.getLocalizedString(30303), "", 10000))
     else:
-      ace = acestream(player=player, url=url, listitem=listitem)
-      ace.engine_connect()
+      if xbmc.getCondVisibility('System.Platform.Android'):
+          #xbmc.executebuiltin("Notification(%s,%s,%i)" % ("android", "", 3000))
+          ace = acestream(player=player, url=url, listitem=listitem)
+          ace.engine_connect()
+      elif xbmc.getCondVisibility('system.platform.linux'):
+          #xbmc.executebuiltin("Notification(%s,%s,%i)" % ("linux", "", 3000))
+          if "aarch" in os.uname()[4]:
+              #xbmc.executebuiltin("Notification(%s,%s,%i)" % ("aarch", "", 3000))
+              if not os.path.isfile(os.path.join(fileslist,"acestream","chroot")):
+                  arch = '64' if sys.maxsize > 2**32 else '32'
+                  acestream_pack = "https://raw.githubusercontent.com/viorel-m/kingul-repo/master/acestream/acestream_arm%s.tar.gz" % arch 
+                  acekit(acestream_pack)
+              import acestream as ace
+              ace.acestreams_builtin(name,iconimage,url)
+          elif "arm" in os.uname()[4]:
+              if not os.path.isfile(os.path.join(fileslist,"acestream","chroot")):
+                  acestream_pack = "https://raw.githubusercontent.com/viorel-m/kingul-repo/master/acestream/acestream_arm32.tar.gz"
+                  acekit(acestream_pack)
+              import acestream as ace
+              ace.acestreams_builtin(name,iconimage,url)
   
   #play direct stream
   else:

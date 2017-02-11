@@ -30,11 +30,16 @@ class SETTINGS(object):
 
   #raspberry pi
   QEMU = "qemu-i386"  #for raspberry pi to issue kill command
+  QEMU64 = "qemuaarch-i386"
   ARM = False
+  ARM64 = False
   
   if sys.platform.startswith('linux'):
     if(os.uname()[4][:3] == 'arm'): #not supported by windows
       ARM = True
+    elif(os.uname()[4][:3] == 'aar'):
+      ARM = True
+      ARM64 = True if sys.maxsize > 2**32 else False
 
   if ARM == False :
     SPSC = os.path.join(ADDON_PATH, 'bin/linux_x86/sopcast', SPSC_BINARY)
@@ -44,17 +49,19 @@ class SETTINGS(object):
     is_exe(SPSC)
 
   elif ARM == True:
-    SOPCAST_ARM_PATH =  addon.getSetting('sopcast_arm_path')
-    if(SOPCAST_ARM_PATH == '') :
-      SOPCAST_ARM_PATH = os.path.join(ADDON_PATH, 'bin/arm/sopcast')
+      SOPCAST_ARM_PATH =  addon.getSetting('sopcast_arm_path')
+      if(SOPCAST_ARM_PATH == '') :
+        SOPCAST_ARM_PATH = os.path.join(ADDON_PATH, 'bin/arm/sopcast')
+      is_exe(os.path.join(SOPCAST_ARM_PATH, "lib/ld-linux.so.2"))
 
-    #make executables
-    is_exe(os.path.join(SOPCAST_ARM_PATH, QEMU))
-    is_exe(os.path.join(SOPCAST_ARM_PATH, "lib/ld-linux.so.2"))
+      if ARM64 == False:
+        is_exe(os.path.join(SOPCAST_ARM_PATH, QEMU))
+        QEMU_SPSC = [os.path.join(SOPCAST_ARM_PATH, QEMU), os.path.join(SOPCAST_ARM_PATH, "lib/ld-linux.so.2"), "--library-path", os.path.join(SOPCAST_ARM_PATH, "lib")]
+      else:
+        is_exe(os.path.join(SOPCAST_ARM_PATH, QEMU64))
+        QEMU_SPSC = [os.path.join(SOPCAST_ARM_PATH, QEMU64), os.path.join(SOPCAST_ARM_PATH, "lib/ld-linux.so.2"), "--library-path", os.path.join(SOPCAST_ARM_PATH, "lib")]
 
-    QEMU_SPSC = [os.path.join(SOPCAST_ARM_PATH, QEMU), os.path.join(SOPCAST_ARM_PATH, "lib/ld-linux.so.2"), "--library-path", os.path.join(SOPCAST_ARM_PATH, "lib")]
-    SPSC = os.path.join(SOPCAST_ARM_PATH, SPSC_BINARY)
-    #/storage/sopcast/qemu-i386 /storage/sopcast/lib/ld-linux.so.2 --library-path /storage/sopcast/lib /storage/sopcast/sp-sc-auth 2>&- $1 $2 $3
+      SPSC = os.path.join(SOPCAST_ARM_PATH, SPSC_BINARY)
 
   LOCAL_PORT =  addon.getSetting('local_port')
   VIDEO_PORT =  addon.getSetting('video_port')
