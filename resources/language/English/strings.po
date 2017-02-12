@@ -110,7 +110,19 @@ msgid "Show unverified"
 msgstr ""
 
 msgctxt "#30027"
-msgid "Use Plexus"
+msgid "use Plexus"
+msgstr ""
+
+msgctxt "#30028"
+msgid "external"
+msgstr ""
+
+msgctxt "#30029"
+msgid "Acestream engine"
+msgstr ""
+
+msgctxt "#30030"
+msgid "internal"
 msgstr ""
 
 #empty strings from id 30028 to 30049

@@ -363,21 +363,28 @@ def STREAM(name, iconimage, url, protocol, sch_ch_id, ch_id):
 
   #play acestream
   elif protocol=='acestream':
-    if(SETTINGS.USE_PLEXUS_ACE == 'true'):
+    if(SETTINGS.ACE_ENGINE_TYPE == 2): #use plexus
       try:
         addon_log('plexus')
         xbmc.executebuiltin('XBMC.RunPlugin(plugin://program.plexus/?mode=1&url='+url+'&name='+name+'&iconimage='+iconimage+')')
       except Exception as inst:
         addon_log(inst)
         xbmc.executebuiltin("Notification(%s,%s,%i)" % (addon.getLocalizedString(30303), "", 10000))
-    else:
+    elif(SETTINGS.ACE_ENGINE_TYPE == 1): #use external
+      #play with acestream engine started on another machine or on the localhost
+      ace = acestream(player=player, url=url, listitem=listitem)
+      ace.engine_connect()
+    else: #use internal
       if xbmc.getCondVisibility('System.Platform.Android'):
           #xbmc.executebuiltin("Notification(%s,%s,%i)" % ("android", "", 3000))
           ace = acestream(player=player, url=url, listitem=listitem)
           ace.engine_connect()
       elif xbmc.getCondVisibility('system.platform.linux'):
           #xbmc.executebuiltin("Notification(%s,%s,%i)" % ("linux", "", 3000))
+          addon_log('linux')
+          addon_log(os.uname())
           if "aarch" in os.uname()[4]:
+              addon_log('aarch')
               #xbmc.executebuiltin("Notification(%s,%s,%i)" % ("aarch", "", 3000))
               if not os.path.isfile(os.path.join(fileslist,"acestream","chroot")):
                   arch = '64' if sys.maxsize > 2**32 else '32'
@@ -386,6 +393,7 @@ def STREAM(name, iconimage, url, protocol, sch_ch_id, ch_id):
               import acestream as ace
               ace.acestreams_builtin(name,iconimage,url)
           elif "arm" in os.uname()[4]:
+              addon_log('arm')
               if not os.path.isfile(os.path.join(fileslist,"acestream","chroot")):
                   acestream_pack = "https://raw.githubusercontent.com/viorel-m/kingul-repo/master/acestream/acestream_arm32.tar.gz"
                   acekit(acestream_pack)

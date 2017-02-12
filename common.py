@@ -42,14 +42,14 @@ def extract(file_tar,destination):
     dp.update(100)
     tar.close()
     dp.close()
-		
+
 def remove(file_):
     dp = xbmcgui.DialogProgress()
     dp.create("Streams","Removing files.")
     os.remove(file_)
     dp.update(100)
     dp.close()
-		
+
 def acekit(acestream_pack):
     ACE_KIT = os.path.join(addonpath,acestream_pack.split("/")[-1])
     Downloader(acestream_pack,ACE_KIT,"Downloading AceStream modules.","Streams")

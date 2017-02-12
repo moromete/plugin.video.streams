@@ -78,5 +78,5 @@ class SETTINGS(object):
   PRODUCT_KEY='n51LvQoTlJzNGaFxseRK-uvnvX-sD4Vm5Axwmc4UcoD-jruxmKsuJaH0eVgE' #aceproxy
   ACE_HOST = addon.getSetting('ace_host')
   ACE_PORT = int(addon.getSetting('ace_port'))
-  USE_PLEXUS_ACE = addon.getSetting('use_plexus_ace')
+  ACE_ENGINE_TYPE = int(addon.getSetting('ace_engine_type'))
   ##########################################################

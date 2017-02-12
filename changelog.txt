@@ -1,3 +1,6 @@
+v 0.5.4
+  1. Add setting to force using external/internal acestream engine
+  
 v 0.5.3
   1. Merge changes from kingul's repo:
     a. added support for sopcast in aarch64 linux systems
