@@ -42,4 +42,5 @@ class mark_stream():
       response = opener.open(request)
       addon_log('Response :')
       addon_log(response.read())
-    except: pass
+    except Exception as inst:
+      addon_log(inst)
