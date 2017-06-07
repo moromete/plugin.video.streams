@@ -123,10 +123,10 @@ class epg():
               event_title = l['t']
               
               #convert from timezone ro to timezone utc
-              startTime=datetime.fromtimestamp(event_timestamp)
-              startTime=timezone('Europe/Bucharest').localize(startTime)
-              startTime=startTime.astimezone(timezone('UTC'))
-              event_timestamp = time.mktime(startTime.timetuple())
+              #startTime=datetime.fromtimestamp(event_timestamp)
+              #startTime=timezone('Europe/Bucharest').localize(startTime)
+              #startTime=startTime.astimezone(timezone('UTC'))
+              #event_timestamp = time.mktime(startTime.timetuple())
               
               if(lastEventTimestamp<event_timestamp):
                 sql="INSERT INTO `%s` VALUES (?, ?)" % \
@@ -134,19 +134,25 @@ class epg():
                 st = db_cursor.execute(sql, (event_timestamp, event_title))
                 lastEventTimestamp = event_timestamp
                 
-                startTime=datetime.fromtimestamp(event_timestamp)
-                startTime=timezone('UTC').localize(startTime)
-                startTime=startTime.astimezone(timezone('Europe/Bucharest'))
+                #startTime=datetime.fromtimestamp(event_timestamp)
+                #startTime=timezone('UTC').localize(startTime)
+                #startTime=startTime.astimezone(timezone('Europe/Bucharest'))
                 
                 #endTime=l['e']/1000
                 #endTime=datetime.fromtimestamp(endTime)
                 #endTime=timezone('UTC').localize(endTime)
                 #endTime=endTime.astimezone(tz_ro)
                 
-                addon_log('starttt = '+str(event_timestamp))
-                addon_log('start = '+startTime.strftime('%Y-%m-%d %H:%M:%S'))
+                #addon_log('starttt = '+str(event_timestamp))
+                #addon_log('start = '+startTime.strftime('%Y-%m-%d %H:%M:%S'))
+                
+                startTime = datetime.fromtimestamp(event_timestamp, timezone('UTC'))
+                
+                addon_log(startTime.strftime('%Y-%m-%d %H:%M:%S'))
                 #addon_log('end = '+endTime.strftime('%Y-%m-%d %H:%M:%S'))
+                #addon_log(event_timestamp)
                 addon_log(l['t'])
+                
                 
     
     # for k in schedule_json: #for every day
@@ -262,8 +268,9 @@ class epg():
     dt_ro = tz_ro.normalize(now_utc.astimezone(tz_ro))
     
     #https://web-api-salt.horizon.tv/oesp/v2/RO/ron/web/channels
-    urlBase="https://web-api-salt.horizon.tv/oesp/v2/RO/ron/web/programschedules/"
-    
+    #urlBase="https://web-api-salt.horizon.tv/oesp/v2/RO/ron/web/programschedules/"
+    urlBase="https://web-api-pepper.horizon.tv/oesp/v2/RO/ron/web/programschedules/"
+                 
     for day in range(0,2):
       dt_ro = dt_ro + timedelta(days=day)
       urlDate = urlBase + dt_ro.strftime('%Y%m%d')+'/'
@@ -292,9 +299,9 @@ class epg():
   
     table_name = name.replace(' ', '_').lower()
     
-    now_utc = datetime.now(timezone('UTC'))
-    tz_ro = timezone('Europe/Bucharest')
-    dt_ro = tz_ro.normalize(now_utc.astimezone(tz_ro))
+    #now_utc = datetime.now(timezone('UTC'))
+    #tz_ro = timezone('Europe/Bucharest')
+    #dt_ro = tz_ro.normalize(now_utc.astimezone(tz_ro))
   
     try:
       active_event = self.load_active_event(name)
@@ -305,7 +312,7 @@ class epg():
            (table_name,)
       #addon_log(sql)
       #db_cursor.execute(sql, (time.mktime(dt_ro.timetuple()),) )
-      db_cursor.execute(sql, (time.mktime(now_utc.timetuple()),) )
+      db_cursor.execute(sql, (int(time.time()),) )
       rec=db_cursor.fetchall()
   
       if len(rec)>0:
@@ -331,9 +338,9 @@ class epg():
   
     table_name = name.replace(' ', '_').lower()
   
-    now_utc = datetime.now(timezone('UTC'))
-    tz_ro = timezone('Europe/Bucharest')
-    dt_ro = tz_ro.normalize(now_utc.astimezone(tz_ro))
+    #now_utc = datetime.now(timezone('UTC'))
+    #tz_ro = timezone('Europe/Bucharest')
+    #dt_ro = tz_ro.normalize(now_utc.astimezone(tz_ro))
   
     event = None
   
@@ -341,7 +348,7 @@ class epg():
       sql="SELECT event_time, title FROM `%s` WHERE event_time <= ? ORDER BY event_time DESC LIMIT 1" % \
           (table_name,)
       #db_cursor.execute(sql, ( time.mktime(dt_ro.timetuple()), ) )
-      db_cursor.execute(sql, ( time.mktime(now_utc.timetuple()), ) )
+      db_cursor.execute(sql, ( int(time.time()), ) )
       rec=db_cursor.fetchone()
       if rec:
         event = self.add_event(rec[0], rec[1])
@@ -364,7 +371,7 @@ class epg():
     # dt_ro = datetime.fromtimestamp(event_time)
     # dt_display = dt_ro - timedelta(hours = tz_ro_offset) + timedelta(hours = tz_offset)
   
-    dt_utc = datetime.fromtimestamp(event_time)
+    dt_utc = datetime.fromtimestamp(event_time, timezone('UTC'))
     dt_display = dt_utc + timedelta(hours = tz_offset)
   
     #addon_log(dt_display.strftime('%H:%M') + " " + title)
