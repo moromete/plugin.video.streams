@@ -1,6 +1,6 @@
 v 0.5.6
   1. fix epg timezone offset
-  2. change epg url
+  2. change epg url and put it into addon settings
   
 v 0.5.5
   1. add default setting for acestream engine type to fix error when defaults are applied
