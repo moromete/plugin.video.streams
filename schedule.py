@@ -267,9 +267,7 @@ class epg():
     tz_ro = timezone('Europe/Bucharest')
     dt_ro = tz_ro.normalize(now_utc.astimezone(tz_ro))
     
-    #https://web-api-salt.horizon.tv/oesp/v2/RO/ron/web/channels
-    #urlBase="https://web-api-salt.horizon.tv/oesp/v2/RO/ron/web/programschedules/"
-    urlBase="https://web-api-pepper.horizon.tv/oesp/v2/RO/ron/web/programschedules/"
+    urlBase=SETTINGS.EPG_URL
                  
     for day in range(0,2):
       dt_ro = dt_ro + timedelta(days=day)

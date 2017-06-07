@@ -125,7 +125,11 @@ msgctxt "#30030"
 msgid "internal"
 msgstr ""
 
-#empty strings from id 30028 to 30049
+msgctxt "#30031"
+msgid "EPG url"
+msgstr ""
+
+#empty strings from id 30032 to 30049
 
 msgctxt "#30050"
 msgid "Refresh Schedule"

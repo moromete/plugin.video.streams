@@ -24,6 +24,7 @@ class SETTINGS(object):
 
   DISABLE_SCHEDULE = addon.getSetting('disable_schedule')
   SCHEDULE_PATH = os.path.join(ADDON_PATH,'schedule.sqlite')
+  EPG_URL = addon.getSetting('epg_url')
 
   ########################################## sopcast
   SPSC_BINARY = "sp-sc-auth"
@@ -79,4 +80,4 @@ class SETTINGS(object):
   ACE_HOST = addon.getSetting('ace_host')
   ACE_PORT = int(addon.getSetting('ace_port'))
   ACE_ENGINE_TYPE = int(addon.getSetting('ace_engine_type'))
-  ##########################################################
+##########################################################
