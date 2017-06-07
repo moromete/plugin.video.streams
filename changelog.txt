@@ -1,3 +1,6 @@
+v 0.5.5
+  1. add default setting for acestream engine type to fix error when defaults are applied
+  
 v 0.5.4
   1. Add setting to force using external/internal acestream engine
   
