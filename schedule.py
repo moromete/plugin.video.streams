@@ -276,7 +276,8 @@ class epg():
       for section in range(1,5): #every day EPG is splitted in 3
         url=urlDate+str(section)
         #addon_log(url)
-        epgFile = os.path.join(SETTINGS.ADDON_PATH,"epg_" + dt_ro.strftime('%Y%m%d') + "_" + str(section)+".json")
+        epgFileName = "epg_" + dt_ro.strftime('%Y%m%d') + "_" + str(section)+".json"
+        epgFile = os.path.join(SETTINGS.ADDON_PATH, epgFileName)
         if(not os.path.isfile(epgFile)):
           try:
             Downloader(url, epgFile, addon.getLocalizedString(30061), addon.getLocalizedString(30062))  #Downloading Schedule
