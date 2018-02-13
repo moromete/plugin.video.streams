@@ -1,0 +1,138 @@
+# XBMC Media Center language file
+msgid ""
+msgstr ""
+"Project-Id-Version: XBMC-Addons\n"
+"Report-Msgid-Bugs-To: alanwww1@xbmc.org\n"
+"POT-Creation-Date: 2013-05-17 19:34+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: en\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+
+#strings 30000 thru 30999 reserved for plugins and plugin settings
+
+msgctxt "#30000"
+msgid "General"
+msgstr ""
+
+msgctxt "#30001"
+msgid "Sopcast"
+msgstr ""
+
+msgctxt "#30002"
+msgid "Schedule"
+msgstr ""
+
+msgctxt "#30003"
+msgid "Channel List"
+msgstr ""
+
+#empty strings from id 30004 to 30009
+
+msgctxt "#30010"
+msgid "Enable Add-on Debugging"
+msgstr ""
+
+msgctxt "#30011"
+msgid "Wait time before atempting to start the player [ms]"
+msgstr ""
+
+msgctxt "#30012"
+msgid "Local port (where others can connect)"
+msgstr ""
+
+msgctxt "#30013"
+msgid "Video port"
+msgstr ""
+
+msgctxt "#30014"
+msgid "Buffer Size"
+msgstr ""
+
+msgctxt "#30015"
+msgid "Disable Schedule"
+msgstr ""
+
+msgctxt "#30016"
+msgid "Remote channel list URL"
+msgstr ""
+
+msgctxt "#30017"
+msgid "Channel list expire [hours] (0 = no update)"
+msgstr ""
+
+msgctxt "#30018"
+msgid "Show offline channels"
+msgstr ""
+
+#empty strings from id 30019 to 30049
+
+msgctxt "#30050"
+msgid "Refresh Schedule"
+msgstr ""
+
+msgctxt "#30051"
+msgid "Refresh All Schedules"
+msgstr ""
+
+msgctxt "#30052"
+msgid "Refresh Channel List"
+msgstr ""
+
+msgctxt "#30053"
+msgid "Downloading Channel list"
+msgstr ""
+
+msgctxt "#30054"
+msgid "Channel list"
+msgstr ""
+
+msgctxt "#30055"
+msgid "Downloading Channel Logo"
+msgstr ""
+
+msgctxt "#30056"
+msgid "Schedule is up to date"
+msgstr ""
+
+msgctxt "#30057"
+msgid "Channel is offline"
+msgstr ""
+
+msgctxt "#30058"
+msgid "Network is offline"
+msgstr ""
+
+msgctxt "#30059"
+msgid "Channel initialization failed"
+msgstr ""
+
+msgctxt "#30060"
+msgid "Sream"
+msgstr ""
+
+msgctxt "#30061"
+msgid "Downloading Schedule"
+msgstr ""
+
+msgctxt "#30062"
+msgid "Schedule"
+msgstr ""
+
+msgctxt "#30063"
+msgid "Offline"
+msgstr ""
+
+#empty strings from id 30064 to 30299
+
+msgctxt "#30300"
+msgid "Error"
+msgstr ""
+
+msgctxt "#30301"
+msgid "Cannot parse channel list !"
+msgstr ""
