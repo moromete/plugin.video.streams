@@ -15,7 +15,7 @@
     <setting id="buffer_size" type="number" label="30014" default="8192"/>
     <setting id="use_plexus_sop" type="bool" label="30027" default="false"/>
     <setting type="lsep" label="30023"/>
-    <setting id="ace_engine_type" type="select" label="30029" lvalues="30030|30028|30027" default="0"/>
+    <setting id="ace_engine_type" type="select" label="30029" lvalues="30030|30028|30027" default="1"/>
     <setting id="ace_host" type="text" label="30024" default="127.0.0.1"/>
     <setting id="ace_port" type="number" label="30025" default="62062"/>
   </category>

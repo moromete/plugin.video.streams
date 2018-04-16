@@ -8,7 +8,7 @@ import time
 from datetime import datetime, timedelta
 
 from settings import SETTINGS
-from common import addon_log, addon, Downloader, acekit
+from common import addon_log, addon, Downloader
 
 if SETTINGS.DISABLE_SCHEDULE != 'true':
   #from schedule import grab_schedule, load_schedule
@@ -138,7 +138,7 @@ def parse_ch_data():
     db_cursor.execute(sql)
 
     addon_log(data['date'])
-    
+
     for group in data['groups']:
       addon_log(str(group['id']) + " " + group['name'])
       db_cursor.execute("INSERT INTO categories \
@@ -148,16 +148,16 @@ def parse_ch_data():
       for channel in group['channels']:
         #addon_log(str(channel['id'])+" "+unicode(channel['name'])+" "+ str(channel['language'])+" "+str(channel['status']))
         if ((not channel['unverified']) or (SETTINGS.SHOW_UNVERIFIED=='true')):
-        
+
           addon_log(channel['name'].encode('utf8'))
-    
+
           schedule_id = 0
           thumbnail = ""
           video_resolution = ""
           video_aspect = 0
           audio_codec = ""
           video_codec = ""
-    
+
           stream_type = channel['stream_type']
           if 'schedule' in channel:
             schedule = channel['schedule']
@@ -172,7 +172,7 @@ def parse_ch_data():
             audio_codec = stream_type['audio_codec']
           if 'video_codec' in stream_type:
             video_codec = stream_type['video_codec']
-    
+
           db_cursor.execute( \
                 "INSERT INTO channels \
                  VALUES (?, ?, ?, ?, ?, \
@@ -221,7 +221,7 @@ def CAT_LIST(force=False, mode=None):
         name="[COLOR red]"+name+"[/COLOR]"
         channelsListMode=101
       addDir(name, str(id), SETTINGS.CHAN_LIST, channelsListMode)
-      
+
   #unverified category
   if ((SETTINGS.SHOW_UNVERIFIED == 'true') and (mode==None)):
     addDir("[COLOR red]"+addon.getLocalizedString(30066)+"[/COLOR]", str(-1), SETTINGS.CHAN_LIST, 100)
@@ -232,7 +232,7 @@ def CAT_LIST(force=False, mode=None):
 def CHANNEL_LIST(name, cat_id, mode=None, schedule=False):
   if (SETTINGS.DISABLE_SCHEDULE != 'true'):
     epgObj = epg()
-    
+
   addon_log(name);
   rec = []
   try:
@@ -266,13 +266,13 @@ def CHANNEL_LIST(name, cat_id, mode=None, schedule=False):
 
       chan_name = name
       chan_url = address.strip()
-      
+
       protocol = protocol.strip()
       #if protocol=='sop':
       #  protocol_color = '[COLOR lightgreen]'+protocol+'[/COLOR]'
       #else:
       #  protocol_color = '[COLOR yellow]'+protocol+'[/COLOR]'
-                
+
       chan_thumb = thumbnail.strip()
       #addon_log(chan_thumb)
       chan_status = status
@@ -283,31 +283,31 @@ def CHANNEL_LIST(name, cat_id, mode=None, schedule=False):
 
         chan_name_formatted ="[B]"+chan_name+"[/B]"
         chan_name_formatted += " [[COLOR yellow]"+protocol+"[/COLOR]]"
-        
+
         if int(chan_status)==1: chan_name_formatted += " [COLOR red]"+addon.getLocalizedString(30063)+"[/COLOR]"  #Offline
 
         thumb_path=""
         if chan_thumb and chan_thumb != "":
           fileName, fileExtension = os.path.splitext(chan_thumb)
           fileName=fileName.split("/")[-1]
-          
+
           logoDir = os.path.join(SETTINGS.ADDON_PATH,"logos");
           #create logos directory if does not exists
           if(not os.path.isdir(logoDir)):
             os.makedirs(logoDir)
-            
+
           if fileName != "":
             #thumb_path=os.path.join(ADDON_PATH,"logos",fileName+fileExtension)
             fileExtension = fileExtension.encode('utf8')
             thumb_path=os.path.join(logoDir,logo_name+fileExtension)
-          
+
           if not os.path.isfile(thumb_path):
             if fileName != "":
               try:
                 Downloader(chan_thumb, thumb_path, fileName+fileExtension, addon.getLocalizedString(30055)) #Downloading Channel Logo
               except Exception as inst:
                 pass;
-        
+
         #schedule
         if (schedule_id != 0) and \
             (schedule or (addon.getSetting('schedule_ch_list') == 'true')) \
@@ -374,32 +374,32 @@ def STREAM(name, iconimage, url, protocol, sch_ch_id, ch_id):
       #play with acestream engine started on another machine or on the localhost
       ace = acestream(player=player, url=url, listitem=listitem)
       ace.engine_connect()
-    else: #use internal
-      if xbmc.getCondVisibility('System.Platform.Android'):
-          #xbmc.executebuiltin("Notification(%s,%s,%i)" % ("android", "", 3000))
-          ace = acestream(player=player, url=url, listitem=listitem)
-          ace.engine_connect()
-      elif xbmc.getCondVisibility('system.platform.linux'):
-          #xbmc.executebuiltin("Notification(%s,%s,%i)" % ("linux", "", 3000))
-          addon_log('linux')
-          addon_log(os.uname())
-          if "aarch" in os.uname()[4]:
-              addon_log('aarch')
-              #xbmc.executebuiltin("Notification(%s,%s,%i)" % ("aarch", "", 3000))
-              if not os.path.isfile(os.path.join(fileslist,"acestream","chroot")):
-                  arch = '64' if sys.maxsize > 2**32 else '32'
-                  acestream_pack = "https://raw.githubusercontent.com/viorel-m/kingul-repo/master/acestream/acestream_arm%s.tar.gz" % arch 
-                  acekit(acestream_pack)
-              import acestream as ace
-              ace.acestreams_builtin(name,iconimage,url)
-          elif "arm" in os.uname()[4]:
-              addon_log('arm')
-              if not os.path.isfile(os.path.join(fileslist,"acestream","chroot")):
-                  acestream_pack = "https://raw.githubusercontent.com/viorel-m/kingul-repo/master/acestream/acestream_arm32.tar.gz"
-                  acekit(acestream_pack)
-              import acestream as ace
-              ace.acestreams_builtin(name,iconimage,url)
-  
+    # else: #use internal
+    #   if xbmc.getCondVisibility('System.Platform.Android'):
+    #       #xbmc.executebuiltin("Notification(%s,%s,%i)" % ("android", "", 3000))
+    #       ace = acestream(player=player, url=url, listitem=listitem)
+    #       ace.engine_connect()
+    #   elif xbmc.getCondVisibility('system.platform.linux'):
+    #       #xbmc.executebuiltin("Notification(%s,%s,%i)" % ("linux", "", 3000))
+    #       addon_log('linux')
+    #       addon_log(os.uname())
+    #       if "aarch" in os.uname()[4]:
+    #           addon_log('aarch')
+    #           #xbmc.executebuiltin("Notification(%s,%s,%i)" % ("aarch", "", 3000))
+    #           if not os.path.isfile(os.path.join(fileslist,"acestream","chroot")):
+    #               arch = '64' if sys.maxsize > 2**32 else '32'
+    #               acestream_pack = "https://raw.githubusercontent.com/viorel-m/kingul-repo/master/acestream/acestream_arm%s.tar.gz" % arch
+    #               acekit(acestream_pack)
+    #           import acestream as ace
+    #           ace.acestreams_builtin(name,iconimage,url)
+    #       elif "arm" in os.uname()[4]:
+    #           addon_log('arm')
+    #           if not os.path.isfile(os.path.join(fileslist,"acestream","chroot")):
+    #               acestream_pack = "https://raw.githubusercontent.com/viorel-m/kingul-repo/master/acestream/acestream_arm32.tar.gz"
+    #               acekit(acestream_pack)
+    #           import acestream as ace
+    #           ace.acestreams_builtin(name,iconimage,url)
+
   #play direct stream
   else:
     try:
