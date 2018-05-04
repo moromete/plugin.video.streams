@@ -495,21 +495,27 @@ elif mode==2:  #play stream
     try: xbmc.executebuiltin("Dialog.Close(all,true)")
     except: pass
 
-    xbmc.executebuiltin( "ActivateWindow(busydialog)" )
-    xbmc.sleep(800)
-    if cat_id == "200" :
-      url = grab_vk_stream(name, url)
-    if cat_id == "201" or cat_id == "202" :
-      url = grab_fu_stream(name, url)
-    STREAM(name, iconimage, url, protocol, sch_ch_id, ch_id)
-  else:
+    #xbmc.executebuiltin( "ActivateWindow(busydialog)" )
+    #xbmc.sleep(800)
+    #if cat_id == "200" :
+    #  url = grab_vk_stream(name, url)
+    #if cat_id == "201" or cat_id == "202" :
+    #  url = grab_fu_stream(name, url)
+    #STREAM(name, iconimage, url, protocol, sch_ch_id, ch_id)
+  #else:
     #stop_spsc()
-    xbmc.executebuiltin( "ActivateWindow(busydialog)" )
-    if cat_id == "200" :
-      url = grab_vk_stream(name, url)
-    if cat_id == "201" or cat_id == "202" :
-      url = grab_fu_stream(name, url)
-    STREAM(name, iconimage, url, protocol, sch_ch_id, ch_id)
+
+  #dialog = xbmcgui.DialogProgress()
+  #dialog.create('Kodi', 'Loading...')
+
+  xbmc.executebuiltin( "ActivateWindow(busydialog)" )
+
+
+    #if cat_id == "200" :
+    #  url = grab_vk_stream(name, url)
+    #if cat_id == "201" or cat_id == "202" :
+    #  url = grab_fu_stream(name, url)
+  STREAM(name, iconimage, url, protocol, sch_ch_id, ch_id)
 elif mode==3:  #refresh schedule
   if sch_ch_id != None:
     epgObj = epg()

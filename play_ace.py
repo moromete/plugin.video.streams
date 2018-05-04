@@ -108,12 +108,12 @@ class acestream():
         response = line.split()[2:]
         response = ' '.join(response)
         response = json.loads(response)
-        
+
         if response.get('status') == 100:
           addon_log("LOADASYNC returned error with message: %s" % response.get('message'))
           xbmc.executebuiltin("Notification(%s,%s,%i)" % (response.get('message'), "", 10000))
           return False
-        
+
         infohash = response.get('infohash')
         #self.sock.send('GETADURL width = 1328 height = 474 infohash = ' + infohash + ' action = load'+"\r\n")
         #self.sock.send('GETADURL width = 1328 height = 474 infohash = ' + infohash + ' action = pause'+"\r\n")
