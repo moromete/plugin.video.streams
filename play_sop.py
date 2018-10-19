@@ -105,8 +105,8 @@ class sopcast():
 
   # this function will sleep only if the sop is running
   def sop_sleep(self, time):
-    counter=0
-    increment=200
+    counter = 0
+    increment = 5000
     #path="/proc/%s" % str(spsc_pid)
 
     #addon_log('proc exists')
