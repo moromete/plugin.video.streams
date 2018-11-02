@@ -20,6 +20,8 @@ from play_fastupload_ro import grab_fu_stream
 from play_ace import acestream
 from play_sop import sopcast
 
+from resources.streams.mystreams import *
+
 addon_id = 'plugin.video.streams'
 settings = xbmcaddon.Addon(id=addon_id)
 fileslist = xbmc.translatePath(settings.getAddonInfo('profile')).decode('utf-8')
@@ -202,6 +204,8 @@ def CAT_LIST(force=False, mode=None):
   else:
     Downloader(SETTINGS.CHAN_LIST_URL, SETTINGS.CHAN_LIST, addon.getLocalizedString(30053), addon.getLocalizedString(30054)) #Downloading Channel list
     parse_ch_data()
+  
+  #addDir("[B]"+addon.getLocalizedString(30401)+"[/B]", "", "", 6)
 
   rec = []
   try:
@@ -225,11 +229,19 @@ def CAT_LIST(force=False, mode=None):
   #unverified category
   if ((SETTINGS.SHOW_UNVERIFIED == 'true') and (mode==None)):
     addDir("[COLOR red]"+addon.getLocalizedString(30066)+"[/COLOR]", str(-1), SETTINGS.CHAN_LIST, 100)
-
+  
   #xbmc.executebuiltin("Container.SetViewMode(500)")
   xbmc.executebuiltin("Container.SetViewMode(51)")
 
 def CHANNEL_LIST(name, cat_id, mode=None, schedule=False):
+
+  if(mode == 1):
+    #add new channel link
+    liz=xbmcgui.ListItem('[B][COLOR green]'+addon.getLocalizedString(30402)+'[/COLOR][/B]', iconImage="DefaultVideo.png", thumbnailImage=iconimage)
+    liz.setInfo( type="Video", infoLabels={ "Title": name } )
+    url = sys.argv[0] + "?mode=6&cat_id=" + cat_id
+    xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=url,listitem=liz)
+
   if (SETTINGS.DISABLE_SCHEDULE != 'true'):
     epgObj = epg()
 
@@ -273,7 +285,9 @@ def CHANNEL_LIST(name, cat_id, mode=None, schedule=False):
       #else:
       #  protocol_color = '[COLOR yellow]'+protocol+'[/COLOR]'
 
-      chan_thumb = thumbnail.strip()
+      chan_thumb = ''
+      if(thumbnail):
+        chan_thumb = thumbnail.strip()
       #addon_log(chan_thumb)
       chan_status = status
 
@@ -527,6 +541,11 @@ elif mode==4:  #refresh channel list
 elif mode==5:  #refresh all schedules
   CHANNEL_LIST(name=name, cat_id=cat_id, schedule=True)
   xbmc.executebuiltin('Container.Refresh()')
+elif (mode==6): 
+  add_stream(cat_id) #add stream
+  #addDir('[B][COLOR green]'+addon.getLocalizedString(30402)+'[/COLOR][/B]', "", "", 7)
+#elif (mode==7): add_stream() #add stream
+  
 #elif mode==6:  #EPG
 #  addon_log('epg');
 #  mydisplay = EPG("custom_help.xml",ADDON_PATH)
