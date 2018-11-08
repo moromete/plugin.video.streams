@@ -5,6 +5,8 @@ from common import addon_log
 from settings import SETTINGS
 from urlparse import urlparse
 
+from resources.streams.mystreams import *
+
 class mark_stream():
   def __init__( self , *args, **kwargs):
     self.ch_id=kwargs.get('ch_id')
@@ -24,14 +26,16 @@ class mark_stream():
                     "aCodec":    xbmc.getInfoLabel('VideoPlayer.AudioCodec')
                   }
     addon_log(json.dumps(channelData))
-    self.send_request(channelData)
+    #self.send_request(channelData)
+    setStatus(self.ch_id, 2)
 
   def mark_offline(self):
     channelData = { "idChannel": self.ch_id,
                     "status":    -1,
                   }
     addon_log(json.dumps(channelData))
-    self.send_request(channelData)
+    #self.send_request(channelData)
+    setStatus(self.ch_id, 1)
 
   def send_request(self, channelData):
     try:

@@ -103,6 +103,9 @@ def addLink(ch_id, name_formatted, name, url, protocol, schedule_ch_id, cat_name
 
   u=sys.argv[0]+"?mode=4"
   contextMenuItems.append(( addon.getLocalizedString(30052), "XBMC.RunPlugin("+u+")", )) #Refresh Channel List
+  
+  u=sys.argv[0]+"?mode=7&ch_id=" + str(ch_id)
+  contextMenuItems.append(( addon.getLocalizedString(30407), "XBMC.RunPlugin("+u+")", )) #Delete Channel
 
   liz = xbmcgui.ListItem(name_formatted, iconImage="DefaultVideo.png", thumbnailImage=iconimage)
   liz.setInfo( type="Video", infoLabels={ "Title": name, "Plot": plot} )
@@ -131,10 +134,10 @@ def parse_ch_data():
     db_cursor.execute(sql)
 
     sql = "CREATE TABLE IF NOT EXISTS channels \
-          (id INTEGER, id_cat INTEGER, name TEXT, language TEXT, status INTEGER, \
+          (id TEXT, id_cat INTEGER, name TEXT, language TEXT, status INTEGER, \
            video_resolution TEXT, video_aspect REAL, audio_codec TEXT, video_codec TEXT, \
            address TEXT, thumbnail TEXT, protocol TEXT, \
-           schedule_id INTEGER, unverified INTEGER)"
+           schedule_id INTEGER, unverified INTEGER, my integer)"
     db_cursor.execute(sql)
     sql="DELETE FROM channels"
     db_cursor.execute(sql)
@@ -180,11 +183,11 @@ def parse_ch_data():
                  VALUES (?, ?, ?, ?, ?, \
                          ?, ?, ?, ?, \
                          ?, ?, ?, \
-                         ?, ?)" ,
+                         ?, ?, ?)" ,
                  ( channel['id'], group['id'], channel['name'], channel['language'], channel['status'], \
                    video_resolution, video_aspect, audio_codec, video_codec, \
                    channel['address'], thumbnail, channel['protocol'], \
-                   schedule_id, channel['unverified']) )
+                   schedule_id, channel['unverified'], None) )
 
     db_connection.commit()
 
@@ -192,17 +195,17 @@ def CAT_LIST(force=False, mode=None):
   if force==False:
     if not os.path.isfile(SETTINGS.CHAN_LIST):
       addon_log('channels first download')
-      Downloader(SETTINGS.CHAN_LIST_URL, SETTINGS.CHAN_LIST, addon.getLocalizedString(30053), addon.getLocalizedString(30054))  #Downloading Channel list
+      #Downloader(SETTINGS.CHAN_LIST_URL, SETTINGS.CHAN_LIST, addon.getLocalizedString(30053), addon.getLocalizedString(30054))  #Downloading Channel list
       parse_ch_data()
     else:
       now_time = time.mktime(datetime.now().timetuple())
       time_created = os.stat(SETTINGS.CHAN_LIST)[8]  # get local play list modified date
       if SETTINGS.CHAN_LIST_EXPIRE>0 and now_time - time_created > SETTINGS.CHAN_LIST_EXPIRE:
         addon_log('channels update')
-        Downloader(SETTINGS.CHAN_LIST_URL, SETTINGS.CHAN_LIST, addon.getLocalizedString(30053), addon.getLocalizedString(30054)) #Downloading Channel list
+        #Downloader(SETTINGS.CHAN_LIST_URL, SETTINGS.CHAN_LIST, addon.getLocalizedString(30053), addon.getLocalizedString(30054)) #Downloading Channel list
         parse_ch_data()
   else:
-    Downloader(SETTINGS.CHAN_LIST_URL, SETTINGS.CHAN_LIST, addon.getLocalizedString(30053), addon.getLocalizedString(30054)) #Downloading Channel list
+    #Downloader(SETTINGS.CHAN_LIST_URL, SETTINGS.CHAN_LIST, addon.getLocalizedString(30053), addon.getLocalizedString(30054)) #Downloading Channel list
     parse_ch_data()
   
   #addDir("[B]"+addon.getLocalizedString(30401)+"[/B]", "", "", 6)
@@ -239,6 +242,7 @@ def CHANNEL_LIST(name, cat_id, mode=None, schedule=False):
     #add new channel link
     liz=xbmcgui.ListItem('[B][COLOR green]'+addon.getLocalizedString(30402)+'[/COLOR][/B]', iconImage="DefaultVideo.png", thumbnailImage=iconimage)
     liz.setInfo( type="Video", infoLabels={ "Title": name } )
+    liz.setProperty('IsPlayable', 'false')
     url = sys.argv[0] + "?mode=6&cat_id=" + cat_id
     xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=url,listitem=liz)
 
@@ -258,6 +262,7 @@ def CHANNEL_LIST(name, cat_id, mode=None, schedule=False):
     else:
       sql += ' and unverified IS NULL'
     sql += ' ORDER BY name'
+    addon_log(sql)
     db_cursor.execute( sql, (cat_id,) )
     rec=db_cursor.fetchall()
   except Exception as inst:
@@ -275,7 +280,8 @@ def CHANNEL_LIST(name, cat_id, mode=None, schedule=False):
            #(((language != '') and (addon.getSetting('lang_'+language) == 'true')) or
            #((language == '') and (addon.getSetting('lang_none') == 'true')) )
         #):
-
+      addon_log(name)
+     
       chan_name = name
       chan_url = address.strip()
 
@@ -541,8 +547,8 @@ elif mode==4:  #refresh channel list
 elif mode==5:  #refresh all schedules
   CHANNEL_LIST(name=name, cat_id=cat_id, schedule=True)
   xbmc.executebuiltin('Container.Refresh()')
-elif (mode==6): 
-  add_stream(cat_id) #add stream
+elif (mode==6): addChannel(cat_id) #add stream
+elif (mode==7): deleteStream(ch_id) #add stream
   #addDir('[B][COLOR green]'+addon.getLocalizedString(30402)+'[/COLOR][/B]', "", "", 7)
 #elif (mode==7): add_stream() #add stream
   

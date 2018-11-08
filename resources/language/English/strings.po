@@ -240,3 +240,11 @@ msgstr ""
 msgctxt "#30406"
 msgid "Invalid protocol!"
 msgstr ""
+
+msgctxt "#30407"
+msgid "Delete channel"
+msgstr ""
+
+msgctxt "#30408"
+msgid "Error adding channel"
+msgstr ""

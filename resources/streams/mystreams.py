@@ -6,13 +6,14 @@ import os
 import hashlib
 import sys
 import re
+import uuid
 
 import sqlite3
 
 from settings import SETTINGS
 from common import addon, addon_log
 
-def add_stream(catId):
+def addChannel(catId):
   kb = xbmc.Keyboard('', addon.getLocalizedString(30403))
 
   #url
@@ -34,10 +35,13 @@ def add_stream(catId):
       kb.doModal()
       if (kb.isConfirmed()):
         name = kb.getText()
+        name = name.title()
         if name == '' : sys.exit(0)
         else:
           #save
-          save(catId, url, name, protocol)
+          if(insertStream(catId, url, name, protocol) == False):
+            xbmc.executebuiltin("Notification(%s,%s,%i)" % (addon.getLocalizedString(30408), "", 1))
+            xbmc.executebuiltin("Container.Refresh")
           xbmc.executebuiltin("Notification(%s,%s,%i)" % (addon.getLocalizedString(30405), "", 1))
           xbmc.executebuiltin("Container.Refresh")
       else:
@@ -45,11 +49,32 @@ def add_stream(catId):
   else:
     xbmc.executebuiltin("Container.Refresh")
 
-def save(catId, url, name, protocol):
+def insertStream(catId, url, name, protocol):
   db_connection=sqlite3.connect(SETTINGS.CHANNELS_DB)
   db_cursor=db_connection.cursor()
   sql = "INSERT INTO channels \
-         (id_cat, name, address, protocol, status, unverified) \
-         VALUES(?,?,?,?,?,?)"
-  st = db_cursor.execute(sql, (catId, name, url, protocol, 2, 1))
+         (id, id_cat, name, address, protocol, status, my) \
+         VALUES(?, ?, ?, ?, ?, ?, ?)"
+  st = db_cursor.execute(sql, (str(uuid.uuid1()), catId, name, url, protocol, 2, 1))
+  addon_log(str(uuid.uuid1()))
   db_connection.commit()
+  return st
+
+def deleteStream(chId):
+  db_connection=sqlite3.connect(SETTINGS.CHANNELS_DB)
+  db_cursor=db_connection.cursor()
+  sql = "DELETE FROM channels \
+         WHERE id = ?"
+  db_cursor.execute(sql, (chId, ))
+  db_connection.commit()
+  xbmc.executebuiltin("Container.Refresh")
+
+def setStatus(chId, status):
+  db_connection=sqlite3.connect(SETTINGS.CHANNELS_DB)
+  db_cursor=db_connection.cursor()
+  sql = "UPDATE channels \
+         SET status = ? \
+         WHERE id = ?"
+  db_cursor.execute(sql, (status, chId))
+  db_connection.commit()
+  xbmc.executebuiltin("Container.Refresh")
