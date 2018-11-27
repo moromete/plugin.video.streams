@@ -21,11 +21,11 @@ from play_ace import acestream
 from play_sop import sopcast
 
 from resources.streams.mystreams import *
+from resources.streams.export import export
 
 addon_id = 'plugin.video.streams'
 settings = xbmcaddon.Addon(id=addon_id)
 fileslist = xbmc.translatePath(settings.getAddonInfo('profile')).decode('utf-8')
-
 
 # try:
 #   try:
@@ -207,6 +207,10 @@ def CAT_LIST(force=False, mode=None):
   else:
     #Downloader(SETTINGS.CHAN_LIST_URL, SETTINGS.CHAN_LIST, addon.getLocalizedString(30053), addon.getLocalizedString(30054)) #Downloading Channel list
     parse_ch_data()
+
+  exp = export()
+  exp.export()
+  #exp.send()
   
   #addDir("[B]"+addon.getLocalizedString(30401)+"[/B]", "", "", 6)
 

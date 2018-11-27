@@ -78,3 +78,4 @@ def setStatus(chId, status):
   db_cursor.execute(sql, (status, chId))
   db_connection.commit()
   xbmc.executebuiltin("Container.Refresh")
+
