@@ -11,6 +11,8 @@ from email.mime.base import MIMEBase
 from settings import SETTINGS
 from common import addon, addon_log
 
+import xbmc, xbmcgui
+
 class export():
   def __init__( self ):
     db_connection=sqlite3.connect(SETTINGS.CHANNELS_DB)
@@ -51,16 +53,21 @@ class export():
       return True
   
   def export(self):
-    if(self.checkDoExport()):
-      self.createExportFile()
+    if(self.checkSmtp()):
+      if(self.checkDoExport()):
+        self.createExportFile()
+        self.send()
+      self.smtp.quit()
+      return True;
   
   def send(self):
-    emailTo = 'test@gmail.com'
+    emailTo = 'streams201811@gmail.com'
 
     msg = MIMEMultipart()
     #msg = EmailMessage()
-    msg['Subject'] = 'Export %s' % datetime.now().isoformat()
-    msg['From'] = 'contact@tvdot.tk'
+    #msg['Subject'] = 'Export %s' % datetime.now().isoformat()
+    msg['Subject'] = 'Export plugin.video.streams'
+    msg['From'] = 'streams201811@gmail.com'
     msg['To'] = emailTo
     #msg.set_content(fp.read())
         
@@ -77,11 +84,21 @@ class export():
     #                   subtype='json',
     #                   filename='export.json')
     
-    s = smtplib.SMTP('localhost')
-    #s.send_message(msg)
-    s.sendmail('contact@tvdot.tk', emailTo, msg.as_string())
-    s.quit()
+    try:  
+      self.smtp.sendmail('streams201811@gmail.com', emailTo, msg.as_string())
+      #s.send_message(msg)
+    except Exception as inst:
+      addon_log(inst)
+      xbmcgui.Dialog().ok(addon.getLocalizedString(30300), addon.getLocalizedString(30409), str(inst))
 
-
-
-    
+  def checkSmtp(self):
+    try:  
+      self.smtp = smtplib.SMTP(addon.getSetting('smtp'))
+      self.smtp.starttls()
+      self.smtp.login(addon.getSetting('smtpUsername'), addon.getSetting('smtpPasswd'))
+      self.smtp.ehlo()
+      return True
+    except Exception as inst:
+      addon_log(inst)
+      #xbmc.executebuiltin("Notification(%s,%s,%d)" % (addon.getLocalizedString(30409), "", 30000))
+      xbmcgui.Dialog().ok(addon.getLocalizedString(30300), addon.getLocalizedString(30409), str(inst))

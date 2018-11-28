@@ -209,9 +209,9 @@ def CAT_LIST(force=False, mode=None):
     parse_ch_data()
 
   exp = export()
-  exp.export()
-  #exp.send()
-  
+  if(exp.export() != True) :
+    return
+    
   #addDir("[B]"+addon.getLocalizedString(30401)+"[/B]", "", "", 6)
 
   rec = []

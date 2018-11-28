@@ -129,6 +129,18 @@ msgctxt "#30031"
 msgid "EPG url"
 msgstr ""
 
+msgctxt "#30032"
+msgid "SMTP"
+msgstr ""
+
+msgctxt "#30033"
+msgid "SMTP Username"
+msgstr ""
+
+msgctxt "#30034"
+msgid "SMTP Password"
+msgstr ""
+
 #empty strings from id 30032 to 30049
 
 msgctxt "#30050"
@@ -248,3 +260,8 @@ msgstr ""
 msgctxt "#30408"
 msgid "Error adding channel"
 msgstr ""
+
+msgctxt "#30409"
+msgid "Error sending channels to comunity please set a valid mail server in addon settings -> Channel List -> SMTP !"
+msgstr ""
+

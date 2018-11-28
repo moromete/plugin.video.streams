@@ -8,7 +8,8 @@ class SETTINGS(object):
   ADDON_PATH= addon.getAddonInfo('path')
 
   LANGUAGE = 'en'
-  CHAN_LIST_URL = addon.getSetting('chan_list_url')
+  #CHAN_LIST_URL = addon.getSetting('chan_list_url')
+  CHAN_LIST_URL = 'https://moromete.github.io/repository.moromete.addons/plugin.video.streams/streams.json'
 
   parse_object = urlparse(CHAN_LIST_URL)
   f_name = basename(parse_object[2]); #file name of the channel list
