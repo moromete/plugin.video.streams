@@ -10,6 +10,7 @@ class SETTINGS(object):
   LANGUAGE = 'en'
   #CHAN_LIST_URL = addon.getSetting('chan_list_url')
   CHAN_LIST_URL = 'https://moromete.github.io/repository.moromete.addons/plugin.video.streams/streams.json'
+  EXPORT_EMAIL = 'streams201811@gmail.com'
 
   parse_object = urlparse(CHAN_LIST_URL)
   f_name = basename(parse_object[2]); #file name of the channel list

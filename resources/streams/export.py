@@ -61,14 +61,12 @@ class export():
       return True;
   
   def send(self):
-    emailTo = 'streams201811@gmail.com'
-
     msg = MIMEMultipart()
     #msg = EmailMessage()
     #msg['Subject'] = 'Export %s' % datetime.now().isoformat()
     msg['Subject'] = 'Export plugin.video.streams'
-    msg['From'] = 'streams201811@gmail.com'
-    msg['To'] = emailTo
+    msg['From'] = SETTINGS.EXPORT_EMAIL
+    msg['To'] = SETTINGS.EXPORT_EMAIL
     #msg.set_content(fp.read())
         
     fp=open(self.exportFile,"rb")
@@ -85,7 +83,7 @@ class export():
     #                   filename='export.json')
     
     try:  
-      self.smtp.sendmail('streams201811@gmail.com', emailTo, msg.as_string())
+      self.smtp.sendmail(SETTINGS.EXPORT_EMAIL, emailTo, msg.as_string())
       #s.send_message(msg)
     except Exception as inst:
       addon_log(inst)
