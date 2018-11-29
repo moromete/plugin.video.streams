@@ -4,6 +4,7 @@ v 2.0.0
   3. remove epg
   4. import only non existing channels without overwiting channels database
   5. add Croatian translations
+  6. updated qemu-i386 version 2.4.0
 
 v 0.5.6
   1. fix epg timezone offset
