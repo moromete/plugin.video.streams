@@ -95,7 +95,8 @@ class export():
     try:  
       self.smtp = smtplib.SMTP(addon.getSetting('smtp'))
       self.smtp.starttls()
-      self.smtp.login(addon.getSetting('smtpUsername'), addon.getSetting('smtpPasswd'))
+      if((addon.getSetting('smtpUsername') != "") and (addon.getSetting('smtpPasswd') != "")):
+        self.smtp.login(addon.getSetting('smtpUsername'), addon.getSetting('smtpPasswd'))
       self.smtp.ehlo()
       return True
     except Exception as inst:
