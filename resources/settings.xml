@@ -29,7 +29,7 @@
   <category label="30003">
     <setting type="sep" />
     <setting id="smtp" type="text" label="30032" default="smtp.gmail.com"/>
-    <setting id="smtpPort" type="number" label="30035" default="465"/>
+    <setting id="smtpPort" type="number" label="30035" default="587"/>
     <setting id="smtpUsername" type="text" label="30033" default=""/>
     <setting id="smtpPasswd" type="text" label="30034" default=""/>
     <!-- <setting id="chan_list_url" type="text" label="30016" default="http://tvdot.tk/ro/streams.json"/> -->
