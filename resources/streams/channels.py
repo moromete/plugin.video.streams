@@ -149,14 +149,9 @@ class Channels():
       sql += ' and unverified IS NULL'
     sql += ' ORDER BY name'
     
-    try:
-      db_cursor.execute( sql, (self.catId) )
-      rec=db_cursor.fetchall()
-    except Exception as inst:
-      xbmcgui.Dialog().ok(addon.getLocalizedString(30300), addon.getLocalizedString(30301), str(inst))  #Cannot parse channel list !
-      db_connection.close()
-      return
-
+    db_cursor.execute( sql, (self.catId, ) )
+    rec=db_cursor.fetchall()
+    
     arrChannels = []
     if len(rec)>0:
       for id, name, language, status, \
@@ -180,16 +175,9 @@ class Channels():
       
     sql = "SELECT id, name \
            FROM categories"
+    db_cursor.execute(sql)
+    rec=db_cursor.fetchall()
     
-    try:
-      db_cursor.execute(sql)
-      rec=db_cursor.fetchall()
-    except Exception as inst:
-      #cannot parse the channel list
-      xbmcgui.Dialog().ok(addon.getLocalizedString(30300), addon.getLocalizedString(30301), str(inst))  #Cannot parse channel list !
-      db_connection.close()
-      return
-
     arrCategories = []
     if len(rec)>0:
       for id, name in rec:
