@@ -1,3 +1,10 @@
+v 2.0.0
+  1. change channel marking engine (use smtp)
+  2. add / delete channel features
+  3. remove epg
+  4. import only non existing channels without overwiting channels database
+  5. add Croatian translations
+
 v 0.5.6
   1. fix epg timezone offset
   2. change epg url and put it into addon settings
