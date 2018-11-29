@@ -91,7 +91,7 @@ class export():
 
   def checkSmtp(self):
     try:  
-      self.smtp = smtplib.SMTP(addon.getSetting('smtp'))
+      self.smtp = smtplib.SMTP(addon.getSetting('smtp'), addon.getSetting('smtpPort'))
       self.smtp.starttls()
       if((addon.getSetting('smtpUsername') != "") and (addon.getSetting('smtpPasswd') != "")):
         self.smtp.login(addon.getSetting('smtpUsername'), addon.getSetting('smtpPasswd'))

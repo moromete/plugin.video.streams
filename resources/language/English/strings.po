@@ -141,7 +141,11 @@ msgctxt "#30034"
 msgid "SMTP Password"
 msgstr ""
 
-#empty strings from id 30032 to 30049
+msgctxt "#30035"
+msgid "SMTP Port"
+msgstr ""
+
+#empty strings from id 30036 to 30049
 
 msgctxt "#30050"
 msgid "Refresh Schedule"
