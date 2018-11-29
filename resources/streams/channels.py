@@ -198,5 +198,12 @@ class Channels():
         arrCategories.append(cat)
     db_connection.close()
     return arrCategories
+  
+  def markStream(self, chId, status):
+    ch = Channel()
+    ch.findOne(chId)
+    ch.setStatus(status)
+    xbmc.executebuiltin("Container.Refresh")
+
 
     
