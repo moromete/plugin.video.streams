@@ -94,9 +94,8 @@ class export():
       self.smtp = smtplib.SMTP(addon.getSetting('smtp'), addon.getSetting('smtpPort'))
       self.smtp.ehlo()
       self.smtp.starttls()
-      if((addon.getSetting('smtpUsername') != "") and (addon.getSetting('smtpPasswd') != "")):
-        self.smtp.login(addon.getSetting('smtpUsername'), addon.getSetting('smtpPasswd'))
-      a = self.smtp.sendmail('noreply@localhost', 'noreply@localhost', '')
+      #if((addon.getSetting('smtpUsername') != "") and (addon.getSetting('smtpPasswd') != "")):
+      self.smtp.login(addon.getSetting('smtpUsername'), addon.getSetting('smtpPasswd'))
       return True
     except Exception as inst:
       addon_log(inst)
