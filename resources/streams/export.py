@@ -83,7 +83,7 @@ class export():
     #                   filename='export.json')
     
     try:  
-      self.smtp.sendmail(SETTINGS.EXPORT_EMAIL, emailTo, msg.as_string())
+      self.smtp.sendmail(SETTINGS.EXPORT_EMAIL, SETTINGS.EXPORT_EMAIL, msg.as_string())
       #s.send_message(msg)
     except Exception as inst:
       addon_log(inst)
@@ -92,10 +92,11 @@ class export():
   def checkSmtp(self):
     try:  
       self.smtp = smtplib.SMTP(addon.getSetting('smtp'), addon.getSetting('smtpPort'))
+      self.smtp.ehlo()
       self.smtp.starttls()
       if((addon.getSetting('smtpUsername') != "") and (addon.getSetting('smtpPasswd') != "")):
         self.smtp.login(addon.getSetting('smtpUsername'), addon.getSetting('smtpPasswd'))
-      self.smtp.ehlo()
+      a = self.smtp.sendmail('noreply@localhost', 'noreply@localhost', '')
       return True
     except Exception as inst:
       addon_log(inst)

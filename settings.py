@@ -30,7 +30,7 @@ class SETTINGS(object):
 
   ########################################## sopcast
   SPSC_BINARY = "sp-sc-auth"
-
+  
   #raspberry pi
   QEMU = "qemu-i386"  #for raspberry pi to issue kill command
   QEMU64 = "qemuaarch-i386"
@@ -43,13 +43,18 @@ class SETTINGS(object):
     elif(os.uname()[4][:3] == 'aar'):
       ARM = True
       ARM64 = True if sys.maxsize > 2**32 else False
-
+  
   if ARM == False :
     SPSC = os.path.join(ADDON_PATH, 'bin/linux_x86/sopcast', SPSC_BINARY)
-    SPSC_LIB = os.path.join(ADDON_PATH, 'bin/linux_x86/sopcast')
+    SPSC_LIB = os.path.join(ADDON_PATH, 'bin/linux_x86/sopcast/lib')
+    
+    LOADER = os.path.join(ADDON_PATH, 'bin/linux_x86/sopcast', 'ld-linux.so.2')
 
     #make executables
     is_exe(SPSC)
+    is_exe(LOADER)
+
+    SPSC = [LOADER, '--library-path', os.path.join(ADDON_PATH, 'bin/linux_x86/sopcast', 'lib'), SPSC]
 
   elif ARM == True:
       SOPCAST_ARM_PATH =  addon.getSetting('sopcast_arm_path')
@@ -64,7 +69,8 @@ class SETTINGS(object):
         is_exe(os.path.join(SOPCAST_ARM_PATH, QEMU64))
         QEMU_SPSC = [os.path.join(SOPCAST_ARM_PATH, QEMU64), os.path.join(SOPCAST_ARM_PATH, "lib/ld-linux.so.2"), "--library-path", os.path.join(SOPCAST_ARM_PATH, "lib")]
 
-      SPSC = os.path.join(SOPCAST_ARM_PATH, SPSC_BINARY)
+      # SPSC = os.path.join(SOPCAST_ARM_PATH, SPSC_BINARY)
+      SPSC = QEMU_SPSC + [os.path.join(SOPCAST_ARM_PATH, SPSC_BINARY)]
 
   LOCAL_PORT =  addon.getSetting('local_port')
   VIDEO_PORT =  addon.getSetting('video_port')

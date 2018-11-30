@@ -21,12 +21,10 @@
     <description>
       Radio/Tv Streams
       - Watch internet video/audio streams (sopcast, acestream, http, rtmp, rtsp, mms ...) based on a remote channel list.
-      http://tvdot.tk
     </description>
     <description lang="hr">
       Radio/Tv strujanja
       - Gledajte internet video/audio strujanja (sopcast, acestream, http, rtmp, rtsp, mms ...) temeljena na udaljenom popisu programa.
-      http://tvdot.tk
     </description>
     <platform>all</platform>
   </extension>

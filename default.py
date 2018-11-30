@@ -166,6 +166,7 @@ def CHANNEL_LIST(name, cat_id, mode=None, schedule=False):
   xbmc.executebuiltin("Container.SetViewMode(51)")
 
 def STREAM(name, iconimage, url, protocol, sch_ch_id, ch_id):
+  addon_log("stream")
   if(url == None):
     try: xbmc.executebuiltin("Dialog.Close(all,true)")
     except: pass
@@ -187,7 +188,9 @@ def STREAM(name, iconimage, url, protocol, sch_ch_id, ch_id):
 
   #play sopcast stream
   if protocol == "sop":
+    addon_log("sop")
     if(SETTINGS.USE_PLEXUS_SOP == 'true'):
+      addon_log("sop play plexus")
       try:
         addon_log('plexus')
         xbmc.executebuiltin('XBMC.RunPlugin(plugin://program.plexus/?mode=2&url='+url+'&name='+name+'&iconimage='+iconimage+')')
@@ -195,6 +198,7 @@ def STREAM(name, iconimage, url, protocol, sch_ch_id, ch_id):
         addon_log(inst)
         xbmc.executebuiltin("Notification(%s,%s,%i)" % (addon.getLocalizedString(30303), "", 10000))
     else:
+      addon_log("sop play")
       sop = sopcast(player=player, url=url, listitem=listitem)
       sop.start()
 
@@ -224,8 +228,8 @@ def STREAM(name, iconimage, url, protocol, sch_ch_id, ch_id):
 #######################################################################################################################
 
 addon_log('------------- START -------------')
-addon_log(SETTINGS.CHAN_LIST_URL)
-addon_log(SETTINGS.CHAN_LIST)
+# addon_log(SETTINGS.CHAN_LIST_URL)
+# addon_log(SETTINGS.CHAN_LIST)
 
 #read params
 params=get_params()
@@ -262,7 +266,7 @@ try:
 except:
   ch_id=None
 
-addon_log(mode)
+addon_log('MODE = ' + str(mode))
 if ((mode==None) or (mode==100)): #list categories
   CAT_LIST(mode=mode)
 elif ((mode==1) or (mode==101)):  #list channels
@@ -296,6 +300,6 @@ try:
   xbmc.executebuiltin( "Dialog.Close(busydialog)" )
 except: pass
 
-addon_log('------------- END -------------')
+addon_log('------------- END ---------------')
 
 xbmcplugin.endOfDirectory(int(sys.argv[1]))
