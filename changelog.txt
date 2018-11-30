@@ -1,3 +1,6 @@
+v 2.0.1
+  1. fix sopcast play on linux x64
+
 v 2.0.0
   1. change channel marking engine (use smtp)
   2. add / delete channel features
