@@ -150,8 +150,12 @@ def CHANNEL_LIST(name, cat_id, mode=None, schedule=False):
     url = sys.argv[0] + "?mode=6&cat_id=" + cat_id
     xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=url,listitem=liz)
 
+  loadUnverified = False 
+  if((mode!=None) and (int(mode)==101)):
+    loadUnverified = True
+
   channels = Channels(catId = cat_id)
-  arrChannels = channels.loadChannels()
+  arrChannels = channels.loadChannels(loadUnverified)
   for ch in arrChannels:
     if (((SETTINGS.SHOW_OFFLINE_CH=='true') and (int(ch.status)==1)) or (int(ch.status)!=1)): #if we show or not offline channels based on settings
       name_formatted ="[B]"+ch.name+"[/B]"
