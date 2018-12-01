@@ -290,9 +290,9 @@ elif mode==2:  #play stream
 elif mode==4:  #refresh channel list
   CAT_LIST(force=True)
   xbmc.executebuiltin('Container.Refresh()')
-elif mode==5:  #refresh all schedules
-  CHANNEL_LIST(name=name, cat_id=cat_id, schedule=True)
-  xbmc.executebuiltin('Container.Refresh()')
+# elif mode==5:  #refresh all schedules
+#   CHANNEL_LIST(name=name, cat_id=cat_id, schedule=True)
+#   xbmc.executebuiltin('Container.Refresh()')
 elif (mode==6): #add stream
   channels = Channels(catId = cat_id) 
   channels.addChannel()

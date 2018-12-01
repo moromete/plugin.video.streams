@@ -1,3 +1,6 @@
+v 2.0.3
+  1. fix pytz dependency
+
 v 2.0.2
   1. fix listing of non verified channels 
   2. force smtp auth

@@ -24,8 +24,8 @@ class SETTINGS(object):
 
   NOTIFY_OFFLINE = "true"
 
-  DISABLE_SCHEDULE = addon.getSetting('disable_schedule')
-  SCHEDULE_PATH = os.path.join(ADDON_PATH,'schedule.sqlite')
+  # DISABLE_SCHEDULE = addon.getSetting('disable_schedule')
+  # SCHEDULE_PATH = os.path.join(ADDON_PATH,'schedule.sqlite')
   EPG_URL = addon.getSetting('epg_url')
 
   ########################################## sopcast
