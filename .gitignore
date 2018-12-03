@@ -1,10 +1,9 @@
-schedule.sqlite
-channels.sqlite
-streams.json
+*.sqlite
+*.json
 *.pyc
 *.pyo
 logos/*.gif
 logos/*.png
 logos/*.jpg
 logos/*.jpeg
-epg*.json
+.vscode

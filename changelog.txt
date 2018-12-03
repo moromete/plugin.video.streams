@@ -1,9 +1,20 @@
+v 2.0.3
+  1. fix pytz dependency
+
+v 2.0.2
+  1. fix listing of non verified channels 
+  2. force smtp auth
+
+v 2.0.1
+  1. fix sopcast play on linux x64
+
 v 2.0.0
   1. change channel marking engine (use smtp)
   2. add / delete channel features
   3. remove epg
   4. import only non existing channels without overwiting channels database
   5. add Croatian translations
+  6. updated qemu-i386 version 2.4.0
 
 v 0.5.6
   1. fix epg timezone offset

@@ -7,8 +7,8 @@ from common import addon_log, addon
 from settings import SETTINGS
 from resources.streams.channels import Channels
 
-if SETTINGS.DISABLE_SCHEDULE != 'true':
-  from schedule import epg
+# if SETTINGS.DISABLE_SCHEDULE != 'true':
+#   from schedule import epg
 
 class streamplayer(xbmc.Player):
   def __init__( self , *args, **kwargs):
@@ -46,13 +46,13 @@ class streamplayer(xbmc.Player):
 
     self.stream_online = True
 
-    if SETTINGS.DISABLE_SCHEDULE!='true':
-      #display schedule active event
-      epgObj = epg()
-      active_event = epgObj.load_active_event(self.name)
-      if active_event:
-        active_event = active_event.encode('utf8')
-        xbmc.executebuiltin("Notification(%s,%s,%i)" % (active_event, "", 10000))
+    # if SETTINGS.DISABLE_SCHEDULE!='true':
+    #   #display schedule active event
+    #   epgObj = epg()
+    #   active_event = epgObj.load_active_event(self.name)
+    #   if active_event:
+    #     active_event = active_event.encode('utf8')
+    #     xbmc.executebuiltin("Notification(%s,%s,%i)" % (active_event, "", 10000))
 
   def onPlayBackEnded(self):
     addon_log('----------------------->END')
