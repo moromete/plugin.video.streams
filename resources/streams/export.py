@@ -17,10 +17,10 @@ class export():
   def __init__( self ):
     db_connection=sqlite3.connect(SETTINGS.CHANNELS_DB)
     self.db_cursor=db_connection.cursor()
-    self.exportFile = os.path.join(addon.getAddonInfo('path'), 'export.json') 
+    self.exportFile = SETTINGS.EXPORT_CHAN_LIST
 
   def createExportFile( self ):
-    sql = "SELECT id, name, status, address, unverified, my \
+    sql = "SELECT id, name, status, address, id_cat \
            FROM channels \
            order by id_cat, name"
     self.db_cursor.execute( sql )
@@ -29,13 +29,15 @@ class export():
     if len(rec)>0:
       jsonData = []
       for id, name, status, \
-          address, unverified, my in rec:
+          address, id_cat in rec:
         channel = {'id': id,
                    'name': name,
                    'address': address,
                    'status': status,
-                   'unverified': unverified,
-                   'my': my}
+                   'id_cat': id_cat
+                  #  'unverified': unverified,
+                  #  'my': my
+                  }
         jsonData.append(channel)
       jsonStr = json.dumps(jsonData)
 
