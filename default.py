@@ -139,7 +139,7 @@ def CAT_LIST(force=False, mode=None):
     addDir("[COLOR red]"+addon.getLocalizedString(30066)+"[/COLOR]", str(-1), SETTINGS.CHAN_LIST, 100)
   
   #xbmc.executebuiltin("Container.SetViewMode(500)")
-  xbmc.executebuiltin("Container.SetViewMode(51)")
+  #xbmc.executebuiltin("Container.SetViewMode(51)")
 
 def CHANNEL_LIST(name, cat_id, mode=None, schedule=False):
   if(mode == 1):
@@ -163,7 +163,7 @@ def CHANNEL_LIST(name, cat_id, mode=None, schedule=False):
       addLink(ch.id, name_formatted, ch.name, ch.address.strip(), ch.protocol.strip(),
               ch.id_cat, 2, '', "", len(arrChannels))
 
-  xbmc.executebuiltin("Container.SetViewMode(51)")
+  #xbmc.executebuiltin("Container.SetViewMode(51)")
 
 def STREAM(name, iconimage, url, protocol, sch_ch_id, ch_id):
   if(url == None):
