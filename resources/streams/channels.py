@@ -108,6 +108,16 @@ class Channels():
     ch.delete()
     xbmc.executebuiltin("Container.Refresh")
 
+  def cleanCategories(self):
+    db = sqlite3.connect(SETTINGS.CHANNELS_DB)
+    db_cursor=db.cursor()
+
+    sql="DELETE FROM categories"
+    db_cursor.execute(sql)
+
+    db.commit()
+    db.close()
+  
   def importChannels(self):
     # self.createDb()
     # self.migrateDb()
@@ -115,6 +125,8 @@ class Channels():
     with open(SETTINGS.CHAN_LIST) as json_file:
       data = json.loads(json_file.read())
       json_file.close()
+
+      self.cleanCategories()
 
       for group in data['groups']:
         addon_log(str(group['id']) + " " + group['name'])
