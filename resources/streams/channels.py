@@ -91,7 +91,7 @@ class Channels():
           if name == '' : sys.exit(0)
           else:
             #save
-            ch = Channel(id_cat = self.catId, address = url, name=name, protocol=protocol, status=2, my=1)
+            ch = Channel(id_cat = self.catId, address = url, name=name, protocol=protocol, status=Channel.STATUS_ONLINE, my=1)
             if(ch.save() == False):
               xbmc.executebuiltin("Notification(%s,%s,%i)" % (addon.getLocalizedString(30408), "", 1))
               xbmc.executebuiltin("Container.Refresh")
