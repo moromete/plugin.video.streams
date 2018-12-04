@@ -65,8 +65,8 @@ class export():
       if(self.checkDoExport()):
         self.createExportFile()
         self.send()
-      self.createExportFile()
-      self.send()
+      # self.createExportFile()
+      # self.send()
       self.smtp.quit()
       return True;
   
