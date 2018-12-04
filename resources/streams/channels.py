@@ -98,7 +98,7 @@ class Channels():
           #addon_log(str(channel['id'])+" "+unicode(channel['name'])+" "+ str(channel['language'])+" "+str(channel['status']))
           if ((not channel['unverified']) or (SETTINGS.SHOW_UNVERIFIED=='true')):
 
-            addon_log(channel['name'].encode('utf8'))
+            #addon_log(channel['name'].encode('utf8'))
 
             # schedule_id = 0
             # thumbnail = ""

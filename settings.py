@@ -1,3 +1,4 @@
+import xbmc
 import os, sys
 from urlparse import urlparse
 from posixpath import basename, dirname
@@ -5,8 +6,9 @@ from common import addon, addon_log, is_exe
 
 class SETTINGS(object):
 
-  ADDON_PATH= addon.getAddonInfo('path')
-
+  ADDON_PATH = addon.getAddonInfo('path')
+  PROFILE = xbmc.translatePath(addon.getAddonInfo('profile'))
+  
   LANGUAGE = 'en'
   #CHAN_LIST_URL = addon.getSetting('chan_list_url')
   CHAN_LIST_URL = 'https://moromete.github.io/repository.moromete.addons/plugin.video.streams/streams.json'
@@ -14,9 +16,12 @@ class SETTINGS(object):
 
   parse_object = urlparse(CHAN_LIST_URL)
   f_name = basename(parse_object[2]); #file name of the channel list
-  CHAN_LIST = os.path.join(ADDON_PATH, f_name) #full path of the channel list
+  # CHAN_LIST = os.path.join(ADDON_PATH, f_name) #full path of the channel list
+  CHAN_LIST = os.path.join(PROFILE, f_name) #full path of the channel list
   CHAN_LIST_EXPIRE =  int(addon.getSetting('chan_list_expire'))*60*60
-  CHANNELS_DB = os.path.join(ADDON_PATH,'channels.sqlite')
+  # CHANNELS_DB = os.path.join(ADDON_PATH,'channels.sqlite')
+  CHANNELS_DB = os.path.join(PROFILE,'channels.sqlite')
+  EXPORT_CHAN_LIST = os.path.join(PROFILE, 'export.json') 
 
   #DISABLE_SCHEDULE = addon.getSetting('disable_schedule')
   SHOW_OFFLINE_CH = addon.getSetting('show_offline_ch')
