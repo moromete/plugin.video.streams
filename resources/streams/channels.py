@@ -14,7 +14,7 @@ from category import Category
 class Channels():
   def __init__( self , **kwargs):
     self.catId = kwargs.get('catId')
-  
+
   def createDb(self):
     db_connection=sqlite3.connect(SETTINGS.CHANNELS_DB)
     db_cursor=db_connection.cursor()
@@ -38,6 +38,32 @@ class Channels():
     
     db_connection.commit()
     db_connection.close()
+
+  def migrateDb(self):
+    addon_log("""Run database migrations.""")
+
+    def get_script_version(path):
+        return int(path.split('_')[0])
+
+    db = sqlite3.connect(SETTINGS.CHANNELS_DB)
+    current_version = db.cursor().execute('pragma user_version').fetchone()[0]
+
+    addon_log(current_version)
+
+    migrations_path = os.path.join(SETTINGS.ADDON_PATH, 'resources/streams/migrations/')
+    migration_files = list(os.listdir(migrations_path))
+    for migration in sorted(migration_files):
+        scriptFile = "{0}".format(migration)
+        migration_version = get_script_version(scriptFile)
+        scriptPath = os.path.join(SETTINGS.ADDON_PATH, 'resources/streams/migrations/', scriptFile)
+
+        if migration_version > current_version:
+            addon_log("applying migration {0}".format(migration_version))
+            with open(scriptPath, mode='r') as f:
+                 db.cursor().executescript(f.read())
+                 addon_log("database now at version {0}".format(migration_version))
+        else:
+            addon_log("migration {0} already applied".format(migration_version))
 
   def addChannel(self):
     kb = xbmc.Keyboard('', addon.getLocalizedString(30403))
@@ -83,8 +109,9 @@ class Channels():
     xbmc.executebuiltin("Container.Refresh")
 
   def importChannels(self):
-    self.createDb()
-
+    # self.createDb()
+    # self.migrateDb()
+    
     with open(SETTINGS.CHAN_LIST) as json_file:
       data = json.loads(json_file.read())
       json_file.close()
@@ -121,6 +148,10 @@ class Channels():
             #   audio_codec = stream_type['audio_codec']
             # if 'video_codec' in stream_type:
             #   video_codec = stream_type['video_codec']
+            if(channel['status'] == 2): 
+              status = Channel.STATUS_ONLINE 
+            else: 
+              status = Channel.STATUS_OFFLINE
 
             ch = Channel(id = str(channel['id']),
                          id_cat = group['id'],
@@ -128,7 +159,7 @@ class Channels():
                          address = channel['address'], 
                          protocol = channel['protocol'],
                          language = channel['language'],
-                         status = channel['status'],
+                         status = status,
                          unverified = channel['unverified']
                         )
             if((ch.checkExist() == False) and (ch.checkAddrExist() == False)):

@@ -18,6 +18,7 @@ from play_sop import sopcast
 
 from resources.streams.export import export
 from resources.streams.channels import Channels
+from resources.streams.channel import Channel
 
 addon_id = 'plugin.video.streams'
 settings = xbmcaddon.Addon(id=addon_id)
@@ -103,6 +104,7 @@ def addLink(ch_id, name_formatted, name, url, protocol, cat_id, mode, iconimage,
 
 def CAT_LIST(force=False, mode=None):
   channels = Channels()
+  channels.migrateDb()
   if force==False:
     if not os.path.isfile(SETTINGS.CHAN_LIST):
       addon_log('channels first download')
@@ -157,12 +159,12 @@ def CHANNEL_LIST(name, cat_id, mode=None, schedule=False):
   channels = Channels(catId = cat_id)
   arrChannels = channels.loadChannels(loadUnverified)
   for ch in arrChannels:
-    if (((SETTINGS.SHOW_OFFLINE_CH=='true') and (int(ch.status)==1)) or (int(ch.status)!=1)): #if we show or not offline channels based on settings
+    if (((SETTINGS.SHOW_OFFLINE_CH=='true') and (int(ch.status)==ch.STATUS_OFFLINE)) or (int(ch.status)!=ch.STATUS_OFFLINE)): #if we show or not offline channels based on settings
       name_formatted ="[B]"+ch.name+"[/B]"
       name_formatted += " [[COLOR yellow]"+ch.protocol+"[/COLOR]]"
-
-      if int(ch.status)==1: 
-        name_formatted += " [COLOR red]"+addon.getLocalizedString(30063)+"[/COLOR]"  #Offline
+       
+      if int(ch.status)==ch.STATUS_OFFLINE: 
+        name_formatted += " [COLOR red]" + addon.getLocalizedString(30063) + "[/COLOR]"  #Offline
       
       addLink(ch.id, name_formatted, ch.name, ch.address.strip(), ch.protocol.strip(),
               ch.id_cat, 2, '', "", len(arrChannels))

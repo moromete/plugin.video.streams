@@ -8,6 +8,7 @@ import glob
 from common import addon_log, addon, is_exe
 from settings import SETTINGS
 from resources.streams.channels import Channels
+from resources.streams.channel import Channel
 
 class sopcast():
   def __init__( self , *args, **kwargs):
@@ -84,7 +85,7 @@ class sopcast():
         
         if offline:
           ch = Channels();
-          ch.markStream(chId = self.player.ch_id, status=1) #offline
+          ch.markStream(chId = self.player.ch_id, status=Channel.STATUS_OFFLINE) #offline
 
       except Exception as inst:
         xbmcgui.Dialog().ok(addon.getLocalizedString(30060), str(type(inst)),str(inst),"")

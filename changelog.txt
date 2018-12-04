@@ -1,3 +1,7 @@
+v 2.0.4
+  1. send to comunity only checked streams
+  2. add last_online date to internal database
+
 v 2.0.3
   1. fix pytz dependency
 

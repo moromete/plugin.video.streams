@@ -15,28 +15,29 @@ import xbmc, xbmcgui
 
 class export():
   def __init__( self ):
-    db_connection=sqlite3.connect(SETTINGS.CHANNELS_DB)
-    self.db_cursor=db_connection.cursor()
     self.exportFile = SETTINGS.EXPORT_CHAN_LIST
 
   def createExportFile( self ):
-    sql = "SELECT id, name, status, address, id_cat \
+    db=sqlite3.connect(SETTINGS.CHANNELS_DB)
+    db_cursor=db.cursor()
+    sql = "SELECT id, name, status, address, id_cat, my, last_online \
            FROM channels \
+           WHERE checked = 1 \
            order by id_cat, name"
-    self.db_cursor.execute( sql )
-    rec=self.db_cursor.fetchall()
+    db_cursor.execute( sql )
+    rec=db_cursor.fetchall()
 
     if len(rec)>0:
       jsonData = []
       for id, name, status, \
-          address, id_cat in rec:
+          address, id_cat, my, last_online in rec:
         channel = {'id': id,
                    'name': name,
                    'address': address,
                    'status': status,
-                   'id_cat': id_cat
-                  #  'unverified': unverified,
-                  #  'my': my
+                   'id_cat': id_cat,
+                   'my': my,
+                   'last_online': last_online
                   }
         jsonData.append(channel)
       jsonStr = json.dumps(jsonData)
@@ -44,6 +45,11 @@ class export():
       f=open(self.exportFile,"w+")
       f.write(jsonStr)
       f.close() 
+
+      db_cursor.execute('UPDATE channels SET checked = NULL')
+      db.commit()
+    
+    db.close()
 
   def checkDoExport( self ):
     if not os.path.isfile(self.exportFile):
@@ -59,10 +65,15 @@ class export():
       if(self.checkDoExport()):
         self.createExportFile()
         self.send()
+      self.createExportFile()
+      self.send()
       self.smtp.quit()
       return True;
   
   def send(self):
+    if(not os.path.isfile(self.exportFile)):
+      return
+
     msg = MIMEMultipart()
     #msg = EmailMessage()
     #msg['Subject'] = 'Export %s' % datetime.now().isoformat()

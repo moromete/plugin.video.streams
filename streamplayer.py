@@ -6,6 +6,7 @@ from common import addon_log, addon
 
 from settings import SETTINGS
 from resources.streams.channels import Channels
+from resources.streams.channel import Channel
 
 # if SETTINGS.DISABLE_SCHEDULE != 'true':
 #   from schedule import epg
@@ -42,7 +43,7 @@ class streamplayer(xbmc.Player):
 
     #online notif
     ch = Channels();
-    ch.markStream(chId = self.ch_id, status=2) #online
+    ch.markStream(chId = self.ch_id, status=Channel.STATUS_ONLINE) #online
 
     self.stream_online = True
 
@@ -67,7 +68,7 @@ class streamplayer(xbmc.Player):
     if(self.stream_online!=True) :
       #online notif
       ch = Channels();
-      ch.markStream(chId = self.ch_id, status=1) #offline
+      ch.markStream(chId = self.ch_id, status=Channel.STATUS_OFFLINE) #offline
       self.stream_online = False
 
     #addon.setSetting('player_status', 'end')
@@ -87,7 +88,7 @@ class streamplayer(xbmc.Player):
     #online notif
     if(self.stream_online!=True) :
       ch = Channels();
-      ch.markStream(chId = self.ch_id, status=1)  #offline
+      ch.markStream(chId = self.ch_id, status=Channel.STATUS_OFFLINE)  #offline
       self.stream_online = False
       xbmc.executebuiltin( "Dialog.Close(busydialog)" )
       if SETTINGS.NOTIFY_OFFLINE == "true": xbmc.executebuiltin("Notification(%s,%s,%i)" % (addon.getLocalizedString(30057), "",1))  #Channel is offline

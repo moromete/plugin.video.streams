@@ -1,10 +1,14 @@
 import sqlite3
 import uuid
+from datetime import datetime
 
 from settings import SETTINGS
 from common import addon, addon_log
 
 class Channel():
+  STATUS_ONLINE   = 1
+  STATUS_OFFLINE  = -1
+
   def __init__( self , *args, **kwargs):
     self.id = kwargs.get('id')
     self.id_cat = kwargs.get('id_cat')
@@ -16,27 +20,31 @@ class Channel():
     self.unverified = kwargs.get('unverified')
     self.my = kwargs.get('my')
     self.deleted = kwargs.get('deleted')
+    self.last_online = kwargs.get('last_online')
+    self.checked = kwargs.get('checked')
 
     self.db_connection=sqlite3.connect(SETTINGS.CHANNELS_DB)
     self.db_cursor=self.db_connection.cursor()
  
   def findOne(self, id):
-    sql = "SELECT id_cat, name, address, protocol, language, status, unverified, my, deleted \
+    sql = "SELECT id_cat, name, address, protocol, language, status, unverified, my, deleted, last_online, checked \
            FROM channels \
            where id = ?"
     self.db_cursor.execute( sql, (id, ) )
     rec=self.db_cursor.fetchone()
     if rec != None:
-      self.id         = id
-      self.id_cat     = rec[0]
-      self.name       = rec[1]
-      self.address    = rec[2]
-      self.protocol   = rec[3]
-      self.language   = rec[4]
-      self.status     = rec[5]
-      self.unverified = rec[6]
-      self.my         = rec[7]
-      self.deleted    = rec[8]
+      self.id          = id
+      self.id_cat      = rec[0]
+      self.name        = rec[1]
+      self.address     = rec[2]
+      self.protocol    = rec[3]
+      self.language    = rec[4]
+      self.status      = rec[5]
+      self.unverified  = rec[6]
+      self.my          = rec[7]
+      self.deleted     = rec[8]
+      self.last_online = rec[9]
+      self.checked     = rec[10]
       return True
   
   def save(self):
@@ -75,8 +83,8 @@ class Channel():
   
   def insert(self):
     sql = "INSERT INTO channels \
-           (id, id_cat, name, address, protocol, language, status, unverified, my) \
-           VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)"
+           (id, id_cat, name, address, protocol, language, status, unverified, my, last_online, checked) \
+           VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
     st = self.db_cursor.execute(sql, (self.id,
                                       self.id_cat,
                                       self.name,
@@ -86,6 +94,8 @@ class Channel():
                                       self.status,
                                       self.unverified,
                                       self.my,
+                                      self.last_online,
+                                      self.checked
                                      ))
     self.db_connection.commit()
     return st
@@ -100,7 +110,9 @@ class Channel():
                status = ?, \
                unverified = ?, \
                my = ?, \
-               deleted = ?) \
+               deleted = ?, \
+               last_online = ?, \
+               checked = ?) \
            where id = ?"
     st = self.db_cursor.execute(sql, (self.id_cat,
                                       self.name,
@@ -111,16 +123,22 @@ class Channel():
                                       self.unverified,
                                       self.my,
                                       self.deleted,
+                                      self.last_online,
+                                      self.checked,
                                       self.id))
     self.db_connection.commit()
     return st
 
   def setStatus(self, status):
     self.status = status
+    if(self.status == self.STATUS_ONLINE):
+      self.last_online = datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S')
     sql = "UPDATE channels \
-          SET status = ? \
-          WHERE id = ?"
-    st = self.db_cursor.execute(sql, (self.status, self.id, ))
+           SET status = ?, \
+           last_online = ?, \
+           checked = 1 \
+           WHERE id = ?"
+    st = self.db_cursor.execute(sql, (self.status, self.last_online, self.id, ))
     self.db_connection.commit()
     return st
       
