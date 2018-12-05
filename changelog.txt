@@ -1,6 +1,7 @@
 v 2.0.6
   1. clean deleted streams from master (keep my channels)
   2. my channels displayed in italic 
+  3. update existing stream from master
 
 v 2.0.5
   1. fix duplicated categories
