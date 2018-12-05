@@ -160,11 +160,14 @@ def CHANNEL_LIST(name, cat_id, mode=None, schedule=False):
   arrChannels = channels.loadChannels(loadUnverified)
   for ch in arrChannels:
     if (((SETTINGS.SHOW_OFFLINE_CH=='true') and (int(ch.status)==ch.STATUS_OFFLINE)) or (int(ch.status)!=ch.STATUS_OFFLINE)): #if we show or not offline channels based on settings
-      name_formatted ="[B]"+ch.name+"[/B]"
-      name_formatted += " [[COLOR yellow]"+ch.protocol+"[/COLOR]]"
+      if (ch.my == 1): 
+        name_formatted = "[I]%s[/I]" % ch.name
+      else:
+        name_formatted = "[B]%s[/B]" % ch.name
+      name_formatted += " [[COLOR yellow]%s[/COLOR]]" % ch.protocol
        
       if int(ch.status)==ch.STATUS_OFFLINE: 
-        name_formatted += " [COLOR red]" + addon.getLocalizedString(30063) + "[/COLOR]"  #Offline
+        name_formatted += " [COLOR red]%s[/COLOR]" % addon.getLocalizedString(30063)  #Offline
       
       addLink(ch.id, name_formatted, ch.name, ch.address.strip(), ch.protocol.strip(),
               ch.id_cat, 2, '', "", len(arrChannels))

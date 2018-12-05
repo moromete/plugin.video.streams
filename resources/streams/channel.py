@@ -80,6 +80,17 @@ class Channel():
       return True
     else:
       return False
+
+  def checkIsMy(self):
+    sql = "SELECT my \
+           FROM channels \
+           where id = ?"
+    self.db_cursor.execute( sql, (self.id, ) ) 
+    rec=self.db_cursor.fetchone()
+    if(rec[0] == 1):
+      return True
+    else:
+      return False
   
   def insert(self):
     sql = "INSERT INTO channels \
@@ -100,32 +111,21 @@ class Channel():
     self.db_connection.commit()
     return st
 
-  def update(self):
-    sql = "UPDATE channels \
-           SET id_cat =?,  \
-               name = ?, \
-               address = ?, \
-               protocol = ?, \
-               language = ?, \
-               status = ?, \
-               unverified = ?, \
-               my = ?, \
-               deleted = ?, \
-               last_online = ?, \
-               checked = ?) \
-           where id = ?"
-    st = self.db_cursor.execute(sql, (self.id_cat,
-                                      self.name,
-                                      self.address,
-                                      self.protocol,
-                                      self.language,
-                                      self.status,
-                                      self.unverified,
-                                      self.my,
-                                      self.deleted,
-                                      self.last_online,
-                                      self.checked,
-                                      self.id))
+  def update(self, **kwargs):
+    sql = "UPDATE channels SET "
+    values = []
+    count = 1
+    for key, value in kwargs.items():
+      values.append(value)
+      if(count > 1):
+        sql += ", "
+      sql += " %s = ? " % key
+      count = count + 1
+    sql += " WHERE id = ? "
+    values.append(self.id)
+    #addon_log(sql)
+    #addon_log(values)
+    st = self.db_cursor.execute(sql, values)
     self.db_connection.commit()
     return st
 

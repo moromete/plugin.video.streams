@@ -15,29 +15,29 @@ class Channels():
   def __init__( self , **kwargs):
     self.catId = kwargs.get('catId')
 
-  def createDb(self):
-    db_connection=sqlite3.connect(SETTINGS.CHANNELS_DB)
-    db_cursor=db_connection.cursor()
+  # def createDb(self):
+  #   db_connection=sqlite3.connect(SETTINGS.CHANNELS_DB)
+  #   db_cursor=db_connection.cursor()
 
-    sql = "CREATE TABLE IF NOT EXISTS categories (id INTEGER, name TEXT)"
-    addon_log(sql)
-    db_cursor.execute(sql);
+  #   sql = "CREATE TABLE IF NOT EXISTS categories (id INTEGER, name TEXT)"
+  #   addon_log(sql)
+  #   db_cursor.execute(sql);
     
-    sql="DELETE FROM categories"
-    db_cursor.execute(sql)
+  #   sql="DELETE FROM categories"
+  #   db_cursor.execute(sql)
 
-    #video_resolution TEXT, video_aspect REAL, audio_codec TEXT, video_codec TEXT, thumbnail TEXT, schedule_id INTEGER,\
-    sql = "CREATE TABLE IF NOT EXISTS channels \
-          (id TEXT, id_cat INTEGER, name TEXT, language TEXT, status INTEGER, \
-           address TEXT, protocol TEXT, \
-           unverified INTEGER, my integer, deleted integer)"
-    db_cursor.execute(sql)
+  #   #video_resolution TEXT, video_aspect REAL, audio_codec TEXT, video_codec TEXT, thumbnail TEXT, schedule_id INTEGER,\
+  #   sql = "CREATE TABLE IF NOT EXISTS channels \
+  #         (id TEXT, id_cat INTEGER, name TEXT, language TEXT, status INTEGER, \
+  #          address TEXT, protocol TEXT, \
+  #          unverified INTEGER, my integer, deleted integer)"
+  #   db_cursor.execute(sql)
     
-    # sql="DELETE FROM channels"
-    # db_cursor.execute(sql)
+  #   # sql="DELETE FROM channels"
+  #   # db_cursor.execute(sql)
     
-    db_connection.commit()
-    db_connection.close()
+  #   db_connection.commit()
+  #   db_connection.close()
 
   def migrateDb(self):
     addon_log("""Run database migrations.""")
@@ -128,11 +128,13 @@ class Channels():
 
       self.cleanCategories()
 
+      parsedIds = []
+
       for group in data['groups']:
         addon_log(str(group['id']) + " " + group['name'])
         cat = Category(id = group['id'], name=group['name'])
         cat.insert()
-
+        
         for channel in group['channels']:
           #addon_log(str(channel['id'])+" "+unicode(channel['name'])+" "+ str(channel['language'])+" "+str(channel['status']))
           if ((not channel['unverified']) or (SETTINGS.SHOW_UNVERIFIED=='true')):
@@ -176,6 +178,35 @@ class Channels():
                         )
             if((ch.checkExist() == False) and (ch.checkAddrExist() == False)):
               ch.insert()
+            else:
+              if(ch.checkIsMy() == False):
+                ch.update(id_cat = group['id'],
+                          name = channel['name'],
+                          address = channel['address'], 
+                          protocol = channel['protocol'],
+                          language = channel['language'],
+                          status = status,
+                          unverified = channel['unverified'])
+                          
+            parsedIds.append(ch.id)
+      
+      addon_log('parsed %d channels' % len(parsedIds))
+      self.cleanChannels(parsedIds)
+  
+  #delete channels that are not comming from import and are not my channels
+  def cleanChannels(self, parsedIds):
+    if(len(parsedIds) > 0):
+      db = sqlite3.connect(SETTINGS.CHANNELS_DB)
+      db_cursor=db.cursor()
+      # addon_log(parsedIds)
+
+      #do not delete my channels 
+      sql="DELETE FROM channels WHERE id NOT IN ( %s ) AND my IS NULL" % ", ".join(parsedIds)
+      # addon_log(sql)
+      db_cursor.execute(sql)
+
+      db.commit()
+      db.close()
 
   def loadChannels(self, loadUnverified = False):
     db_connection=sqlite3.connect(SETTINGS.CHANNELS_DB)
@@ -183,7 +214,7 @@ class Channels():
 
     sql = 'SELECT id, name, language, status, \
            address, protocol, \
-           unverified \
+           unverified, my \
            FROM channels \
            WHERE id_cat = ? and deleted is NULL'
     if(loadUnverified):
@@ -199,7 +230,7 @@ class Channels():
     if len(rec)>0:
       for id, name, language, status, \
           address, protocol, \
-          unverified in rec:
+          unverified, my in rec:
         ch = Channel(id=id, 
                      id_cat=self.catId,
                      name=name,
@@ -207,7 +238,8 @@ class Channels():
                      status=status,
                      address=address,
                      protocol=protocol,
-                     unverified=unverified)
+                     unverified=unverified,
+                     my=my)
         arrChannels.append(ch)
     db_connection.close()
     return arrChannels
