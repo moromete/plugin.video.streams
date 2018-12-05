@@ -213,14 +213,14 @@ def STREAM(name, iconimage, url, protocol, sch_ch_id, ch_id):
 
   #play acestream
   elif protocol=='acestream':
-    if(SETTINGS.ACE_ENGINE_TYPE == 2): #use plexus
+    if(SETTINGS.ACE_ENGINE_TYPE == 1): #use plexus
       try:
         addon_log('plexus')
         xbmc.executebuiltin('XBMC.RunPlugin(plugin://program.plexus/?mode=1&url='+url+'&name='+name+'&iconimage='+iconimage+')')
       except Exception as inst:
         addon_log(inst)
         xbmc.executebuiltin("Notification(%s,%s,%i)" % (addon.getLocalizedString(30303), "", 10000))
-    elif(SETTINGS.ACE_ENGINE_TYPE == 1): #use external
+    elif(SETTINGS.ACE_ENGINE_TYPE == 0): #use external
       #play with acestream engine started on another machine or on the localhost
       ace = acestream(player=player, url=url, listitem=listitem)
       ace.engine_connect()
