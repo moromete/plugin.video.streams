@@ -1,3 +1,33 @@
+v 2.0.6
+  1. clean deleted streams from master (keep my channels)
+  2. my channels displayed in italic 
+  3. update existing stream from master
+
+v 2.0.5
+  1. fix duplicated categories
+
+v 2.0.4
+  1. send to comunity only checked streams
+  2. add last_online date to internal database
+
+v 2.0.3
+  1. fix pytz dependency
+
+v 2.0.2
+  1. fix listing of non verified channels 
+  2. force smtp auth
+
+v 2.0.1
+  1. fix sopcast play on linux x64
+
+v 2.0.0
+  1. change channel marking engine (use smtp)
+  2. add / delete channel features
+  3. remove epg
+  4. import only non existing channels without overwiting channels database
+  5. add Croatian translations
+  6. updated qemu-i386 version 2.4.0
+
 v 0.5.6
   1. fix epg timezone offset
   2. change epg url and put it into addon settings

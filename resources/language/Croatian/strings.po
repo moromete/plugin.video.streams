@@ -4,268 +4,212 @@ msgstr ""
 "Project-Id-Version: XBMC-Addons\n"
 "Report-Msgid-Bugs-To: alanwww1@xbmc.org\n"
 "POT-Creation-Date: 2016-06-02 11:19+0000\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2018-02-13 22:41+0100\n"
 "Language-Team: LANGUAGE\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: en\n"
-"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+"Language: hr\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Last-Translator: gogo <trebelnik2@gmail.com>\n"
+"X-Generator: Poedit 1.8.7.1\n"
 
-#strings 30000 thru 30999 reserved for plugins and plugin settings
-
+# strings 30000 thru 30999 reserved for plugins and plugin settings
 msgctxt "#30000"
 msgid "General"
-msgstr ""
+msgstr "Općenito"
 
 msgctxt "#30001"
 msgid "Engines"
-msgstr ""
+msgstr "Pogoni"
 
 msgctxt "#30002"
 msgid "Schedule"
-msgstr ""
+msgstr "Raspored"
 
 msgctxt "#30003"
 msgid "Channel List"
-msgstr ""
+msgstr "Popis programa"
 
 msgctxt "#30004"
 msgid "Channel Countries"
-msgstr ""
+msgstr "Zemlja programa"
 
 msgctxt "#30005"
 msgid "Channel Language"
-msgstr ""
+msgstr "Jezik programa"
 
-#empty strings from id 30006 to 30009
-
+# empty strings from id 30006 to 30009
 msgctxt "#30010"
 msgid "Enable Add-on Debugging"
-msgstr ""
+msgstr "Omogući otklanjanje grešaka dodatka"
 
 msgctxt "#30011"
 msgid "Wait time before atempting to start the player [ms]"
-msgstr ""
+msgstr "Vrijeme čekanja prije pokušaja pokretanja reproduktora [ms]"
 
 msgctxt "#30012"
 msgid "Local port (where others can connect)"
-msgstr ""
+msgstr "Lokalni ulaz (gdje se drugi ne mogu povezati)"
 
 msgctxt "#30013"
 msgid "Video port"
-msgstr ""
+msgstr "Ulaz video strujanja"
 
 msgctxt "#30014"
 msgid "Buffer Size"
-msgstr ""
+msgstr "Veličina međuspremnika"
 
 msgctxt "#30015"
 msgid "Disable program guides"
-msgstr ""
+msgstr "Onemogući programske vodiče"
 
 msgctxt "#30016"
 msgid "Remote channel list URL"
-msgstr ""
+msgstr "URL udaljenog popisa programa"
 
 msgctxt "#30017"
 msgid "Channel list expire [hours] (0 = no update)"
-msgstr ""
+msgstr "Popis programa istječe [sata] (0 = bez nadopune)"
 
 msgctxt "#30018"
 msgid "Show offline channels"
-msgstr ""
+msgstr "Prikaži nedostupne programe"
 
 msgctxt "#30019"
 msgid "Load program guide when displaying channel list"
-msgstr ""
+msgstr "Učitaj programski vodič pri prikazu popisa programa"
 
 msgctxt "#30020"
 msgid "Sopcast path for ARM system (Raspberry Pi)"
-msgstr ""
+msgstr "Sopcast putanja za ARM sustave (Raspberry Pi)"
 
 msgctxt "#30021"
 msgid "unclassified"
-msgstr ""
+msgstr "neklasificirano"
 
 msgctxt "#30022"
 msgid "Sopcast"
-msgstr ""
+msgstr "Sopcast"
 
 msgctxt "#30023"
 msgid "Acestream"
-msgstr ""
+msgstr "Acestream"
 
 msgctxt "#30024"
 msgid "Engine host"
-msgstr ""
+msgstr "Poslužitelj pogona"
 
 msgctxt "#30025"
 msgid "Engine TCP port"
-msgstr ""
+msgstr "TCP ulaz pogona"
 
 msgctxt "#30026"
 msgid "Show unverified"
-msgstr ""
+msgstr "Prikaži neprovjereno"
 
 msgctxt "#30027"
 msgid "use Plexus"
-msgstr ""
+msgstr "Koristi Plexus"
 
 msgctxt "#30028"
 msgid "external"
-msgstr ""
+msgstr "vanjski"
 
 msgctxt "#30029"
 msgid "Acestream engine"
-msgstr ""
+msgstr "Acestream pogon"
 
 msgctxt "#30030"
 msgid "internal"
-msgstr ""
+msgstr "unutrašnji"
 
 msgctxt "#30031"
 msgid "EPG url"
-msgstr ""
+msgstr "EPG url"
 
-msgctxt "#30032"
-msgid "SMTP"
-msgstr ""
-
-msgctxt "#30033"
-msgid "SMTP Username"
-msgstr ""
-
-msgctxt "#30034"
-msgid "SMTP Password"
-msgstr ""
-
-msgctxt "#30035"
-msgid "SMTP Port"
-msgstr ""
-
-#empty strings from id 30036 to 30049
-
+# empty strings from id 30032 to 30049
 msgctxt "#30050"
 msgid "Refresh Schedule"
-msgstr ""
+msgstr "Osvježi raspored"
 
 msgctxt "#30051"
 msgid "Refresh All Schedules"
-msgstr ""
+msgstr "Osvježi sve rasporede"
 
 msgctxt "#30052"
 msgid "Refresh Channel List"
-msgstr ""
+msgstr "Osvježi popis programa"
 
 msgctxt "#30053"
 msgid "Downloading Channel list"
-msgstr ""
+msgstr "Preuzimanje popisa programa"
 
 msgctxt "#30054"
 msgid "Channel list"
-msgstr ""
+msgstr "Popis programa"
 
 msgctxt "#30055"
 msgid "Downloading Channel Logo"
-msgstr ""
+msgstr "Preuzimanje logotipa programa"
 
 msgctxt "#30056"
 msgid "Program guide is up to date"
-msgstr ""
+msgstr "Programski vodič je najnovije inačice"
 
 msgctxt "#30057"
 msgid "Channel is offline"
-msgstr ""
+msgstr "Program je nedostupan"
 
 msgctxt "#30058"
 msgid "Network is offline"
-msgstr ""
+msgstr "Mreža je nedostupna"
 
 msgctxt "#30059"
 msgid "Channel initialization failed"
-msgstr ""
+msgstr "Pokretanje programa neuspješno"
 
 msgctxt "#30060"
 msgid "Sream"
-msgstr ""
+msgstr "Strujanje"
 
 msgctxt "#30061"
 msgid "Downloading Program Guide"
-msgstr ""
+msgstr "Preuzimanje programskog vodiča"
 
 msgctxt "#30062"
 msgid "Program guide"
-msgstr ""
+msgstr "Programski vodič"
 
 msgctxt "#30063"
 msgid "Offline"
-msgstr ""
+msgstr "Nedostupan"
 
 msgctxt "#30064"
 msgid "Program guide is not available"
-msgstr ""
+msgstr "Programski vodič je nedostupan"
 
 msgctxt "#30065"
 msgid "Get stream URL"
-msgstr ""
+msgstr "Preuzmi URL strujanja"
 
 msgctxt "#30066"
 msgid "unverified"
-msgstr ""
+msgstr "neprovjereno"
 
-#empty strings from id 30067 to 30299
-
+# empty strings from id 30067 to 30299
 msgctxt "#30300"
 msgid "Error"
-msgstr ""
+msgstr "Greška"
 
 msgctxt "#30301"
 msgid "Cannot parse channel list !"
-msgstr ""
+msgstr "Nemoguća obrada popisa programa!"
 
 msgctxt "#30302"
 msgid "Please install python module \"pytz\" or disable program guides from addon settings"
-msgstr ""
+msgstr "Instalirajte python modul \"pytz\" ili onemogućite programski vodič iz postavki dodatka"
 
 msgctxt "#30303"
 msgid "Plexus addon not installed!"
-msgstr ""
-
-msgctxt "#30401"
-msgid "My channels"
-msgstr ""
-
-msgctxt "#30402"
-msgid "Add new channel"
-msgstr ""
-
-msgctxt "#30403"
-msgid "Stream url"
-msgstr ""
-
-msgctxt "#30404"
-msgid "Stream name"
-msgstr ""
-
-msgctxt "#30405"
-msgid "Successfully added!"
-msgstr ""
-
-msgctxt "#30406"
-msgid "Invalid protocol!"
-msgstr ""
-
-msgctxt "#30407"
-msgid "Delete channel"
-msgstr ""
-
-msgctxt "#30408"
-msgid "Error adding channel"
-msgstr ""
-
-msgctxt "#30409"
-msgid "Error sending channels to comunity please set a valid mail server in addon settings -> Channel List -> SMTP !"
-msgstr ""
-
+msgstr "Plexus dodatak nije instaliran!"

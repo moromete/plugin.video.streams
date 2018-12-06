@@ -1,4 +1,6 @@
 plugin.video.streams
 ====================
 
-streams plugin for xbmc
+streams plugin for kodi
+
+https://github.com/moromete/plugin.video.streams/wiki

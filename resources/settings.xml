@@ -15,20 +15,24 @@
     <setting id="buffer_size" type="number" label="30014" default="8192"/>
     <setting id="use_plexus_sop" type="bool" label="30027" default="false"/>
     <setting type="lsep" label="30023"/>
-    <setting id="ace_engine_type" type="select" label="30029" lvalues="30030|30028|30027" default="1"/>
+    <setting id="ace_engine_type" type="select" label="30029" lvalues="30028|30027" default="0"/>
     <setting id="ace_host" type="text" label="30024" default="127.0.0.1"/>
     <setting id="ace_port" type="number" label="30025" default="62062"/>
   </category>
-  <category label="30002">
+  <!-- <category label="30002">
     <setting type="sep" />
     <setting id="disable_schedule" type="bool" label="30015" default="false"/>
     <setting id="schedule_ch_list" type="bool" label="30019" default="false"/>
     <setting id="epg_url" type="text" label="30031" default="https://web-api-pepper.horizon.tv/oesp/v2/RO/ron/web/programschedules/"/>
     <setting type="sep" />
-  </category>
+  </category> -->
   <category label="30003">
     <setting type="sep" />
-    <setting id="chan_list_url" type="text" label="30016" default="http://tvdot.tk/ro/streams.json"/>
+    <setting id="smtp" type="text" label="30032" default="smtp.gmail.com"/>
+    <setting id="smtpPort" type="number" label="30035" default="587"/>
+    <setting id="smtpUsername" type="text" label="30033" default=""/>
+    <setting id="smtpPasswd" type="text" label="30034" default=""/>
+    <!-- <setting id="chan_list_url" type="text" label="30016" default="http://tvdot.tk/ro/streams.json"/> -->
     <setting id="chan_list_expire" type="number" label="30017" default="12"/>
     <setting id="show_offline_ch" type="bool" label="30018" default="true"/>
     <setting id="show_unverified" type="bool" label="30026" default="false"/>

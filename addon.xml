@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.streams"
        name="Streams"
-       version="0.5.7"
+       version="2.0.6"
        provider-name="Moromete">
   <requires>
     <import addon="xbmc.python" version="2.1.0"/>
-    <import addon="script.module.pytz"/>
+    <!-- <import addon="script.module.pytz"/> -->
   </requires>
   <extension point="xbmc.python.pluginsource"
              library="default.py">
@@ -15,10 +15,16 @@
     <summary>
       Radio/Tv Streams
     </summary>
+    <summary lang="hr">
+      Radio/Tv strujanja
+    </summary>
     <description>
       Radio/Tv Streams
       - Watch internet video/audio streams (sopcast, acestream, http, rtmp, rtsp, mms ...) based on a remote channel list.
-      http://tvdot.tk
+    </description>
+    <description lang="hr">
+      Radio/Tv strujanja
+      - Gledajte internet video/audio strujanja (sopcast, acestream, http, rtmp, rtsp, mms ...) temeljena na udaljenom popisu programa.
     </description>
     <platform>all</platform>
   </extension>

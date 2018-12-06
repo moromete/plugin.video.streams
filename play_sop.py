@@ -54,11 +54,26 @@ class sopcast():
           remaining_display = "Still " + str(secs_left) + "seconds left"
           mensagemprogresso.update(percent, remaining_display)
           xbmc.sleep(500)
+          
+        self.spsc_pid = self.spsc.pid
+
+        xbmc.sleep(int(addon.getSetting('wait_time')))
+
+        res=False
+        counter=50
+        #while counter > 0 and os.path.exists("/proc/"+str(spsc.pid)):
+        while counter > 0 and self.sop_pid_exists():
+          xbmc.executebuiltin( "ActivateWindow(busydialog)" )
+          xbmc.sleep(400)
+          counter -= 1
+
           try:
             addon_log(SETTINGS.LOCAL_URL);
             urllib2.urlopen(SETTINGS.LOCAL_URL)
             counter=0
             res=self.sop_sleep(200)
+
+            break
           except Exception as inst:
             addon_log(inst)
 
@@ -67,7 +82,9 @@ class sopcast():
         if res:
 
           #START PLAY
+
           xbmc.executebuiltin("Dialog.Close(all,true)")
+
           self.player.callback = self.stop_spsc
           self.player.play(SETTINGS.LOCAL_URL, self.listitem)
 

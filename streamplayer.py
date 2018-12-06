@@ -1,14 +1,15 @@
 import xbmc, xbmcgui
-from mark_stream import mark_stream
 
 #import glob
 from common import addon_log, addon
 #from default import DISABLE_SCHEDULE, load_active_event
 
 from settings import SETTINGS
+from resources.streams.channels import Channels
+from resources.streams.channel import Channel
 
-if SETTINGS.DISABLE_SCHEDULE != 'true':
-  from schedule import epg
+# if SETTINGS.DISABLE_SCHEDULE != 'true':
+#   from schedule import epg
 
 class streamplayer(xbmc.Player):
   def __init__( self , *args, **kwargs):
@@ -41,17 +42,18 @@ class streamplayer(xbmc.Player):
     xbmc.executebuiltin( "Dialog.Close(busydialog)" )
 
     #online notif
-    mark = mark_stream(ch_id=self.ch_id)
-    mark.mark_online()
+    ch = Channels();
+    ch.markStream(chId = self.ch_id, status=Channel.STATUS_ONLINE) #online
+
     self.stream_online = True
 
-    if SETTINGS.DISABLE_SCHEDULE!='true':
-      #display schedule active event
-      epgObj = epg()
-      active_event = epgObj.load_active_event(self.name)
-      if active_event:
-        active_event = active_event.encode('utf8')
-        xbmc.executebuiltin("Notification(%s,%s,%i)" % (active_event, "", 10000))
+    # if SETTINGS.DISABLE_SCHEDULE!='true':
+    #   #display schedule active event
+    #   epgObj = epg()
+    #   active_event = epgObj.load_active_event(self.name)
+    #   if active_event:
+    #     active_event = active_event.encode('utf8')
+    #     xbmc.executebuiltin("Notification(%s,%s,%i)" % (active_event, "", 10000))
 
   def onPlayBackEnded(self):
     addon_log('----------------------->END')
@@ -65,8 +67,8 @@ class streamplayer(xbmc.Player):
 
     if(self.stream_online!=True) :
       #online notif
-      mark = mark_stream(ch_id=self.ch_id)
-      mark.mark_offline()
+      ch = Channels();
+      ch.markStream(chId = self.ch_id, status=Channel.STATUS_OFFLINE) #offline
       self.stream_online = False
 
     #addon.setSetting('player_status', 'end')
@@ -85,8 +87,8 @@ class streamplayer(xbmc.Player):
 
     #online notif
     if(self.stream_online!=True) :
-      mark = mark_stream(ch_id=self.ch_id)
-      mark.mark_offline()
+      ch = Channels();
+      ch.markStream(chId = self.ch_id, status=Channel.STATUS_OFFLINE)  #offline
       self.stream_online = False
       xbmc.executebuiltin( "Dialog.Close(busydialog)" )
       if SETTINGS.NOTIFY_OFFLINE == "true": xbmc.executebuiltin("Notification(%s,%s,%i)" % (addon.getLocalizedString(30057), "",1))  #Channel is offline

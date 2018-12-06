@@ -12,7 +12,8 @@ import time
 import glob
 from common import addon_log, addon
 from settings import SETTINGS
-from mark_stream import mark_stream
+from resources.streams.channels import Channels
+from resources.streams.channel import Channel
 
 class acestream():
   buffer_size = 1024
@@ -157,8 +158,8 @@ class acestream():
         #addon_log('player_started=');
         #addon_log(self.player_started);
         if(self.player_started != True):
-          mark = mark_stream(ch_id=self.player.ch_id)
-          mark.mark_offline()
+          ch = Channels();
+          ch.markStream(chId = self.player.ch_id, status=Channel.STATUS_OFFLINE) #offline
 
         break
 
