@@ -37,7 +37,9 @@ class sopcast():
         #   env['LD_LIBRARY_PATH'] = SETTINGS.SPSC_LIB
         #   addon_log(self.cmd)
         #   self.spsc = subprocess.Popen(self.cmd, shell=False, bufsize=SETTINGS.BUFER_SIZE, stdin=None, stdout=None, stderr=None, env=env)
- 
+        
+        self.spsc_pid = self.spsc.pid
+        
         res=False
         mensagemprogresso = xbmcgui.DialogProgress()
         ret = mensagemprogresso.create("SopCast")
