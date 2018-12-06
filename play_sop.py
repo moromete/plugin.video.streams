@@ -52,7 +52,7 @@ class sopcast():
           percent = int((1 - (counter / 50.0)) * 100)
           secs_left = str((counter))
           remaining_display = "Still " + str(secs_left) + "seconds left"
-          mensagemprogresso.update(percent, listitem.setLabel(name), remaining_display)
+          mensagemprogresso.update(percent, remaining_display)
           xbmc.sleep(500)
           try:
             addon_log(SETTINGS.LOCAL_URL);
