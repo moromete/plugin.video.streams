@@ -37,17 +37,15 @@ class sopcast():
         #   env['LD_LIBRARY_PATH'] = SETTINGS.SPSC_LIB
         #   addon_log(self.cmd)
         #   self.spsc = subprocess.Popen(self.cmd, shell=False, bufsize=SETTINGS.BUFER_SIZE, stdin=None, stdout=None, stderr=None, env=env)
-          
+ 
         self.spsc_pid = self.spsc.pid
 
-
         res=False
-        #counter=50
         mensagemprogresso = xbmcgui.DialogProgress()
         ret = mensagemprogresso.create("SopCast")
         mensagemprogresso.update(0)
-        counter=50
-        percent=0
+        counter = 50
+        percent= 0
         cancelled = False
         while counter > 0 and self.sop_pid_exists():
           counter -= 1
@@ -55,7 +53,7 @@ class sopcast():
           secs_left = str((counter))
           remaining_display = "Still " + str(secs_left) + "seconds left"
           mensagemprogresso.update(percent, remaining_display)
-          xbmc.sleep(1000)
+          xbmc.sleep(500)
           try:
             addon_log(SETTINGS.LOCAL_URL);
             urllib2.urlopen(SETTINGS.LOCAL_URL)
