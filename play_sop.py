@@ -51,7 +51,7 @@ class sopcast():
           counter -= 1
           percent = int((1 - (counter / 50.0)) * 100)
           secs_left = str((counter))
-          mensagemprogresso.update(percent, addon.getLocalizedString(30410) + str(secs_left))
+          mensagemprogresso.update(percent, "[COLOR yellow]"+self.player.name+"[/COLOR]", addon.getLocalizedString(30410) + str(secs_left))
           xbmc.sleep(500)
           try:
             addon_log(SETTINGS.LOCAL_URL);
