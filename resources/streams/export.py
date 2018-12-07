@@ -78,7 +78,7 @@ class export():
     #msg = EmailMessage()
     #msg['Subject'] = 'Export %s' % datetime.now().isoformat()
     msg['Subject'] = 'Export plugin.video.streams'
-    msg['From'] = SETTINGS.EXPORT_EMAIL
+    msg['From'] = addon.getSetting('smtpUsername')
     msg['To'] = SETTINGS.EXPORT_EMAIL
     #msg.set_content(fp.read())
         
@@ -96,7 +96,7 @@ class export():
     #                   filename='export.json')
     
     try:  
-      self.smtp.sendmail(SETTINGS.EXPORT_EMAIL, SETTINGS.EXPORT_EMAIL, msg.as_string())
+      self.smtp.sendmail(addon.getSetting('smtpUsername'), SETTINGS.EXPORT_EMAIL, msg.as_string())
       #s.send_message(msg)
     except Exception as inst:
       addon_log(inst)
