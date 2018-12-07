@@ -187,6 +187,14 @@ msgctxt "#30059"
 msgid "Channel initialization failed"
 msgstr ""
 
+msgctxt "#30410"
+msgid "Loading stream. Please wait seconds "
+msgstr ""
+
+msgctxt "#30411"
+msgid "Sopcast "
+msgstr ""
+
 msgctxt "#30060"
 msgid "Sream"
 msgstr ""
