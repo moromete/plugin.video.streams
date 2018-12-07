@@ -42,7 +42,7 @@ class sopcast():
         xbmc.sleep(400)
         res=False
         mensagemprogresso = xbmcgui.DialogProgress()
-        ret = mensagemprogresso.create("SopCast")
+        ret = mensagemprogresso.create(addon.getLocalizedString(30411))
         mensagemprogresso.update(0)
         counter = 50
         percent= 0
@@ -51,8 +51,7 @@ class sopcast():
           counter -= 1
           percent = int((1 - (counter / 50.0)) * 100)
           secs_left = str((counter))
-          remaining_display = "Loading stream. Please wait " + str(secs_left) + " seconds"
-          mensagemprogresso.update(percent, remaining_display)
+          mensagemprogresso.update(percent, addon.getLocalizedString(30410) + str(secs_left))
           xbmc.sleep(500)
           try:
             addon_log(SETTINGS.LOCAL_URL);
