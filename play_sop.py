@@ -39,7 +39,7 @@ class sopcast():
         #   self.spsc = subprocess.Popen(self.cmd, shell=False, bufsize=SETTINGS.BUFER_SIZE, stdin=None, stdout=None, stderr=None, env=env)
         
         self.spsc_pid = self.spsc.pid
-        
+        xbmc.sleep(400)
         res=False
         mensagemprogresso = xbmcgui.DialogProgress()
         ret = mensagemprogresso.create("SopCast")
