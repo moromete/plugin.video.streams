@@ -22,7 +22,8 @@ class sopcast():
                [ url, str(SETTINGS.LOCAL_PORT), str(SETTINGS.VIDEO_PORT), 
                 "> /dev/null &"
                ]
-
+    print(self.cmd)
+    
   def start( self ):
     if xbmc.getCondVisibility('System.Platform.Android'):
       xbmc.executebuiltin('XBMC.StartAndroidActivity("com.devaward.soptohttp","android.intent.action.VIEW","",'+self.sopurl+')')
@@ -71,6 +72,8 @@ class sopcast():
           mensagemprogresso.close()
           self.player.callback = self.stop_spsc
           self.player.play(SETTINGS.LOCAL_URL, self.listitem)
+          xbmc.sleep(500)
+          self.start()
 
         elif not self.sop_pid_exists():
           try: xbmc.executebuiltin("Dialog.Close(all,true)")
