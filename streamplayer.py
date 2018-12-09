@@ -94,7 +94,8 @@ class streamplayer(xbmc.Player):
       if SETTINGS.NOTIFY_OFFLINE == "true": xbmc.executebuiltin("Notification(%s,%s,%i)" % (addon.getLocalizedString(30057), "",1))  #Channel is offline
 
     #addon.setSetting('player_status', 'stop')
-    self.player_status = 'stop';
+    xbmc.Player().stop()
+
 
   def keep_allive(self):
     xbmc.sleep(500)
