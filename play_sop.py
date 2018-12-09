@@ -44,13 +44,14 @@ class sopcast():
         mensagemprogresso = xbmcgui.DialogProgress()
         ret = mensagemprogresso.create(addon.getLocalizedString(30411))
         mensagemprogresso.update(0)
-        counter = 50
-        percent= 0
-        cancelled = False
+        counter = 55
         while counter > 0 and self.sop_pid_exists():
+          if mensagemprogresso.iscanceled(): 
+              mensagemprogresso.close()
+              break        
           counter -= 1
-          percent = int((1 - (counter / 50.0)) * 100)
-          secs_left = str((counter))
+          percent = int((1 - (counter / 55.0)) * 100)
+          secs_left = str(counter)
           mensagemprogresso.update(percent, "[COLOR yellow]"+self.player.name+"[/COLOR]", addon.getLocalizedString(30410) + str(secs_left))
           xbmc.sleep(500)
           try:
@@ -58,6 +59,7 @@ class sopcast():
             urllib2.urlopen(SETTINGS.LOCAL_URL)
             counter=0
             res=self.sop_sleep(200)
+            break
           except Exception as inst:
             addon_log(inst)
 
@@ -66,7 +68,7 @@ class sopcast():
         if res:
 
           #START PLAY
-          xbmc.executebuiltin("Dialog.Close(all,true)")
+          mensagemprogresso.close()
           self.player.callback = self.stop_spsc
           self.player.play(SETTINGS.LOCAL_URL, self.listitem)
 
