@@ -30,7 +30,7 @@ class sopcast():
     else:
       try:
         # addon_log(self.cmd)
-        self.spsc = subprocess.Popen(self.cmd, shell=False, bufsize=SETTINGS.BUFER_SIZE, stdin=None, stdout=None, stderr=None, preexec_fn=lambda: os.nice(19))
+        self.spsc = subprocess.Popen(self.cmd, shell=False, bufsize=SETTINGS.BUFER_SIZE, stdin=None, stdout=None, stderr=None, preexec_fn=lambda: os.nice(-20))
         # if(SETTINGS.ARM):
         #   self.spsc = subprocess.Popen(self.cmd, shell=False, bufsize=SETTINGS.BUFER_SIZE, stdin=None, stdout=None, stderr=None)
         # else:
