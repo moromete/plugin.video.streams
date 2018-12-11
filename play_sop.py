@@ -30,7 +30,7 @@ class sopcast():
     else:
       try:
         # addon_log(self.cmd)
-        self.spsc = subprocess.Popen(self.cmd, shell=False, bufsize=SETTINGS.BUFER_SIZE, stdin=None, stdout=None, stderr=None, preexec_fn=lambda: os.nice(-20))
+        self.spsc = subprocess.Popen(self.cmd, shell=False, bufsize=SETTINGS.BUFER_SIZE, stdin=None, stdout=None, stderr=open("/dev/null", "w"), preexec_fn=lambda: os.nice(-10))
         # if(SETTINGS.ARM):
         #   self.spsc = subprocess.Popen(self.cmd, shell=False, bufsize=SETTINGS.BUFER_SIZE, stdin=None, stdout=None, stderr=None)
         # else:
@@ -121,7 +121,7 @@ class sopcast():
   # this function will sleep only if the sop is running
   def sop_sleep(self, time):
     counter = 0
-    increment = 3000
+    increment = 500
     #path="/proc/%s" % str(spsc_pid)
 
     #addon_log('proc exists')
