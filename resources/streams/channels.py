@@ -187,8 +187,9 @@ class Channels():
                           language = channel['language'],
                           status = status,
                           unverified = channel['unverified'])
-                          
-            parsedIds.append(ch.id)
+            
+            if(ch.checkIsMy() == False):
+              parsedIds.append(ch.id)
       
       addon_log('parsed %d channels' % len(parsedIds))
       self.cleanChannels(parsedIds)
