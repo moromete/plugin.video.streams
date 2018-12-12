@@ -30,7 +30,7 @@ class sopcast():
     else:
       try:
         # addon_log(self.cmd)
-        self.spsc = subprocess.Popen(self.cmd, shell=False, bufsize=SETTINGS.BUFER_SIZE, stdin=None, stdout=None, stderr=open("/dev/null", "w"), preexec_fn=lambda: os.nice(-10))
+        self.spsc = subprocess.Popen(self.cmd, shell=False, bufsize=-1, stdin=None, stdout=None, stderr=open("/dev/null", "w"), preexec_fn=lambda: os.nice(-10))
         # if(SETTINGS.ARM):
         #   self.spsc = subprocess.Popen(self.cmd, shell=False, bufsize=SETTINGS.BUFER_SIZE, stdin=None, stdout=None, stderr=None)
         # else:
@@ -45,13 +45,13 @@ class sopcast():
         mensagemprogresso = xbmcgui.DialogProgress()
         ret = mensagemprogresso.create(addon.getLocalizedString(30411))
         mensagemprogresso.update(0)
-        counter = 55
+        counter = 70
         while counter > 0 and self.sop_pid_exists():
           if mensagemprogresso.iscanceled(): 
               mensagemprogresso.close()
               break        
           counter -= 1
-          percent = int((1 - (counter / 55.0)) * 100)
+          percent = int((1 - (counter / 70.0)) * 100)
           secs_left = str(counter)
           mensagemprogresso.update(percent, "[COLOR yellow]"+self.player.name+"[/COLOR]", addon.getLocalizedString(30410) + str(secs_left))
           xbmc.sleep(500)
