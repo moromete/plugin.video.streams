@@ -1,6 +1,9 @@
+v 2.0.8
+  1. fix status exporting to be done before updating cahnnel list
+
 v 2.0.7
   1. fix smtp from sender (error sending from yahoo)
-  1. fix import channel - disconsider my channels when deleting master channels
+  2. fix import channel - disconsider my channels when deleting master channels
 
 v 2.0.6
   1. clean deleted streams from master (keep my channels)

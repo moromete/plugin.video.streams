@@ -105,6 +105,11 @@ def addLink(ch_id, name_formatted, name, url, protocol, cat_id, mode, iconimage,
 def CAT_LIST(force=False, mode=None):
   channels = Channels()
   channels.migrateDb()
+
+  exp = export()
+  if(exp.export() != True) :
+    return
+
   if force==False:
     if not os.path.isfile(SETTINGS.CHAN_LIST):
       addon_log('channels first download')
@@ -120,11 +125,7 @@ def CAT_LIST(force=False, mode=None):
   else:
     Downloader(SETTINGS.CHAN_LIST_URL, SETTINGS.CHAN_LIST, addon.getLocalizedString(30053), addon.getLocalizedString(30054)) #Downloading Channel list
     channels.importChannels()
-
-  exp = export()
-  if(exp.export() != True) :
-    return
-
+  
   ch = Channels()
   arrCategories = ch.loadCategories()
   for cat in arrCategories:
