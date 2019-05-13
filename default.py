@@ -6,7 +6,7 @@ import time
 from datetime import datetime, timedelta
 
 from settings import SETTINGS
-from common import addon_log, addon, Downloader
+from common import addon_log, addon, Downloader, busy_dialog
 
 # if SETTINGS.DISABLE_SCHEDULE != 'true':
 #   #from schedule import grab_schedule, load_schedule
@@ -178,8 +178,8 @@ def CHANNEL_LIST(name, cat_id, mode=None, schedule=False):
 def STREAM(name, iconimage, url, protocol, sch_ch_id, ch_id):
   addon_log("stream")
   if(url == None):
-    try: xbmc.executebuiltin("Dialog.Close(all,true)")
-    except: pass
+    # try: xbmc.executebuiltin("Dialog.Close(all,true)")
+    # except: pass
     return False
 
   # if (sch_ch_id != None) and (SETTINGS.DISABLE_SCHEDULE != 'true'):
@@ -230,8 +230,8 @@ def STREAM(name, iconimage, url, protocol, sch_ch_id, ch_id):
       player.play(url, listitem)
     except Exception as inst:
       xbmcgui.Dialog().ok(addon.getLocalizedString(30060), str(type(inst)),str(inst),"")
-      try: xbmc.executebuiltin("Dialog.Close(all,true)")
-      except: pass
+      # try: xbmc.executebuiltin("Dialog.Close(all,true)")
+      # except: pass
 
 #######################################################################################################################
 #######################################################################################################################
@@ -284,9 +284,9 @@ elif ((mode==1) or (mode==101)):  #list channels
 elif mode==2:  #play stream
   if xbmc.Player().isPlaying():
     xbmc.Player().stop()
-    try: xbmc.executebuiltin("Dialog.Close(all,true)")
-    except: pass
-  xbmc.executebuiltin( "ActivateWindow(busydialog)" )
+    # try: xbmc.executebuiltin("Dialog.Close(all,true)")
+    # except: pass
+  # xbmc.executebuiltin( "ActivateWindow(busydialog)" )
   STREAM(name, iconimage, url, protocol, sch_ch_id, ch_id)
 # elif mode==3:  #refresh schedule
 #   if sch_ch_id != None:
@@ -306,9 +306,9 @@ elif (mode==7): #delete stream
   channels = Channels() 
   channels.deleteStream(ch_id)
   
-try:
-  xbmc.executebuiltin( "Dialog.Close(busydialog)" )
-except: pass
+# try:
+#   xbmc.executebuiltin( "Dialog.Close(busydialog)" )
+# except: pass
 
 addon_log('------------- END ---------------')
 

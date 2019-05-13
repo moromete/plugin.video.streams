@@ -5,7 +5,7 @@ import urllib2
 import subprocess
 
 import glob
-from common import addon_log, addon, is_exe
+from common import addon_log, addon, is_exe, busy_dialog
 from settings import SETTINGS
 from resources.streams.channels import Channels
 from resources.streams.channel import Channel
@@ -28,35 +28,37 @@ class sopcast():
       xbmc.executebuiltin('XBMC.StartAndroidActivity("com.devaward.soptohttp","android.intent.action.VIEW","",'+self.sopurl+')')
     else:
       try:
-        # addon_log(self.cmd)
-        self.spsc = subprocess.Popen(self.cmd, shell=False, bufsize=SETTINGS.BUFER_SIZE, stdin=None, stdout=None, stderr=None)
-        # if(SETTINGS.ARM):
-        #   self.spsc = subprocess.Popen(self.cmd, shell=False, bufsize=SETTINGS.BUFER_SIZE, stdin=None, stdout=None, stderr=None)
-        # else:
-        #   env = os.environ
-        #   env['LD_LIBRARY_PATH'] = SETTINGS.SPSC_LIB
-        #   addon_log(self.cmd)
-        #   self.spsc = subprocess.Popen(self.cmd, shell=False, bufsize=SETTINGS.BUFER_SIZE, stdin=None, stdout=None, stderr=None, env=env)
-          
-        self.spsc_pid = self.spsc.pid
+        with busy_dialog():
+          # addon_log(self.cmd)
+          self.spsc = subprocess.Popen(self.cmd, shell=False, bufsize=SETTINGS.BUFER_SIZE, stdin=None, stdout=None, stderr=None)
+          # if(SETTINGS.ARM):
+          #   self.spsc = subprocess.Popen(self.cmd, shell=False, bufsize=SETTINGS.BUFER_SIZE, stdin=None, stdout=None, stderr=None)
+          # else:
+          #   env = os.environ
+          #   env['LD_LIBRARY_PATH'] = SETTINGS.SPSC_LIB
+          #   addon_log(self.cmd)
+          #   self.spsc = subprocess.Popen(self.cmd, shell=False, bufsize=SETTINGS.BUFER_SIZE, stdin=None, stdout=None, stderr=None, env=env)
+            
+          self.spsc_pid = self.spsc.pid
 
-        xbmc.sleep(int(addon.getSetting('wait_time')))
+          xbmc.sleep(int(addon.getSetting('wait_time')))
 
-        res=False
-        counter=50
-        #while counter > 0 and os.path.exists("/proc/"+str(spsc.pid)):
-        while counter > 0 and self.sop_pid_exists():
-          xbmc.executebuiltin( "ActivateWindow(busydialog)" )
-          xbmc.sleep(400)
-          counter -= 1
-          try:
-            addon_log(SETTINGS.LOCAL_URL);
-            urllib2.urlopen(SETTINGS.LOCAL_URL)
-            counter=0
-            res=self.sop_sleep(200)
-            break
-          except Exception as inst:
-            addon_log(inst)
+          res=False
+          counter=50
+          #while counter > 0 and os.path.exists("/proc/"+str(spsc.pid)):
+        
+          while counter > 0 and self.sop_pid_exists():
+            # xbmc.executebuiltin( "ActivateWindow(busydialog)" )
+            xbmc.sleep(400)
+            counter -= 1
+            try:
+              addon_log(SETTINGS.LOCAL_URL);
+              urllib2.urlopen(SETTINGS.LOCAL_URL)
+              counter=0
+              res=self.sop_sleep(200)
+              break
+            except Exception as inst:
+              addon_log(inst)
 
         addon_log(res)
         offline = None
@@ -67,8 +69,8 @@ class sopcast():
           self.player.play(SETTINGS.LOCAL_URL, self.listitem)
 
         elif not self.sop_pid_exists():
-          try: xbmc.executebuiltin("Dialog.Close(all,true)")
-          except: pass
+          # try: xbmc.executebuiltin("Dialog.Close(all,true)")
+          # except: pass
           try:
             urllib2.urlopen(SETTINGS.TEST_URL)
             if SETTINGS.NOTIFY_OFFLINE == "true": xbmc.executebuiltin("Notification(%s,%s,%i)" % (addon.getLocalizedString(30057), "",1))  #Channel is offline
@@ -76,8 +78,8 @@ class sopcast():
           except:
             if SETTINGS.NOTIFY_OFFLINE == "true": xbmc.executebuiltin("Notification(%s,%s,%i)" % (addon.getLocalizedString(30058), "",1)) #Network is offline
         elif SETTINGS.NOTIFY_OFFLINE == "true":
-          try: xbmc.executebuiltin("Dialog.Close(all,true)")
-          except: pass
+          # try: xbmc.executebuiltin("Dialog.Close(all,true)")
+          # except: pass
           xbmc.executebuiltin("Notification(%s,%s,%i)" % (addon.getLocalizedString(30059), "", 1)) #Channel initialization failed
           offline = True
           try: self.stop_spsc()
@@ -93,8 +95,8 @@ class sopcast():
         try:
           stop_spsc()
         except: pass
-        try: xbmc.executebuiltin("Dialog.Close(all,true)")
-        except: pass
+        # try: xbmc.executebuiltin("Dialog.Close(all,true)")
+        # except: pass
 
   def sop_pid_exists(self):
     if(self.spsc.poll() == None): #A None value indicates that the process hasn't terminated yet

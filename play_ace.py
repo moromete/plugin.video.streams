@@ -10,7 +10,7 @@ import urllib
 import time
 
 import glob
-from common import addon_log, addon
+from common import addon_log, addon, busy_dialog
 from settings import SETTINGS
 from resources.streams.channels import Channels
 from resources.streams.channel import Channel
@@ -46,19 +46,27 @@ class acestream():
     return
 
   def engine_connect(self):
-    try:
-      self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-      self.sock.connect((SETTINGS.ACE_HOST, SETTINGS.ACE_PORT))
-    except Exception as inst:
-      addon_log(inst)
-      try: xbmc.executebuiltin("Dialog.Close(all,true)")
-      except: pass
-      DEBUG = addon.getSetting('debug')
-      if DEBUG == 'true': xbmc.executebuiltin("Notification(%s,%s,%i)" % (str(type(inst)), str(inst), 5))
-      return False
+    with busy_dialog():
+      try:
+        self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.sock.connect((SETTINGS.ACE_HOST, SETTINGS.ACE_PORT))
+      except Exception as inst:
+        addon_log(inst)
+        # try: xbmc.executebuiltin("Dialog.Close(all,true)")
+        # except: pass
+        DEBUG = addon.getSetting('debug')
+        if DEBUG == 'true': xbmc.executebuiltin("Notification(%s,%s,%i)" % (str(type(inst)), str(inst), 5))
+        return False
 
-    self.send("HELLOBG version=3")
-    self.ace_read()
+      self.send("HELLOBG version=3")
+      player_url = self.ace_read()
+
+    if(player_url != None):
+      addon_log (player_url)
+      self.player.callback = self.shutdown
+      self.listitem.setInfo('video', {'Title': self.filename})
+      self.player.play(player_url, self.listitem)
+      self.player_started = True
 
   def auth(self, data):
     p = re.compile('\skey=(\w+)\s')
@@ -84,8 +92,8 @@ class acestream():
   def shutdown(self):
     #addon_log("SHUTDOWN")
     self.send("SHUTDOWN")
-    try: xbmc.executebuiltin("Dialog.Close(all,true)")
-    except: pass
+    # try: xbmc.executebuiltin("Dialog.Close(all,true)")
+    # except: pass
 
   def send(self, cmd):
     try:
@@ -126,16 +134,17 @@ class acestream():
       elif line.startswith("START"):
         self.start_time = None
 
-        try: xbmc.executebuiltin("Dialog.Close(all,true)")
-        except: pass
+        # try: xbmc.executebuiltin("Dialog.Close(all,true)")
+        # except: pass
 
         try:
           player_url = line.split()[1]
-          addon_log (player_url)
-          self.player.callback = self.shutdown
-          self.listitem.setInfo('video', {'Title': self.filename})
-          self.player.play(player_url, self.listitem)
-          self.player_started = True
+          return player_url
+          # addon_log (player_url)
+          # self.player.callback = self.shutdown
+          # self.listitem.setInfo('video', {'Title': self.filename})
+          # self.player.play(player_url, self.listitem)
+          # self.player_started = True
         except IndexError as e:
           player_url = None
 

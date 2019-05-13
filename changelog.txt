@@ -1,3 +1,6 @@
+v 2.0.9
+  1. fix bussy dialog for kodi 18
+
 v 2.0.8
   1. fix status exporting to be done before updating cahnnel list
 

@@ -72,3 +72,13 @@ def is_exe(fpath):
     if (os.access(fpath, os.X_OK) != True) :
       st = os.stat(fpath)
       os.chmod(fpath, st.st_mode | stat.S_IEXEC)
+
+
+from contextlib import contextmanager
+@contextmanager
+def busy_dialog():
+  xbmc.executebuiltin('ActivateWindow(busydialognocancel)')
+  try:
+    yield
+  finally:
+    xbmc.executebuiltin('Dialog.Close(busydialognocancel)')
