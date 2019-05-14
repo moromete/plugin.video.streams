@@ -20,33 +20,16 @@ class streamplayer(xbmc.Player):
 
     self.stream_online = None
     self.player_status = None
-    addon_log('INIT PLAYER')
+    # addon_log('INIT PLAYER')
 
   def play(self, url, listitem):
-    #addon.setSetting('player_status', 'play')
     self.player_status = 'play';
-
     super(streamplayer, self).play(url, listitem)
-
     self.keep_allive()
 
   def onPlayBackStarted(self):
-    addon_log('START')
-    addon_log(xbmc.getInfoLabel('VideoPlayer.VideoCodec'))
-    addon_log(xbmc.getInfoLabel('VideoPlayer.AudioCodec'))
-
-    ## this will kill the sopcast if we changed the media
-    #if xbmc.Player(xbmc.PLAYER_CORE_AUTO).getPlayingFile() != SETTINGS.LOCAL_URL:
-    #  try: stop_spsc(self.spsc_pid)
-    #  except: pass
-    xbmc.executebuiltin( "Dialog.Close(busydialog)" )
-
-    #online notif
-    ch = Channels();
-    ch.markStream(chId = self.ch_id, status=Channel.STATUS_ONLINE) #online
-
-    self.stream_online = True
-
+    addon_log('-----------------------------> START PLAY')
+ 
     # if SETTINGS.DISABLE_SCHEDULE!='true':
     #   #display schedule active event
     #   epgObj = epg()
@@ -57,29 +40,21 @@ class streamplayer(xbmc.Player):
 
   def onPlayBackEnded(self):
     addon_log('----------------------->END')
-    addon_log(self.stream_online);
+    self.player_status = 'end';
 
-    #xbmc.executebuiltin('Container.Refresh()')
     try:
       if(self.callback != None):
         self.callback()
     except: pass
 
     if(self.stream_online!=True) :
-      #online notif
-      ch = Channels();
-      ch.markStream(chId = self.ch_id, status=Channel.STATUS_OFFLINE) #offline
-      self.stream_online = False
-
-    #addon.setSetting('player_status', 'end')
-    self.player_status = 'end';
+      self.isOffline()
 
   def onPlayBackStopped(self):
     addon_log('----------------------->STOP')
-    addon_log(self.stream_online);
+    self.player_status = 'stop';
 
-    #xbmc.executebuiltin('Container.Refresh()')
-    addon_log(self.callback)
+    # addon_log(self.callback)
     try:
       if(self.callback != None):
         self.callback()
@@ -87,23 +62,29 @@ class streamplayer(xbmc.Player):
 
     #online notif
     if(self.stream_online!=True) :
-      ch = Channels();
-      ch.markStream(chId = self.ch_id, status=Channel.STATUS_OFFLINE)  #offline
-      self.stream_online = False
-      xbmc.executebuiltin( "Dialog.Close(busydialog)" )
-      if SETTINGS.NOTIFY_OFFLINE == "true": xbmc.executebuiltin("Notification(%s,%s,%i)" % (addon.getLocalizedString(30057), "",1))  #Channel is offline
+      self.isOffline()
 
-    #addon.setSetting('player_status', 'stop')
-    self.player_status = 'stop';
+  def isOffline(self):
+    ch = Channels();
+    ch.markStream(chId = self.ch_id, status=Channel.STATUS_OFFLINE)  #offline
+    self.stream_online = False
+    xbmc.executebuiltin("Notification(%s,%s,%i)" % (addon.getLocalizedString(30057), "",1))  #Channel is offline
 
   def keep_allive(self):
     xbmc.sleep(500)
 
     #KEEP SCRIPT ALLIVE
-    #while (addon.getSetting('player_status')=='play'):
     while (self.player_status=='play'):
+      if(self.stream_online == None):
+        
+        vc = xbmc.getInfoLabel('VideoPlayer.VideoCodec')
+        ac = xbmc.getInfoLabel('VideoPlayer.AudioCodec')
+        if(ac or vc):
+          #online notif
+          addon_log('mark online')
+          ch = Channels();
+          ch.markStream(chId = self.ch_id, status=Channel.STATUS_ONLINE) #online
+          self.stream_online = True
+      
       addon_log('ALLIVE')
       xbmc.sleep(500)
-
-    #try: xbmc.executebuiltin("Dialog.Close(all,true)")
-    #except: pass

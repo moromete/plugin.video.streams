@@ -27,7 +27,7 @@ class SETTINGS(object):
   SHOW_OFFLINE_CH = addon.getSetting('show_offline_ch')
   SHOW_UNVERIFIED = addon.getSetting('show_unverified')
 
-  NOTIFY_OFFLINE = "true"
+  # NOTIFY_OFFLINE = "true"
 
   # DISABLE_SCHEDULE = addon.getSetting('disable_schedule')
   # SCHEDULE_PATH = os.path.join(ADDON_PATH,'schedule.sqlite')
