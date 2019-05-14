@@ -1,3 +1,6 @@
+v 2.0.10
+  1. fix offline detection of http streams
+
 v 2.0.9
   1. fix bussy dialog for kodi 18
 

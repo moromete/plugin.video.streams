@@ -28,7 +28,7 @@ class streamplayer(xbmc.Player):
     self.keep_allive()
 
   def onPlayBackStarted(self):
-    addon_log('-----------------------------> START PLAY')
+    addon_log('-----------------------> START PLAY')
  
     # if SETTINGS.DISABLE_SCHEDULE!='true':
     #   #display schedule active event
@@ -39,7 +39,7 @@ class streamplayer(xbmc.Player):
     #     xbmc.executebuiltin("Notification(%s,%s,%i)" % (active_event, "", 10000))
 
   def onPlayBackEnded(self):
-    addon_log('----------------------->END')
+    addon_log('----------------------->END PLAY')
     self.player_status = 'end';
 
     try:
@@ -51,7 +51,7 @@ class streamplayer(xbmc.Player):
       self.isOffline()
 
   def onPlayBackStopped(self):
-    addon_log('----------------------->STOP')
+    addon_log('----------------------->STOP PLAY')
     self.player_status = 'stop';
 
     # addon_log(self.callback)
