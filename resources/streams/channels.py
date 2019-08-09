@@ -267,7 +267,7 @@ class Channels():
     ch = Channel()
     ch.findOne(chId)
     ch.setStatus(status)
-    xbmc.executebuiltin("Container.Refresh")
+    # xbmc.executebuiltin("Container.Refresh")
 
 
     

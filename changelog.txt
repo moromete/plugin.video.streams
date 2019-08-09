@@ -1,5 +1,6 @@
 v 2.0.10
   1. fix offline detection of http streams
+  2. do not refresh list after marking channel online/offline
 
 v 2.0.9
   1. fix bussy dialog for kodi 18
