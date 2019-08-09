@@ -73,11 +73,11 @@ class sopcast():
           # except: pass
           try:
             urllib2.urlopen(SETTINGS.TEST_URL)
-            if SETTINGS.NOTIFY_OFFLINE == "true": xbmc.executebuiltin("Notification(%s,%s,%i)" % (addon.getLocalizedString(30057), "",1))  #Channel is offline
+            xbmc.executebuiltin("Notification(%s,%s,%i)" % (addon.getLocalizedString(30057), "",1))  #Channel is offline
             offline = True
           except:
-            if SETTINGS.NOTIFY_OFFLINE == "true": xbmc.executebuiltin("Notification(%s,%s,%i)" % (addon.getLocalizedString(30058), "",1)) #Network is offline
-        elif SETTINGS.NOTIFY_OFFLINE == "true":
+            xbmc.executebuiltin("Notification(%s,%s,%i)" % (addon.getLocalizedString(30058), "",1)) #Network is offline
+        else:
           # try: xbmc.executebuiltin("Dialog.Close(all,true)")
           # except: pass
           xbmc.executebuiltin("Notification(%s,%s,%i)" % (addon.getLocalizedString(30059), "", 1)) #Channel initialization failed
