@@ -139,7 +139,8 @@ class acestream():
 
         try:
           player_url = line.split()[1]
-          return player_url
+          #return player_url
+
           # addon_log (player_url)
           # self.player.callback = self.shutdown
           # self.listitem.setInfo('video', {'Title': self.filename})
@@ -167,11 +168,25 @@ class acestream():
         #addon_log('player_started=');
         #addon_log(self.player_started);
         if(self.player_started != True):
-          ch = Channels();
+          ch = Channels()
           ch.markStream(chId = self.player.ch_id, status=Channel.STATUS_OFFLINE) #offline
-
         break
 
+      #IDLE
+      elif line.startswith("STATE 0"):
+        self.shutdown()
+
+      #DOWNLOADING
+      elif line.startswith("STATE 2"):
+        return player_url
+      
+      #messages
+      elif line.startswith("STATUS"):
+        tmp = line.split(';')
+        if(2 < len(tmp)):
+          addon_log(tmp[2])
+          xbmc.executebuiltin("Notification(%s,%s,%i)" % (tmp[2], "", 10000))
+            
       #INFO 1;Cannot find active peers
       elif line.startswith("INFO"):
         tmp = line.split(';')
