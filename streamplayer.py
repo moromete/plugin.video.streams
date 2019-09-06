@@ -21,9 +21,11 @@ class streamplayer(xbmc.Player):
     self.stream_online = None
     self.player_status = None
     # addon_log('INIT PLAYER')
+    self.url = None
 
   def play(self, url, listitem):
-    self.player_status = 'play';
+    self.player_status = 'play'
+    self.url = url
     super(streamplayer, self).play(url, listitem)
     self.keep_allive()
 
@@ -40,38 +42,39 @@ class streamplayer(xbmc.Player):
 
   def onPlayBackEnded(self):
     addon_log('----------------------->END PLAY')
-    self.player_status = 'end';
+    self.player_status = 'end'
 
     try:
       if(self.callback != None):
         self.callback()
     except: pass
 
-    if(self.stream_online!=True) :
+    if(self.stream_online != True) :
       self.isOffline()
 
   def onPlayBackStopped(self):
     addon_log('----------------------->STOP PLAY')
-    self.player_status = 'stop';
-
+    self.player_status = 'stop'
+    
     # addon_log(self.callback)
     try:
       if(self.callback != None):
         self.callback()
     except: pass
-
+    
     #online notif
-    if(self.stream_online!=True) :
+    if(self.stream_online != True) :
       self.isOffline()
 
   def isOffline(self):
+    addon_log('mark offline')
     ch = Channels();
     ch.markStream(chId = self.ch_id, status=Channel.STATUS_OFFLINE)  #offline
     self.stream_online = False
     xbmc.executebuiltin("Notification(%s,%s,%i)" % (addon.getLocalizedString(30057), "",1))  #Channel is offline
 
   def keep_allive(self):
-    xbmc.sleep(500)
+    xbmc.sleep(1000)
 
     #KEEP SCRIPT ALLIVE
     while (self.player_status=='play'):

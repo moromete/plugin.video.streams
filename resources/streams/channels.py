@@ -88,6 +88,7 @@ class Channels():
         if (kb.isConfirmed()):
           name = kb.getText()
           name = name.title()
+          name = name.decode('utf8')
           if name == '' : sys.exit(0)
           else:
             #save
