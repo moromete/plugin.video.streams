@@ -241,6 +241,10 @@ addon_log('------------- START -------------')
 # addon_log(SETTINGS.CHAN_LIST_URL)
 # addon_log(SETTINGS.CHAN_LIST)
 
+xbmcgui.Dialog().ok('DISCONTINUED!', "Please use acestreamsearch plugin from th same repo.")
+xbmcplugin.endOfDirectory(int(sys.argv[1]))
+
+
 #read params
 params=get_params()
 try:

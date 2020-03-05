@@ -1,3 +1,6 @@
+v 2.0.13
+  DISCONTINUED
+
 v 2.0.12
   1. improved acestream playback by adding feedback messages and fix continuous loading when playback is not possible
 
