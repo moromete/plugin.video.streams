@@ -241,7 +241,7 @@ addon_log('------------- START -------------')
 # addon_log(SETTINGS.CHAN_LIST_URL)
 # addon_log(SETTINGS.CHAN_LIST)
 
-xbmcgui.Dialog().ok('DISCONTINUED!', "Please use acestreamsearch plugin from th same repo.")
+xbmcgui.Dialog().ok('DISCONTINUED!', "Please use acestreamsearch plugin from the same repo.")
 xbmcplugin.endOfDirectory(int(sys.argv[1]))
 
 
